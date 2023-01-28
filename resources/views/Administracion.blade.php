@@ -1,0 +1,1 @@
+@extends('Plantilla.Principal')

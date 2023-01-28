@@ -1,0 +1,49 @@
+/*!
+	 * Sizzle CSS Selector Engine v2.3.3
+	 * https://sizzlejs.com/
+	 *
+	 * Copyright jQuery Foundation and other contributors
+	 * Released under the MIT license
+	 * http://jquery.org/license
+	 *
+	 * Date: 2016-08-08
+	 */
+
+/*!
+	 * jQuery JavaScript Library v3.2.1
+	 * https://jquery.com/
+	 *
+	 * Includes Sizzle.js
+	 * https://sizzlejs.com/
+	 *
+	 * Copyright JS Foundation and other contributors
+	 * Released under the MIT license
+	 * https://jquery.org/license
+	 *
+	 * Date: 2017-03-20T18:59Z
+	 */
+
+/*!
+ * VueEasyPieChart v1.0.2 (https://github.com/dotnetage/vue-easy-pie-chart)
+ * (c) 2016 Ray
+ * Released under the MIT License.
+ */
+
+/**
+	 * jquery-circle-progress - jQuery Plugin to draw animated circular progress bars:
+	 * {@link http://kottenator.github.io/jquery-circle-progress/}
+	 *
+	 * @author Rostyslav Bryzgunov <kottenator@gmail.com>
+	 * @version 1.2.2
+	 * @licence MIT
+	 * @preserve
+	 */
+
+/**!
+	 * easy-pie-chart
+	 * Lightweight plugin to render simple, animated and retina optimized pie charts
+	 *
+	 * @license 
+	 * @author Robert Fleischmann <rendro87@gmail.com> (http://robert-fleischmann.de)
+	 * @version 2.1.7
+	 **/
