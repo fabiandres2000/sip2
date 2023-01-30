@@ -19,3 +19,8 @@ export function condiciones_salud() {
 export function exportarGeneralSalud($data) {
     return http().post('/informes/exportar-general-salud', $data);
 }
+
+export function riesgos_salud() {
+    return http().get('/informes/riesgos-salud');
+}
+

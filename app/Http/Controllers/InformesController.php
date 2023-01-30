@@ -221,4 +221,55 @@ class InformesController extends Controller
         }
     }
 
+    public function riesgos_salud(){
+        if (Auth::check()) {
+
+            $alteraciones_transtornos_audicion = \App\Informes::riesgos_salud(Session::get('alias'), "alteraciones_transtornos_audicion");
+            $alteraciones_transtornos_visuales = \App\Informes::riesgos_salud(Session::get('alias'), "alteraciones_transtornos_visuales");
+            $cancer = \App\Informes::riesgos_salud(Session::get('alias'), "cancer");
+            $consumo_spa = \App\Informes::riesgos_salud(Session::get('alias'), "consumo_spa");
+            $enfermedad_cardiovascular = \App\Informes::riesgos_salud(Session::get('alias'), "enfermedad_cardiovascular");
+            $enfermedades_infecciosas =  \App\Informes::riesgos_salud(Session::get('alias'), "enfermedades_infecciosas");
+            $enfermedades_respiratorias =  \App\Informes::riesgos_salud(Session::get('alias'), "enfermedades_respiratorias");
+            $enfermedades_zoonoticas =  \App\Informes::riesgos_salud(Session::get('alias'), "enfermedades_zoonoticas");
+            $problemas_salud_mental = \App\Informes::riesgos_salud(Session::get('alias'), "problemas_salud_mental");
+            $riesgo_delgadez = \App\Informes::riesgos_salud(Session::get('alias'), "riesgo_delgadez");
+            $riesgo_muerte = \App\Informes::riesgos_salud(Session::get('alias'), "riesgo_muerte");
+            $riesgo_sobrepeso = \App\Informes::riesgos_salud(Session::get('alias'), "riesgo_sobrepeso");
+            $riesgo_talla_baja = \App\Informes::riesgos_salud(Session::get('alias'), "riesgo_talla_baja");
+            $riesgos_desnutricion_aguda =  \App\Informes::riesgos_salud(Session::get('alias'), "riesgos_desnutricion_aguda");
+            $riesgos_desnutricion_global =  \App\Informes::riesgos_salud(Session::get('alias'), "riesgos_desnutricion_global");
+            $salud_bucal =  \App\Informes::riesgos_salud(Session::get('alias'), "salud_bucal");
+            $transtornos_asociados_spa = \App\Informes::riesgos_salud(Session::get('alias'), "transtornos_asociados_spa");
+            $transtornos_degenartivos =  \App\Informes::riesgos_salud(Session::get('alias'), "transtornos_degenartivos");
+            $violencias =  \App\Informes::riesgos_salud(Session::get('alias'), "violencias");
+          
+            $respuesta = [
+                "alteraciones_transtornos_audicion" => $alteraciones_transtornos_audicion,
+                "alteraciones_transtornos_visuales" => $alteraciones_transtornos_visuales,
+                "cancer" => $cancer,
+                "consumo_spa" => $consumo_spa,
+                "enfermedad_cardiovascular" => $enfermedad_cardiovascular,
+                "enfermedades_infecciosas" => $enfermedades_infecciosas,
+                "enfermedades_respiratorias" => $enfermedades_respiratorias,
+                "enfermedades_zoonoticas" => $enfermedades_zoonoticas,
+                "problemas_salud_mental" => $problemas_salud_mental,
+                "riesgo_delgadez" => $riesgo_delgadez,
+                "riesgo_muerte" => $riesgo_muerte,
+                "riesgo_sobrepeso" => $riesgo_sobrepeso,
+                "riesgo_talla_baja" => $riesgo_talla_baja,
+                "riesgos_desnutricion_aguda" => $riesgos_desnutricion_aguda,
+                "riesgos_desnutricion_global" => $riesgos_desnutricion_global,
+                "salud_bucal" => $salud_bucal,
+                "transtornos_asociados_spa" => $transtornos_asociados_spa,
+                "transtornos_degenartivos" => $transtornos_degenartivos,
+                "violencias" => $violencias
+            ];
+
+            return response()->json($respuesta, 200);
+        }else {
+            return redirect("/index")->with("error", "Su sesion ha terminado");
+        }
+    }
+
 }

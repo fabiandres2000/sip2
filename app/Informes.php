@@ -2526,5 +2526,810 @@ class Informes extends Model
         return $respuesta;
     
     }
+
+    public static function riesgos_salud($alias, $riesgoSalud)
+    {
+
+        if($riesgoSalud == "alteraciones_transtornos_audicion"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "alteraciones_transtornos_audicion_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "alteraciones_transtornos_audicion_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "alteraciones_transtornos_audicion_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "alteraciones_transtornos_audicion_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "alteraciones_transtornos_audicion_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "alteraciones_transtornos_audicion_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "alteraciones_transtornos_audicion_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }
+        }
+
+        if($riesgoSalud == "alteraciones_transtornos_visuales"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "alteraciones_transtornos_visuales_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "alteraciones_transtornos_visuales_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "alteraciones_transtornos_visuales_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "alteraciones_transtornos_visuales_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "alteraciones_transtornos_visuales_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "alteraciones_transtornos_visuales_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "alteraciones_transtornos_visuales_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }
+        }
+
+        if($riesgoSalud == "cancer"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "cancer_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "cancer_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "cancer_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "cancer_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "cancer_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "cancer_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "cancer_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "consumo_spa"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "consumo_spa_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "consumo_spa_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "consumo_spa_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "consumo_spa_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "consumo_spa_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "consumo_spa_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "consumo_spa_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "enfermedad_cardiovascular"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "enfermedad_cardiovascular_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "enfermedad_cardiovascular_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "enfermedad_cardiovascular_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "enfermedad_cardiovascular_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "enfermedad_cardiovascular_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "enfermedad_cardiovascular_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "enfermedad_cardiovascular_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "enfermedades_infecciosas"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "enfermedades_infecciosas_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "enfermedades_infecciosas_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "enfermedades_infecciosas_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "enfermedades_infecciosas_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "enfermedades_infecciosas_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "enfermedades_infecciosas_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "enfermedades_infecciosas_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "enfermedades_respiratorias"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "enfermedades_respiratorias_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "enfermedades_respiratorias_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "enfermedades_respiratorias_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "enfermedades_respiratorias_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "enfermedades_respiratorias_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "enfermedades_respiratorias_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "enfermedades_respiratorias_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "enfermedades_zoonoticas"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "enfermedades_zoonoticas_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "enfermedades_zoonoticas_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "enfermedades_zoonoticas_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "enfermedades_zoonoticas_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "enfermedades_zoonoticas_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "enfermedades_zoonoticas_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "enfermedades_zoonoticas_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "problemas_salud_mental"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "problemas_salud_mental_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "problemas_salud_mental_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "problemas_salud_mental_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "problemas_salud_mental_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "problemas_salud_mental_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "problemas_salud_mental_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "problemas_salud_mental_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "riesgo_delgadez"){
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "riesgo_delgadez_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "riesgo_delgadez_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "riesgo_delgadez_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "riesgo_delgadez_R");
+
+            $array_completo = array();
+
+           
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+        }
+
+        if($riesgoSalud == "riesgo_muerte"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "riesgo_muerte_I");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "riesgo_muerte_I");
+           
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+   
+        }
+
+        if($riesgoSalud == "riesgo_sobrepeso"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "riesgo_sobrepeso_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "riesgo_sobrepeso_R");
+           
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+   
+        }
+
+        if($riesgoSalud == "riesgo_talla_baja"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "riesgo_talla_baja_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "riesgo_talla_baja_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "riesgo_talla_baja_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "riesgo_talla_baja_R");
+            
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+        }
+
+        if($riesgoSalud == "riesgos_desnutricion_aguda"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "riesgos_desnutricion_aguda_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "riesgos_desnutricion_aguda_R");
+           
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+   
+        }
+
+        if($riesgoSalud == "riesgos_desnutricion_global"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "riesgos_desnutricion_global_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "riesgos_desnutricion_global_R");
+           
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+   
+        }
+
+        if($riesgoSalud == "salud_bucal"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "salud_bucal_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "salud_bucal_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "salud_bucal_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "salud_bucal_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "salud_bucal_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "salud_bucal_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "salud_bucal_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "transtornos_asociados_spa"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "transtornos_asociados_spa_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "transtornos_asociados_spa_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "transtornos_asociados_spa_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "transtornos_asociados_spa_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "transtornos_asociados_spa_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "transtornos_asociados_spa_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "transtornos_asociados_spa_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "transtornos_degenartivos"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "transtornos_degenartivos_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "transtornos_degenartivos_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "transtornos_degenartivos_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "transtornos_degenartivos_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "transtornos_degenartivos_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "transtornos_degenartivos_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "transtornos_degenartivos_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        if($riesgoSalud == "violencias"){
+            $menores_1_a = self:: riesgo_salud_por_edad($alias, "riesgos_salud_men1", "violencias_R");
+            $de1_a_5 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de1a5", "violencias_R");
+            $de_6_a_11 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de6a11", "violencias_R");
+            $de_12_a_17 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de12a17", "violencias_R");
+            $de_18_a_28 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de18a28", "violencias_R");
+            $de_29_a_59 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de29a59", "violencias_R");
+            $de_60 = self:: riesgo_salud_por_edad($alias, "riesgos_salud_de60", "violencias_R");
+
+            $array_completo = array();
+
+            foreach ($menores_1_a as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de1_a_5 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_6_a_11 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_12_a_17 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_18_a_28 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_29_a_59 as $item) {
+                array_push($array_completo, $item);
+            }
+
+            foreach ($de_60 as $item) {
+                array_push($array_completo, $item);
+            }     
+        }
+
+        $inexistente = 0;
+        $bajo = 0;
+        $moderado = 0;
+        $alto = 0;
+
+        $array_alto = array();
+        foreach ($array_completo as $key) {
+            if ($key->puntaje_riesgo == 1 || $key->puntaje_riesgo == 0) {
+                $inexistente += 1;
+            } else {
+                if ($key->puntaje_riesgo == 2) {
+                    $bajo += 1;
+                } else {
+                    if ($key->puntaje_riesgo == 3) {
+                        $moderado += 1;
+                    } else {
+                        $alto += 1;
+                        array_push($array_alto, $key);
+                    }
+                }
+            }
+        } 
+        
+        $masculinos_alto = 0;
+        $femeninos_alto = 0;
+        $porcentaje_masculinos_alto = 0;
+        $porcentaje_femeninos_alto = 0;
+
+        $zona_urbana = 0;
+        $porcentaje_zona_urbana = 0;
+        $zona_rural = 0;
+        $porcentaje_zona_rural = 0;
+
+        $de0a1 = 0;
+        $de1a5 = 0;
+        $de6a11 = 0;
+        $de12a17 = 0;
+        $de18a28 = 0;
+        $de29a59 = 0;
+        $mayores60 = 0;
+
+        foreach ($array_alto as $key) {
+            if ($key->genero == "MASCULINO") {
+                $masculinos_alto += 1;
+            } else {
+                $femeninos_alto += 1;
+            }
+
+            if ($key->id_zona == 1) {
+                $zona_urbana += 1;
+            } else {
+                $zona_rural += 1;
+            }
+
+            if($key->edad == 0){
+                $de0a1 += 1;
+            }elseif ($key->edad >= 1 && $key->edad <= 5) {
+                $de1a5 += 1;
+            }elseif ($key->edad >= 6 && $key->edad <= 11) {
+                $de6a11 += 1;
+            }elseif ($key->edad >= 12 && $key->edad <= 17) {
+                $de12a17 += 1;
+            }elseif ($key->edad >= 18 && $key->edad <= 28) {
+                $de18a28 += 1;
+            }elseif ($key->edad >= 29 && $key->edad <= 59) {
+                $de29a59 += 1;
+            }elseif ($key->edad >= 60) {
+                $mayores60 += 1;
+            }
+        } 
+
+        if(count($array_alto) != 0){
+            $porcentaje_femeninos_alto = round(($femeninos_alto / count($array_alto)) * 100, 2);
+            $porcentaje_masculinos_alto = round(($masculinos_alto / count($array_alto)) * 100, 2);
+
+            $porcentaje_zona_urbana = round(($zona_urbana / count($array_alto)) * 100, 2);
+            $porcentaje_zona_rural = round(($zona_rural / count($array_alto)) * 100, 2);
+        }
+
+        $data = [
+            'alto' => $alto,
+            'moderado' => $moderado,
+            'bajo' => $bajo,
+            'inexistente' => $inexistente,
+            'array_alto' => $array_alto,
+            'numero_personas' => count($array_completo),
+            'porcentaje_femeninos_alto' => $porcentaje_femeninos_alto,
+            'porcentaje_masculinos_alto' => $porcentaje_masculinos_alto,
+            'porcentaje_zona_urbana' => $porcentaje_femeninos_alto,
+            'porcentaje_zona_rural' => $porcentaje_masculinos_alto,
+            'de0a1' => $de0a1,
+            'de1a5' => $de1a5,
+            'de6a11' => $de6a11,
+            'de12a17' => $de12a17,
+            'de18a28' => $de18a28,
+            'de29a59' => $de29a59,
+            'mayores60' => $mayores60,
+        ];
+
+        return $data;
+    }
+
+    public static function riesgo_salud_por_edad($alias, $rango, $riesgo){
+        if($rango == "riesgos_salud_men1"  || $rango == "riesgos_salud_de1a5" || $rango == "riesgos_salud_de6a11" ){
+            $consultai = DB::connection('mysql')->table($alias.'.'.$rango)
+            ->join($alias.'.integrantes',$alias.'.integrantes.id',$alias.'.'.$rango.'.id_inte') 
+            ->join($alias . '.hogar', 'hogar.id', 'integrantes.id_hogar')
+            ->join($alias . ".dptos", "dptos.codigo", "hogar.id_dpto")
+            ->leftJoin($alias . ".barrios", "barrios.id", "hogar.id_barrio")
+            ->join($alias . '.muni', function ($join) {
+                $join->on('muni.coddep', '=', 'dptos.codigo');
+                $join->on('muni.codmun', '=', 'hogar.id_mun');
+            })
+            ->leftJoin($alias . ".corregimientos", "corregimientos.id", "hogar.id_corre")
+            ->where($rango.'.estado', 'Activo')
+            ->select("integrantes.id","integrantes.identificacion","integrantes.sexo AS genero", $rango.'.'.$riesgo.' as puntaje_riesgo', 'hogar.id_zona')        
+            ->selectRaw("CONCAT_WS(' ',integrantes.pape,integrantes.sape,integrantes.pnom,integrantes.snom) as nombres")
+            ->selectRaw("CONCAT_WS('-',dptos.descripcion,muni.descripcion,corregimientos.descripcion,hogar.direccion) as localizacion")
+            ->selectRaw("TIMESTAMPDIFF(YEAR, fecha_nac, hogar.fecha) AS edad");
+
+            return $consultai->get();
+        }else{
+
+            $consultai = DB::connection('mysql')->table($alias.'.'.$rango)
+            ->join($alias.'.integrantes',$alias.'.integrantes.id',$alias.'.'.$rango.'.id_inte') 
+            ->join($alias . '.hogar', 'hogar.id', 'integrantes.id_hogar')
+            ->join($alias . ".dptos", "dptos.codigo", "hogar.id_dpto")
+            ->leftJoin($alias . ".barrios", "barrios.id", "hogar.id_barrio")
+            ->join($alias . '.muni', function ($join) {
+                $join->on('muni.coddep', '=', 'dptos.codigo');
+                $join->on('muni.codmun', '=', 'hogar.id_mun');
+            })
+            ->leftJoin($alias . ".corregimientos", "corregimientos.id", "hogar.id_corre")
+            ->where($rango.'.estado', 'Activo')
+            ->where($rango.'.opci', 'INTE')
+            ->select("integrantes.id","integrantes.identificacion","integrantes.sexo AS genero", $rango.'.'.$riesgo.' as puntaje_riesgo', 'hogar.id_zona')        
+            ->selectRaw("CONCAT_WS(' ',integrantes.pape,integrantes.sape,integrantes.pnom,integrantes.snom) as nombres")
+            ->selectRaw("CONCAT_WS('-',dptos.descripcion,muni.descripcion,corregimientos.descripcion,hogar.direccion) as localizacion")
+            ->selectRaw("TIMESTAMPDIFF(YEAR, fecha_nac, hogar.fecha) AS edad");
+
+            $consulta = DB::connection('mysql')->table($alias.'.'.$rango)
+            ->join($alias.'.caracterizacion',$alias.'.caracterizacion.id',$alias.'.'.$rango.'.id_inte') 
+            ->join($alias . '.hogar', 'hogar.id', 'caracterizacion.id_hogar')
+            ->join($alias . ".dptos", "dptos.codigo", "hogar.id_dpto")
+            ->leftJoin($alias . ".barrios", "barrios.id", "hogar.id_barrio")
+            ->join($alias . '.muni', function ($join) {
+                $join->on('muni.coddep', '=', 'dptos.codigo');
+                $join->on('muni.codmun', '=', 'hogar.id_mun');
+            })
+            ->leftJoin($alias . ".corregimientos", "corregimientos.id", "hogar.id_corre")
+            ->where($rango.'.estado', 'Activo')
+            ->where($rango.'.opci', 'JEFE')
+            ->select("caracterizacion.id","caracterizacion.identificacion","caracterizacion.sexo AS genero", $rango.'.'.$riesgo.' as puntaje_riesgo', 'hogar.id_zona')        
+            ->selectRaw("CONCAT_WS(' ',caracterizacion.pape,caracterizacion.sape,caracterizacion.pnom,caracterizacion.snom) as nombres")
+            ->selectRaw("CONCAT_WS('-',dptos.descripcion,muni.descripcion,corregimientos.descripcion,hogar.direccion) as localizacion")
+            ->selectRaw("TIMESTAMPDIFF(YEAR, fecha_nacimiento, hogar.fecha) AS edad");
+
+            $consulta->union($consultai);
+
+            return $consulta->get();
+        }    
+    }
     
 }

@@ -7,7 +7,7 @@
                         <Salud></Salud>
                     </b-tab>
                     <b-tab title="Informe Riesgos de Salud">
-                    <h4>Riesgos ...</h4>
+                        <Riesgos></Riesgos>
                     </b-tab>
                 </b-tabs>
             </b-card>
@@ -18,10 +18,12 @@
 <script>
 
 import Salud from "./salud.vue"
+import Riesgos from "./riesgoSalud.vue"
 
 export default {
     components: {
         Salud,
+        Riesgos
     },  
 }
 </script>

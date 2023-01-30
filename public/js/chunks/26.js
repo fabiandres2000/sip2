@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[26],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -13,7 +13,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/reportes */ "./resources/js/Servicios/reportes.js");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../store */ "./resources/js/store.js");
-/* harmony import */ var _Servicios_enfermedadesCro_servicios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Servicios/enfermedadesCro_servicios */ "./resources/js/Servicios/enfermedadesCro_servicios.js");
+/* harmony import */ var _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Servicios/enfermedadesInf_servicios */ "./resources/js/Servicios/enfermedadesInf_servicios.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var datatables_net__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! datatables.net */ "./node_modules/datatables.net/js/jquery.dataTables.js");
@@ -240,7 +240,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _Servicios_enfermedadesCro_servicios__WEBPACK_IMPORTED_MODULE_3__["combo"]().then(function (respuesta) {
+                return _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_3__["combo"]().then(function (respuesta) {
                   _this.enfermedades = respuesta.data.enfermedades;
                 });
 
@@ -269,7 +269,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   datos: _this2.datos
                 };
                 _context2.next = 3;
-                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["inicialesCronicas"](parametros).then(function (respuesta) {
+                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["inicialesInfecciosas"](parametros).then(function (respuesta) {
                   _this2.integrantes = respuesta.data.integrantes;
 
                   _this2.crearDataTable();
@@ -284,9 +284,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     crearDataTable: function crearDataTable() {
-      jquery__WEBPACK_IMPORTED_MODULE_4___default()("#cronicas_table").dataTable().fnDestroy();
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()("#infecciosas_table").dataTable().fnDestroy();
       setTimeout(function () {
-        jquery__WEBPACK_IMPORTED_MODULE_4___default()('#cronicas_table').DataTable({
+        jquery__WEBPACK_IMPORTED_MODULE_4___default()('#infecciosas_table').DataTable({
           "lengthChange": true,
           "ordering": false,
           "bFilter": false,
@@ -325,8 +325,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 parametros = {
                   datos: _this3.integrantes,
-                  titulo: "Reporte Enfermedades Cronias",
-                  tipo: "Crónicas"
+                  titulo: "Reporte Enfermedades Infecciosas",
+                  tipo: "Infecciosas"
                 };
                 _context3.next = 3;
                 return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["exportarEnfermedades"](parametros).then(function (respuesta) {
@@ -346,7 +346,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     downloadItem: function downloadItem(url) {
       var link = document.createElement('a');
       link.href = url;
-      link.download = "Reporte Enfermedades Cronias.xlsx";
+      link.download = "Reporte Enfermedades Infecciosas.xlsx";
       link.click();
       URL.revokeObjectURL(link.href);
     }
@@ -355,10 +355,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -374,15 +374,15 @@ exports.push([module.i, "\n.table_data {\n    width: 100%;\n    font-size: 17px;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&":
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -404,10 +404,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2&":
-/*!****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2& ***!
-  \****************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -585,7 +585,7 @@ var render = function() {
                         "table",
                         {
                           staticClass: "table table-sm table-hover",
-                          attrs: { id: "cronicas_table" }
+                          attrs: { id: "infecciosas_table" }
                         },
                         [
                           _vm._m(1),
@@ -833,7 +833,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "kt-portlet__head-label" }, [
       _c("h3", { staticClass: "kt-portlet__head-title" }, [
         _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
-          _vm._v("REPORTE ENFERMEDADES CRÓNICAS")
+          _vm._v("REPORTE ENFERMEDADES INFECCIOSAS")
         ])
       ])
     ])
@@ -879,9 +879,9 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./resources/js/Servicios/enfermedadesCro_servicios.js":
+/***/ "./resources/js/Servicios/enfermedadesInf_servicios.js":
 /*!*************************************************************!*\
-  !*** ./resources/js/Servicios/enfermedadesCro_servicios.js ***!
+  !*** ./resources/js/Servicios/enfermedadesInf_servicios.js ***!
   \*************************************************************/
 /*! exports provided: listar, guardar, eliminar, combo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -895,16 +895,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
 function listar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesCro', $data);
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf', $data);
 }
 function guardar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesCro/guardar', $data);
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf/guardar', $data);
 }
 function eliminar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesCro/eliminar', $data);
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf/eliminar', $data);
 }
-function combo() {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/enfermedadesCro/combo');
+function combo($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/enfermedadesInf/combo');
 }
 
 /***/ }),
@@ -913,7 +913,7 @@ function combo() {
 /*!********************************************!*\
   !*** ./resources/js/Servicios/reportes.js ***!
   \********************************************/
-/*! exports provided: gestantes, exportarGestantes, nutricional, exportarNutricional, inicialesCronicas, cronicasPDF, inicialesMigrantes, migrantesPDF, personas_discapacitadas, adulto_mayor, exportaAdultoMayorExcel, exportaDiscapacitadosExcel, inicialesInfecciosas, exportarEnfermedades, descolarizados, exportarDescolarizados, bajo_nivel_socioeconomico, exportarSocioeconomico, riesgo_salud */
+/*! exports provided: gestantes, exportarGestantes, nutricional, exportarNutricional, inicialesCronicas, cronicasPDF, inicialesMigrantes, migrantesPDF, personas_discapacitadas, adulto_mayor, exportaAdultoMayorExcel, exportaDiscapacitadosExcel, inicialesInfecciosas, exportarEnfermedades, descolarizados, exportarDescolarizados, bajo_nivel_socioeconomico, exportarSocioeconomico, riesgo_salud, exportarRiesgosSalud */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -937,6 +937,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bajo_nivel_socioeconomico", function() { return bajo_nivel_socioeconomico; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportarSocioeconomico", function() { return exportarSocioeconomico; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "riesgo_salud", function() { return riesgo_salud; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportarRiesgosSalud", function() { return exportarRiesgosSalud; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
 function gestantes($data) {
@@ -996,21 +997,24 @@ function exportarSocioeconomico($data) {
 function riesgo_salud($data) {
   return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/reportes/riesgos-salud', $data);
 }
+function exportarRiesgosSalud($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/reportes/exportar-riesgos-salud', $data);
+}
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue":
-/*!***************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue ***!
-  \***************************************************************/
+/***/ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue ***!
+  \******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EnfermedadesCronicas.vue?vue&type=template&id=06e135a2& */ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2&");
-/* harmony import */ var _EnfermedadesCronicas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EnfermedadesCronicas.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636& */ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636&");
+/* harmony import */ var _EnfermedadesInfecciosas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EnfermedadesInfecciosas.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -1021,9 +1025,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _EnfermedadesCronicas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _EnfermedadesInfecciosas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -1033,54 +1037,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Reportes/EnfermedadesCronicas.vue"
+component.options.__file = "resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesCronicas.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInfecciosas.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&":
-/*!************************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& ***!
-  \************************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2&":
-/*!**********************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2& ***!
-  \**********************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636& ***!
+  \*************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesCronicas.vue?vue&type=template&id=06e135a2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesCronicas.vue?vue&type=template&id=06e135a2&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/EnfermedadesInfecciosas.vue?vue&type=template&id=422a8636&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesCronicas_vue_vue_type_template_id_06e135a2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInfecciosas_vue_vue_type_template_id_422a8636___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

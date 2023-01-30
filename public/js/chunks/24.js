@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[24],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -127,6 +127,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -134,20 +176,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    this.bajo_nivel_socioeconomico();
+    this.iniciales();
   },
   data: function data() {
     return {
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
       ruta: "",
+      datos: {
+        rangoEdad: "Todos"
+      },
       integrantes: []
     };
   },
   methods: {
     filtrar: function filtrar() {
-      this.bajo_nivel_socioeconomico();
+      this.iniciales();
     },
-    bajo_nivel_socioeconomico: function bajo_nivel_socioeconomico() {
+    iniciales: function iniciales() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -157,10 +202,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 parametros = {
-                  _token: _this.csrf
+                  _token: _this.csrf,
+                  datos: _this.datos
                 };
                 _context.next = 3;
-                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["bajo_nivel_socioeconomico"](parametros).then(function (respuesta) {
+                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["descolarizados"](parametros).then(function (respuesta) {
                   _this.integrantes = respuesta.data.integrantes;
 
                   _this.crearDataTable();
@@ -175,9 +221,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     crearDataTable: function crearDataTable() {
-      jquery__WEBPACK_IMPORTED_MODULE_4___default()("#bajo_nivel_table").dataTable().fnDestroy();
+      jquery__WEBPACK_IMPORTED_MODULE_4___default()("#descolarizados_table").dataTable().fnDestroy();
       setTimeout(function () {
-        jquery__WEBPACK_IMPORTED_MODULE_4___default()('#bajo_nivel_table').DataTable({
+        jquery__WEBPACK_IMPORTED_MODULE_4___default()('#descolarizados_table').DataTable({
           "lengthChange": true,
           "ordering": false,
           "bFilter": false,
@@ -216,10 +262,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 parametros = {
                   datos: _this2.integrantes,
-                  titulo: "Reporte Población en Bajo Nivel Socioeconomico"
+                  titulo: "Reporte Personas Descolarizadas",
+                  tipo: "Crónicas"
                 };
                 _context2.next = 3;
-                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["exportarSocioeconomico"](parametros).then(function (respuesta) {
+                return _Servicios_reportes__WEBPACK_IMPORTED_MODULE_1__["exportarDescolarizados"](parametros).then(function (respuesta) {
                   var href = _store__WEBPACK_IMPORTED_MODULE_2__["default"].state.apiURL + respuesta.data.nombre;
 
                   _this2.downloadItem(href);
@@ -236,7 +283,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     downloadItem: function downloadItem(url) {
       var link = document.createElement('a');
       link.href = url;
-      link.download = "Poblacion en Bajo Nivel Socioeconomico.xlsx";
+      link.download = "Reporte Personas Descolarizadas.xlsx";
       link.click();
       URL.revokeObjectURL(link.href);
     }
@@ -245,10 +292,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -264,15 +311,15 @@ exports.push([module.i, "\n.table_data {\n    width: 100%;\n    font-size: 17px;
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Descolarizados.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -294,10 +341,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce&":
-/*!*******************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce& ***!
-  \*******************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979& ***!
+  \**********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -329,6 +376,25 @@ var render = function() {
                   _c(
                     "button",
                     {
+                      staticClass: "btn btn-brand",
+                      attrs: {
+                        type: "button",
+                        "data-skin": "dark",
+                        "data-toggle": "kt-tooltip",
+                        "data-placement": "top",
+                        title: "Filtrar"
+                      },
+                      on: { click: _vm.filtrar }
+                    },
+                    [
+                      _c("i", { staticClass: "fa fa-search" }),
+                      _vm._v("Filtrar\n                            ")
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
                       staticClass: "btn btn-success",
                       attrs: {
                         type: "button",
@@ -353,13 +419,72 @@ var render = function() {
             _c("div", { staticClass: "kt-section" }, [
               _c("div", { staticClass: "kt-section__content" }, [
                 _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-md-3 col-lg-3" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [_vm._v("Grupo de edades:")]),
+                        _vm._v(" "),
+                        _c(
+                          "b-form-select",
+                          {
+                            model: {
+                              value: _vm.datos.rangoEdad,
+                              callback: function($$v) {
+                                _vm.$set(_vm.datos, "rangoEdad", $$v)
+                              },
+                              expression: "datos.rangoEdad"
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "Todos" } }, [
+                              _vm._v("Todos")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "0-" } }, [
+                              _vm._v("Menores de 1")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r1-5" } }, [
+                              _vm._v("De 1 a 5 años")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r6-11" } }, [
+                              _vm._v("De 6 a 11 años")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r12-17" } }, [
+                              _vm._v("De 12 a 17 años")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r18-28" } }, [
+                              _vm._v("De 18 a 28 años")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r29-59" } }, [
+                              _vm._v("De 29 a 59")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "r60+" } }, [
+                              _vm._v("Mayores de 60")
+                            ])
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-md-12" }, [
                     _c("div", { staticClass: "table-responsive" }, [
                       _c(
                         "table",
                         {
                           staticClass: "table table-sm table-hover",
-                          attrs: { id: "bajo_nivel_table" }
+                          attrs: { id: "descolarizados_table" }
                         },
                         [
                           _vm._m(1),
@@ -493,26 +618,7 @@ var render = function() {
                                   [
                                     _vm._v(
                                       "\n                                                    " +
-                                        _vm._s(item.riesgo_hogar.valor) +
-                                        "\n                                                "
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "td",
-                                  {
-                                    staticStyle: {
-                                      "font-weight": "normal",
-                                      "vertical-align": "middle",
-                                      "text-align": "left",
-                                      "text-transform": "capitalize"
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                                    " +
-                                        _vm._s(item.riesgo_vivienda.valor) +
+                                        _vm._s(item.nivel_escolaridad) +
                                         "\n                                                "
                                     )
                                   ]
@@ -561,7 +667,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "kt-portlet__head-label" }, [
       _c("h3", { staticClass: "kt-portlet__head-title" }, [
         _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
-          _vm._v("POBLACIÓN EN BAJO NIVEL SOCIOECONOMICO")
+          _vm._v("REPORTE DE PERSONAS DESCOLARIZADAS")
         ])
       ])
     ])
@@ -587,9 +693,7 @@ var staticRenderFns = [
           _vm._v(" "),
           _c("th", [_vm._v("Genero")]),
           _vm._v(" "),
-          _c("th", [_vm._v("Nivel Hohar")]),
-          _vm._v(" "),
-          _c("th", [_vm._v("Nivel Vivienda")]),
+          _c("th", [_vm._v("Nivel de Escolaridad")]),
           _vm._v(" "),
           _c("th", [_vm._v("Ocupación")])
         ])
@@ -637,7 +741,7 @@ function combo() {
 /*!********************************************!*\
   !*** ./resources/js/Servicios/reportes.js ***!
   \********************************************/
-/*! exports provided: gestantes, exportarGestantes, nutricional, exportarNutricional, inicialesCronicas, cronicasPDF, inicialesMigrantes, migrantesPDF, personas_discapacitadas, adulto_mayor, exportaAdultoMayorExcel, exportaDiscapacitadosExcel, inicialesInfecciosas, exportarEnfermedades, descolarizados, exportarDescolarizados, bajo_nivel_socioeconomico, exportarSocioeconomico, riesgo_salud */
+/*! exports provided: gestantes, exportarGestantes, nutricional, exportarNutricional, inicialesCronicas, cronicasPDF, inicialesMigrantes, migrantesPDF, personas_discapacitadas, adulto_mayor, exportaAdultoMayorExcel, exportaDiscapacitadosExcel, inicialesInfecciosas, exportarEnfermedades, descolarizados, exportarDescolarizados, bajo_nivel_socioeconomico, exportarSocioeconomico, riesgo_salud, exportarRiesgosSalud */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -661,6 +765,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bajo_nivel_socioeconomico", function() { return bajo_nivel_socioeconomico; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportarSocioeconomico", function() { return exportarSocioeconomico; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "riesgo_salud", function() { return riesgo_salud; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportarRiesgosSalud", function() { return exportarRiesgosSalud; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
 function gestantes($data) {
@@ -720,21 +825,24 @@ function exportarSocioeconomico($data) {
 function riesgo_salud($data) {
   return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/reportes/riesgos-salud', $data);
 }
+function exportarRiesgosSalud($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/reportes/exportar-riesgos-salud', $data);
+}
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue":
-/*!******************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue ***!
-  \******************************************************************/
+/***/ "./resources/js/Vistas/Reportes/Descolarizados.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/Descolarizados.vue ***!
+  \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce& */ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce&");
-/* harmony import */ var _BajoNivelSocioeconomico_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BajoNivelSocioeconomico.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Descolarizados.vue?vue&type=template&id=70991979& */ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979&");
+/* harmony import */ var _Descolarizados_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Descolarizados.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Descolarizados.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -745,9 +853,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _BajoNivelSocioeconomico_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Descolarizados_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -757,54 +865,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue"
+component.options.__file = "resources/js/Vistas/Reportes/Descolarizados.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./BajoNivelSocioeconomico.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Descolarizados.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&":
-/*!***************************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& ***!
-  \***************************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Descolarizados.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce&":
-/*!*************************************************************************************************!*\
-  !*** ./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce& ***!
-  \*************************************************************************************************/
+/***/ "./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979& ***!
+  \****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/BajoNivelSocioeconomico.vue?vue&type=template&id=b1a062ce&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Descolarizados.vue?vue&type=template&id=70991979& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Reportes/Descolarizados.vue?vue&type=template&id=70991979&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_BajoNivelSocioeconomico_vue_vue_type_template_id_b1a062ce___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Descolarizados_vue_vue_type_template_id_70991979___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

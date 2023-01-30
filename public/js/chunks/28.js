@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[28],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -19,73 +19,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-loading-overlay/dist/vue-loading.css */ "./node_modules/vue-loading-overlay/dist/vue-loading.css");
 /* harmony import */ var vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay_dist_vue_loading_css__WEBPACK_IMPORTED_MODULE_5__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3710,19 +3643,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.hoy = moment();
     this.IDHOGAR = this.$route.params.IDHOGAR;
-    this.IDUNIDAD = this.$route.params.id;
     this.datos.id_hogar = this.IDHOGAR;
 
     if (this.IDHOGAR == null) {
       this.$router.push("/gestion");
     } else {
-      this.nuevo(this.IDHOGAR, this.IDUNIDAD);
+      this.nuevo(this.IDHOGAR);
     }
   },
   data: function data() {
     return {
       IDHOGAR: 0,
-      IDUNIDAD: 0,
       dpto_options: [],
       muni_options: {},
       corregi_options: {},
@@ -3762,7 +3693,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id_barrio: "",
         direccion: "SIN DIRECCION",
         unidad_area: "",
-        unidad_distancia: ""
+        unidad_distancia: "",
+        unidad_producion_destinada: ""
       },
       datosCulAgri: {
         id: 0,
@@ -3804,7 +3736,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         unidad_producion_destinada: ""
       },
       cultivos_agricolas: [],
-      cuag: [],
       bandeGuaEdiCA: true,
       datosExpPec: {
         id: 0,
@@ -4307,7 +4238,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           texto: "Cana"
         }, {
           value: 3,
-          texto: "Coco"
+          texto: "coco"
         }, {
           value: 4,
           texto: "Aguacate"
@@ -4601,7 +4532,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     nuevo: function () {
-      var _nuevo = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(id_hogar, id) {
+      var _nuevo = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(id_hogar) {
         var _this = this;
 
         var parametros;
@@ -4611,69 +4542,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 parametros = {
                   _token: this.csrf,
-                  id_hogar: id_hogar,
-                  id: id
+                  id_hogar: id_hogar
                 };
                 _context.prev = 1;
                 _context.next = 4;
-                return _Servicios_unidades_servicios__WEBPACK_IMPORTED_MODULE_1__["editar"](parametros).then(function (respuesta) {
+                return _Servicios_unidades_servicios__WEBPACK_IMPORTED_MODULE_1__["nuevo"](parametros).then(function (respuesta) {
                   _this.dpto_options = respuesta.data.arrayDpto;
                   _this.muni_options = respuesta.data.arrayMuni;
                   _this.corregi_options = respuesta.data.arrayCorregi;
                   _this.vereda_options = respuesta.data.arrayVeredas;
                   _this.escolaridad_options = respuesta.data.arrayEscolaridad;
                   _this.CODIGOGENE = respuesta.data.codigo;
-                  _this.datos.id_dpto = respuesta.data.unidades.id_dpto;
-                  _this.datos.id_mun = respuesta.data.unidades.id_mun.padStart(3, 0);
-
-                  _this.cambiarCombo("muni");
-
-                  _this.datos.id_corre = "" + respuesta.data.unidades.id_corre;
-
-                  if (_this.datos.id_corre !== "0") {
-                    _this.cambiarCombo("corregi");
-                  }
-
-                  _this.datos.id_vereda = "" + respuesta.data.unidades.id_vereda;
-                  _this.datos.id_barrio = "" + respuesta.data.unidades.id_barrio;
-                  _this.datos.id = "" + respuesta.data.unidades.id;
-                  _this.datos.id_hogar = "" + respuesta.data.unidades.id_hogar;
-                  _this.datos.direccion = "SIN DIRECCION";
-                  _this.datos.estado = "" + respuesta.data.unidades.estado;
-                  _this.datos.id_compania = "" + respuesta.data.unidades.id_compania;
-                  _this.datos.fecha = "" + respuesta.data.unidades.fecha;
-                  _this.datos.usuario_crear = "" + respuesta.data.unidades.usuario_crear;
-                  _this.datos.fecha_editar = "" + respuesta.data.unidades.fecha_editar;
-                  _this.datos.usuario_editar = "" + respuesta.data.unidades.usuario_editar;
-                  _this.datos.nom_productor = "" + respuesta.data.unidades.nom_productor;
-                  _this.datos.nivel_educativo = "" + respuesta.data.unidades.nivel_educativo;
-                  _this.datos.tipo_id = "" + respuesta.data.unidades.tipo_id;
-                  _this.datos.identificacion = "" + respuesta.data.unidades.identificacion;
-                  _this.datos.nom_finca = "" + respuesta.data.unidades.nom_finca;
-                  _this.datos.hogares_finca = "" + respuesta.data.unidades.hogares_finca;
-                  _this.datos.linea_productiva = JSON.parse(respuesta.data.unidades.linea_productiva);
-                  _this.datos.area_total_finca = "" + respuesta.data.unidades.area_total_finca;
-                  _this.datos.distancia_finca = "" + respuesta.data.unidades.distancia_finca;
-                  _this.datos.tenencia_propiedad = "" + respuesta.data.unidades.tenencia_propiedad;
-                  _this.datos.atiende_entrevista = "" + respuesta.data.unidades.atiende_entrevista;
-                  _this.datos.credito_produccion = "" + respuesta.data.unidades.credito_produccion;
-
-                  _this.mostrarOtro("CP");
-
-                  _this.datos.fuentes_prestamo = "" + respuesta.data.unidades.fuentes_prestamo;
-                  _this.datos.cual_fuente = "" + respuesta.data.unidades.cual_fuente;
-                  _this.datos.vias_acceso = respuesta.data.unidades.vias_acceso == null ? "" : respuesta.data.unidades.vias_acceso;
-                  _this.datos.tipos_vias_acceso = respuesta.data.unidades.tipos_vias_acceso == null ? "" : respuesta.data.unidades.tipos_vias_acceso;
-                  _this.datos.unidad_area = "" + respuesta.data.unidades.unidad_area;
-                  _this.datos.unidad_distancia = "" + respuesta.data.unidades.unidad_distancia;
-                  _this.herramientasData = respuesta.data.herramientas;
-                  _this.utensiliosData = respuesta.data.utensilios;
-                  _this.maquinasData = respuesta.data.maquinas;
-                  _this.instalacionesData = respuesta.data.instalaciones;
-                  _this.mediosData = respuesta.data.medios;
-                  _this.cultivos_agricolas = respuesta.data.cultivos_agricolas;
-                  _this.cultivos_forestales = respuesta.data.cultivos_forestales;
-                  _this.explotaciones_pecuarias = respuesta.data.explotaciones_pecuarias;
                 });
 
               case 4:
@@ -4703,7 +4582,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee, this, [[1, 6]]);
       }));
 
-      function nuevo(_x2, _x3) {
+      function nuevo(_x2) {
         return _nuevo.apply(this, arguments);
       }
 
@@ -4877,7 +4756,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, this, [[6, 11], [25, 30], [45, 50]]);
       }));
 
-      function cambiarCombo(_x4) {
+      function cambiarCombo(_x3) {
         return _cambiarCombo.apply(this, arguments);
       }
 
@@ -5079,11 +4958,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   maquinas: this.maquinasData,
                   instalaciones: this.instalacionesData,
                   medios: this.mediosData,
+                  CODIGOGENE: this.CODIGOGENE,
                   cultivos_agricolas: this.cultivos_agricolas,
                   explotaciones_pecuarias: this.explotaciones_pecuarias,
                   cultivos_forestales: this.cultivos_forestales,
-                  opcion: "editar",
-                  id: this.IDUNIDAD
+                  opcion: "guardar"
                 };
                 this.valG = false;
                 _context3.prev = 5;
@@ -5661,13 +5540,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }
     },
-    eliminarItemHerramientas: function eliminarItemHerramientas(item, index) {
-      if (item.id !== 0) {
-        this.herramientasData[index].estado = "Inactivo";
-        this.herramientasData.splice(index, 1, this.herramientasData[index]);
-      } else {
-        this.herramientasData.splice(index, 1);
-      }
+    eliminarItemHerramientas: function eliminarItemHerramientas(index) {
+      this.herramientasData.splice(index, 1);
     },
     agregarHerramienta: function agregarHerramienta() {
       if (this.herramienta === "") {
@@ -5715,13 +5589,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.herramienta1 = "";
       this.cuantasHerramienta = "";
     },
-    eliminarItemUtensilios: function eliminarItemUtensilios(item, index) {
-      if (item.id !== 0) {
-        this.utensiliosData[index].estado = "Inactivo";
-        this.utensiliosData.splice(index, 1, this.utensiliosData[index]);
-      } else {
-        this.utensiliosData.splice(index, 1);
-      }
+    eliminarItemUtensilios: function eliminarItemUtensilios(index) {
+      this.utensiliosData.splice(index, 1);
     },
     agregarUtensilio: function agregarUtensilio() {
       if (this.utensilio === "") {
@@ -5772,13 +5641,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     isNumeric: function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
     },
-    eliminarItemMaquinas: function eliminarItemMaquinas(item, index) {
-      if (item.id !== 0) {
-        this.maquinasData[index].estado = "Inactivo";
-        this.maquinasData.splice(index, 1, this.maquinasData[index]);
-      } else {
-        this.maquinasData.splice(index, 1);
-      }
+    eliminarItemMaquinas: function eliminarItemMaquinas(index) {
+      this.maquinasData.splice(index, 1);
     },
     agregarMaquina: function agregarMaquina() {
       if (this.maquina === "") {
@@ -5826,13 +5690,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.maquina1 = "";
       this.cuantasMaquina = "";
     },
-    eliminarItemInstalacion: function eliminarItemInstalacion(item, index) {
-      if (item.id !== 0) {
-        this.instalacionesData[index].estado = "Inactivo";
-        this.instalacionesData.splice(index, 1, this.instalacionesData[index]);
-      } else {
-        this.instalacionesData.splice(index, 1);
-      }
+    eliminarItemInstalacion: function eliminarItemInstalacion(index) {
+      this.instalacionesData.splice(index, 1);
     },
     agregarInstalacion: function agregarInstalacion() {
       if (this.instalacion === "") {
@@ -5880,13 +5739,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.instalacion1 = "";
       this.cuantasInstalacion = "";
     },
-    eliminarItemMedio: function eliminarItemMedio(item, index) {
-      if (item.id !== 0) {
-        this.mediosData[index].estado = "Inactivo";
-        this.mediosData.splice(index, 1, this.mediosData[index]);
-      } else {
-        this.mediosData.splice(index, 1);
-      }
+    eliminarItemMedio: function eliminarItemMedio(index) {
+      this.mediosData.splice(index, 1);
     },
     agregarMedio: function agregarMedio() {
       if (this.medio === "") {
@@ -6928,7 +6782,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
       this.explotaciones_pecuarias[this.indiceEditarEP].estado = "Inactivo";
-      this.explotaciones_pecuarias.splice(this.indiceEditarEP, 1, this.explotaciones_pecuarias[this.indiceEditarEP]); //INACTIVAR LA FILA
+      this.explotaciones_pecuarias.splice(this.indiceEditarEP, 1, this.explotaciones_pecuarias[this.indiceEditarEP]); //INACTIVAR LA FILA        
     },
     editarEP: function editarEP() {
       if (this.datosExpPec.importancia_comercial === "") {
@@ -7524,7 +7378,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
       this.cultivos_forestales[this.indiceEditarCF].estado = "Inactivo";
-      this.cultivos_forestales.splice(this.indiceEditarCF, 1, this.cultivos_forestales[this.indiceEditarCF]); //INACTIVAR LA FILA
+      this.cultivos_forestales.splice(this.indiceEditarCF, 1, this.cultivos_forestales[this.indiceEditarCF]); //INACTIVAR LA FILA        
     },
     editarCF: function editarCF() {
       if (this.datosCulFor.importancia_forestales === "") {
@@ -7850,10 +7704,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&":
-/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css& ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7869,15 +7723,15 @@ exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&":
-/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css& ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Editar.vue?vue&type=style&index=1&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Unidades.vue?vue&type=style&index=1&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -7899,10 +7753,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a&":
-/*!**************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a& ***!
-  \**************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8& ***!
+  \****************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -9453,102 +9307,83 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.herramientasData, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.herramienta))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.cuantos))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-icon btn-sm btn-outline-danger",
-                                      attrs: {
-                                        type: "button",
-                                        title: "Eliminar"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.eliminarItemHerramientas(
-                                            item,
-                                            index
-                                          )
-                                        }
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.herramienta))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.cuantos))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-sm btn-outline-danger",
+                                    attrs: {
+                                      type: "button",
+                                      title: "Eliminar"
                                     },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminarItemHerramientas(
+                                          index
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -9712,102 +9547,81 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.utensiliosData, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.utensilio))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.cuantos))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-icon btn-sm btn-outline-danger",
-                                      attrs: {
-                                        type: "button",
-                                        title: "Eliminar"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.eliminarItemUtensilios(
-                                            item,
-                                            index
-                                          )
-                                        }
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.utensilio))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.cuantos))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-sm btn-outline-danger",
+                                    attrs: {
+                                      type: "button",
+                                      title: "Eliminar"
                                     },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminarItemUtensilios(index)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -9979,102 +9793,81 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.maquinasData, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.maquina))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.cuantos))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-icon btn-sm btn-outline-danger",
-                                      attrs: {
-                                        type: "button",
-                                        title: "Eliminar"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.eliminarItemMaquinas(
-                                            item,
-                                            index
-                                          )
-                                        }
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.maquina))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.cuantos))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-sm btn-outline-danger",
+                                    attrs: {
+                                      type: "button",
+                                      title: "Eliminar"
                                     },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminarItemMaquinas(index)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -10260,102 +10053,83 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.instalacionesData, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.instalacion))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.cuantos))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-icon btn-sm btn-outline-danger",
-                                      attrs: {
-                                        type: "button",
-                                        title: "Eliminar"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.eliminarItemInstalacion(
-                                            item,
-                                            index
-                                          )
-                                        }
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.instalacion))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.cuantos))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-sm btn-outline-danger",
+                                    attrs: {
+                                      type: "button",
+                                      title: "Eliminar"
                                     },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminarItemInstalacion(
+                                          index
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -10572,102 +10346,81 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.mediosData, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.medio))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-capitalize" },
-                                    [_vm._v(_vm._s(item.cuantos))]
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-icon btn-sm btn-outline-danger",
-                                      attrs: {
-                                        type: "button",
-                                        title: "Eliminar"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.eliminarItemMedio(
-                                            item,
-                                            index
-                                          )
-                                        }
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.medio))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("span", { staticClass: "text-capitalize" }, [
+                                  _vm._v(_vm._s(item.cuantos))
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-icon btn-sm btn-outline-danger",
+                                    attrs: {
+                                      type: "button",
+                                      title: "Eliminar"
                                     },
-                                    [_c("i", { staticClass: "fa fa-trash" })]
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminarItemMedio(index)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -12442,1547 +12195,1500 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.cultivos_agricolas, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.importancias_agricolas,
-                                        expression:
-                                          "item.importancias_agricolas"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.importancias_agricolas == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.importancias_agricolas
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "importancias_agricolas",
-                                          $event.target.value
-                                        )
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.importancias_agricolas,
+                                      expression: "item.importancias_agricolas"
                                     }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.area_produccion,
-                                        expression: "item.area_produccion"
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.importancias_agricolas == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.importancias_agricolas
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
                                       }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.area_produccion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.area_produccion },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "area_produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_area_produccion,
-                                        expression:
-                                          "item.texto_unidad_area_produccion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_area_produccion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_unidad_area_produccion
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_area_produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_producto,
-                                        expression: "item.texto_producto"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_producto == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.texto_producto },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_producto",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_variedad,
-                                        expression: "item.texto_variedad"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_variedad == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.texto_variedad },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_variedad",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.semilla,
-                                        expression: "item.semilla"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.semilla == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.semilla },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "semilla",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.pertenece,
-                                        expression: "item.pertenece"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.pertenece == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.pertenece },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "pertenece",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.tipo_pertenece,
-                                        expression: "item.tipo_pertenece"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.tipo_pertenece == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.tipo_pertenece },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "tipo_pertenece",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.nombre_organizacion,
-                                        expression: "item.nombre_organizacion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_organizacion == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.nombre_organizacion
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_organizacion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_beneficios,
-                                        expression: "item.texto_beneficios"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_beneficios == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.texto_beneficios },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_beneficios",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_no_pertenece,
-                                        expression: "item.texto_no_pertenece"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_no_pertenece == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_no_pertenece
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_no_pertenece",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.trabaja_asociacion,
-                                        expression: "item.trabaja_asociacion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.trabaja_asociacion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.trabaja_asociacion
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "trabaja_asociacion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.frecuente_cosecha,
-                                        expression: "item.frecuente_cosecha"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.frecuente_cosecha == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.frecuente_cosecha },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "frecuente_cosecha",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_frecuencia_cosecha,
-                                        expression:
-                                          "item.texto_unidad_frecuencia_cosecha"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_frecuencia_cosecha == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.texto_unidad_frecuencia_cosecha
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_frecuencia_cosecha",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.area_cosecha,
-                                        expression: "item.area_cosecha"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.area_cosecha == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.area_cosecha },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "area_cosecha",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_unidad_area_cosecha,
-                                        expression:
-                                          "item.texto_unidad_area_cosecha"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_area_cosecha == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_unidad_area_cosecha
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_area_cosecha",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_produccion,
-                                        expression: "item.costo_produccion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_produccion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.costo_produccion },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_establecimiento,
-                                        expression: "item.costo_establecimiento"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_establecimiento == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.costo_establecimiento
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_establecimiento",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_sostenimiento,
-                                        expression: "item.costo_sostenimiento"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_sostenimiento == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.costo_sostenimiento
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_sostenimiento",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.produccion_destinada,
-                                        expression: "item.produccion_destinada"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.produccion_destinada == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.produccion_destinada
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "produccion_destinada",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_producion_destinada,
-                                        expression:
-                                          "item.texto_unidad_producion_destinada"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_producion_destinada ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.texto_unidad_producion_destinada
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_producion_destinada",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.tipo_problema,
-                                        expression: "item.tipo_problema"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.tipo_problema == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.tipo_problema },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "tipo_problema",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.otro_tipo_problema,
-                                        expression: "item.otro_tipo_problema"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.otro_tipo_problema == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.otro_tipo_problema
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "otro_tipo_problema",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.compradores,
-                                        expression: "item.compradores"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.compradores == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.compradores },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "compradores",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.metodo_pago,
-                                        expression: "item.metodo_pago"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.metodo_pago == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.metodo_pago },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "metodo_pago",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.precio_promedio_venta_kg,
-                                        expression:
-                                          "item.precio_promedio_venta_kg"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.precio_promedio_venta_kg == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.precio_promedio_venta_kg
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "precio_promedio_venta_kg",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.subproductos_produccion,
-                                        expression:
-                                          "item.subproductos_produccion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.subproductos_produccion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.subproductos_produccion
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "subproductos_produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.programa_asistencia_tecnica,
-                                        expression:
-                                          "item.programa_asistencia_tecnica"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.programa_asistencia_tecnica == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.programa_asistencia_tecnica
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "programa_asistencia_tecnica",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.nombre_programa,
-                                        expression: "item.nombre_programa"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_programa == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.nombre_programa },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_programa",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.entidad,
-                                        expression: "item.entidad"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class: item.entidad == "" ? "" : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.entidad },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "entidad",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.cambios_produccion_anio,
-                                        expression:
-                                          "item.cambios_produccion_anio"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.cambios_produccion_anio == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.cambios_produccion_anio
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "cambios_produccion_anio",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.actividad_cambio,
-                                        expression: "item.actividad_cambio"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.actividad_cambio == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.actividad_cambio },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "actividad_cambio",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticStyle: { width: "70px" } },
-                                    [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-danger",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Eliminar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.eliminarItemCA(
-                                                item,
-                                                index
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-trash"
-                                          })
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-warning",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Editar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.editarItemCA(
-                                                index,
-                                                item
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [_c("i", { staticClass: "fa fa-edit" })]
+                                      _vm.$set(
+                                        item,
+                                        "importancias_agricolas",
+                                        $event.target.value
                                       )
-                                    ]
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.area_produccion,
+                                      expression: "item.area_produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.area_produccion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.area_produccion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "area_produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_unidad_area_produccion,
+                                      expression:
+                                        "item.texto_unidad_area_produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_area_produccion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_area_produccion
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_area_produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_producto,
+                                      expression: "item.texto_producto"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_producto == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.texto_producto },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_producto",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_variedad,
+                                      expression: "item.texto_variedad"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_variedad == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.texto_variedad },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_variedad",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.semilla,
+                                      expression: "item.semilla"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.semilla == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.semilla },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "semilla",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.pertenece,
+                                      expression: "item.pertenece"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.pertenece == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.pertenece },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "pertenece",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.tipo_pertenece,
+                                      expression: "item.tipo_pertenece"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.tipo_pertenece == "" ? "" : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.tipo_pertenece },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "tipo_pertenece",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.nombre_organizacion,
+                                      expression: "item.nombre_organizacion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_organizacion == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.nombre_organizacion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_organizacion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_beneficios,
+                                      expression: "item.texto_beneficios"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_beneficios == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.texto_beneficios },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_beneficios",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_no_pertenece,
+                                      expression: "item.texto_no_pertenece"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_no_pertenece == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.texto_no_pertenece },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_no_pertenece",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.trabaja_asociacion,
+                                      expression: "item.trabaja_asociacion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.trabaja_asociacion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.trabaja_asociacion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "trabaja_asociacion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.frecuente_cosecha,
+                                      expression: "item.frecuente_cosecha"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.frecuente_cosecha == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.frecuente_cosecha },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "frecuente_cosecha",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.texto_unidad_frecuencia_cosecha,
+                                      expression:
+                                        "item.texto_unidad_frecuencia_cosecha"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_frecuencia_cosecha == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_frecuencia_cosecha
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_frecuencia_cosecha",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.area_cosecha,
+                                      expression: "item.area_cosecha"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.area_cosecha == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.area_cosecha },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "area_cosecha",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_unidad_area_cosecha,
+                                      expression:
+                                        "item.texto_unidad_area_cosecha"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_area_cosecha == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_area_cosecha
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_area_cosecha",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_produccion,
+                                      expression: "item.costo_produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_produccion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.costo_produccion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_establecimiento,
+                                      expression: "item.costo_establecimiento"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_establecimiento == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.costo_establecimiento
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_establecimiento",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_sostenimiento,
+                                      expression: "item.costo_sostenimiento"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_sostenimiento == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.costo_sostenimiento },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_sostenimiento",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.produccion_destinada,
+                                      expression: "item.produccion_destinada"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.produccion_destinada == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.produccion_destinada
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "produccion_destinada",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.texto_unidad_producion_destinada,
+                                      expression:
+                                        "item.texto_unidad_producion_destinada"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_producion_destinada == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_producion_destinada
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_producion_destinada",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.tipo_problema,
+                                      expression: "item.tipo_problema"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.tipo_problema == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.tipo_problema },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "tipo_problema",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.otro_tipo_problema,
+                                      expression: "item.otro_tipo_problema"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.otro_tipo_problema == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.otro_tipo_problema },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "otro_tipo_problema",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.compradores,
+                                      expression: "item.compradores"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.compradores == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.compradores },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "compradores",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.metodo_pago,
+                                      expression: "item.metodo_pago"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.metodo_pago == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.metodo_pago },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "metodo_pago",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.precio_promedio_venta_kg,
+                                      expression:
+                                        "item.precio_promedio_venta_kg"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.precio_promedio_venta_kg == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.precio_promedio_venta_kg
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "precio_promedio_venta_kg",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.subproductos_produccion,
+                                      expression: "item.subproductos_produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.subproductos_produccion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.subproductos_produccion
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "subproductos_produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.programa_asistencia_tecnica,
+                                      expression:
+                                        "item.programa_asistencia_tecnica"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.programa_asistencia_tecnica == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.programa_asistencia_tecnica
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "programa_asistencia_tecnica",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.nombre_programa,
+                                      expression: "item.nombre_programa"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_programa == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.nombre_programa },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_programa",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.entidad,
+                                      expression: "item.entidad"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class: item.entidad == "" ? "" : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.entidad },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "entidad",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.cambios_produccion_anio,
+                                      expression: "item.cambios_produccion_anio"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.cambios_produccion_anio == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.cambios_produccion_anio
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "cambios_produccion_anio",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.actividad_cambio,
+                                      expression: "item.actividad_cambio"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.actividad_cambio == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.actividad_cambio },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "actividad_cambio",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c("div", { staticStyle: { width: "70px" } }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-danger",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Eliminar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.eliminarItemCA(index)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-trash" })]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-warning",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Editar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editarItemCA(index, item)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-edit" })]
                                   )
-                                ]
-                              )
-                            ]
-                          )
+                                ])
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -15491,1344 +15197,1256 @@ var render = function() {
                           item,
                           index
                         ) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.importancia_comercial,
-                                        expression: "item.importancia_comercial"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.importancia_comercial == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.importancia_comercial
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "importancia_comercial",
-                                          $event.target.value
-                                        )
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.importancia_comercial,
+                                      expression: "item.importancia_comercial"
                                     }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.producto_comercial,
-                                        expression: "item.producto_comercial"
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.importancia_comercial == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.importancia_comercial
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
                                       }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.producto_comercial == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.producto_comercial
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "producto_comercial",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_raza,
-                                        expression: "item.texto_raza"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_raza == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.texto_raza },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_raza",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_total,
-                                        expression: "item.costo_total"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_total == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.costo_total },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_total",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_establecer,
-                                        expression: "item.costo_establecer"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_establecer == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.costo_establecer },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_establecer",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_pecuaria,
-                                        expression: "item.costo_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.costo_pecuaria },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.problematica_productos,
-                                        expression:
-                                          "item.problematica_productos"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.problematica_productos == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.problematica_productos
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "problematica_productos",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.otra_problematica,
-                                        expression: "item.otra_problematica"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.otra_problematica == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.otra_problematica },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "otra_problematica",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.produccion,
-                                        expression: "item.produccion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.produccion == "" ? "" : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.produccion },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.produccion_destinada_pecuaria,
-                                        expression:
-                                          "item.produccion_destinada_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.produccion_destinada_pecuaria == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.produccion_destinada_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "produccion_destinada_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_producion_destinada_pecuaria,
-                                        expression:
-                                          "item.texto_unidad_producion_destinada_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_producion_destinada_pecuaria ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.texto_unidad_producion_destinada_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_producion_destinada_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.numero_animales,
-                                        expression: "item.numero_animales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.numero_animales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.numero_animales },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "numero_animales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.area_destinada_produccion,
-                                        expression:
-                                          "item.area_destinada_produccion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.area_destinada_produccion == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.area_destinada_produccion
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "area_destinada_produccion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_unidad_area_destinada,
-                                        expression:
-                                          "item.texto_unidad_area_destinada"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_area_destinada == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_unidad_area_destinada
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_area_destinada",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.compradores_pecuaria,
-                                        expression: "item.compradores_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.compradores_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.compradores_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "compradores_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.precio_promedio_venta_pecuaria,
-                                        expression:
-                                          "item.precio_promedio_venta_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.precio_promedio_venta_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.precio_promedio_venta_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "precio_promedio_venta_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.metodo_pago_pecuaria,
-                                        expression: "item.metodo_pago_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.metodo_pago_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.metodo_pago_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "metodo_pago_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.subproductos_produccion_pecuaria,
-                                        expression:
-                                          "item.subproductos_produccion_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.subproductos_produccion_pecuaria ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.subproductos_produccion_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "subproductos_produccion_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.pertenece_pecuaria,
-                                        expression: "item.pertenece_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.pertenece_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.pertenece_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "pertenece_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.nombre_programa_pecuaria,
-                                        expression:
-                                          "item.nombre_programa_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_programa_pecuaria == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.nombre_programa_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_programa_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.entidad_pecuaria,
-                                        expression: "item.entidad_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.entidad_pecuaria == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.entidad_pecuaria },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "entidad_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.pertenece_organizacion_pecuaria,
-                                        expression:
-                                          "item.pertenece_organizacion_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.pertenece_organizacion_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.pertenece_organizacion_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "pertenece_organizacion_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.tipo_organizacion_pecuaria,
-                                        expression:
-                                          "item.tipo_organizacion_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.tipo_organizacion_pecuaria == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.tipo_organizacion_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "tipo_organizacion_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.nombre_organizacion_pecuaria,
-                                        expression:
-                                          "item.nombre_organizacion_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_organizacion_pecuaria == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.nombre_organizacion_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_organizacion_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_no_pertenece_pecuaria,
-                                        expression:
-                                          "item.texto_no_pertenece_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_no_pertenece_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_no_pertenece_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_no_pertenece_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_beneficios_pecuaria,
-                                        expression:
-                                          "item.texto_beneficios_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_beneficios_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_beneficios_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_beneficios_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.trabaja_asociacion_pecuaria,
-                                        expression:
-                                          "item.trabaja_asociacion_pecuaria"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.trabaja_asociacion_pecuaria == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.trabaja_asociacion_pecuaria
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "trabaja_asociacion_pecuaria",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticStyle: { width: "70px" } },
-                                    [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-danger",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Eliminar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.eliminarItemEP(
-                                                item,
-                                                index
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-trash"
-                                          })
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-warning",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Editar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.editarItemEP(
-                                                index,
-                                                item
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [_c("i", { staticClass: "fa fa-edit" })]
+                                      _vm.$set(
+                                        item,
+                                        "importancia_comercial",
+                                        $event.target.value
                                       )
-                                    ]
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.producto_comercial,
+                                      expression: "item.producto_comercial"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.producto_comercial == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.producto_comercial },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "producto_comercial",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_raza,
+                                      expression: "item.texto_raza"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_raza == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.texto_raza },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_raza",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_total,
+                                      expression: "item.costo_total"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_total == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.costo_total },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_total",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_establecer,
+                                      expression: "item.costo_establecer"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_establecer == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.costo_establecer },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_establecer",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_pecuaria,
+                                      expression: "item.costo_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.costo_pecuaria },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.problematica_productos,
+                                      expression: "item.problematica_productos"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.problematica_productos == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.problematica_productos
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "problematica_productos",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.otra_problematica,
+                                      expression: "item.otra_problematica"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.otra_problematica == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.otra_problematica },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "otra_problematica",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.produccion,
+                                      expression: "item.produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.produccion == "" ? "" : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.produccion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.produccion_destinada_pecuaria,
+                                      expression:
+                                        "item.produccion_destinada_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.produccion_destinada_pecuaria == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.produccion_destinada_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "produccion_destinada_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.numero_animales,
+                                      expression: "item.numero_animales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.numero_animales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.numero_animales },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "numero_animales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.area_destinada_produccion,
+                                      expression:
+                                        "item.area_destinada_produccion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.area_destinada_produccion == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.area_destinada_produccion
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "area_destinada_produccion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_unidad_area_destinada,
+                                      expression:
+                                        "item.texto_unidad_area_destinada"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_area_destinada == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_area_destinada
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_area_destinada",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.compradores_pecuaria,
+                                      expression: "item.compradores_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.compradores_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.compradores_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "compradores_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.precio_promedio_venta_pecuaria,
+                                      expression:
+                                        "item.precio_promedio_venta_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.precio_promedio_venta_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.precio_promedio_venta_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "precio_promedio_venta_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.metodo_pago_pecuaria,
+                                      expression: "item.metodo_pago_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.metodo_pago_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.metodo_pago_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "metodo_pago_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.subproductos_produccion_pecuaria,
+                                      expression:
+                                        "item.subproductos_produccion_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.subproductos_produccion_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.subproductos_produccion_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "subproductos_produccion_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.pertenece_pecuaria,
+                                      expression: "item.pertenece_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.pertenece_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.pertenece_pecuaria },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "pertenece_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.nombre_programa_pecuaria,
+                                      expression:
+                                        "item.nombre_programa_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_programa_pecuaria == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.nombre_programa_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_programa_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.entidad_pecuaria,
+                                      expression: "item.entidad_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.entidad_pecuaria == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.entidad_pecuaria },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "entidad_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.pertenece_organizacion_pecuaria,
+                                      expression:
+                                        "item.pertenece_organizacion_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.pertenece_organizacion_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.pertenece_organizacion_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "pertenece_organizacion_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.tipo_organizacion_pecuaria,
+                                      expression:
+                                        "item.tipo_organizacion_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.tipo_organizacion_pecuaria == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.tipo_organizacion_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "tipo_organizacion_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.nombre_organizacion_pecuaria,
+                                      expression:
+                                        "item.nombre_organizacion_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_organizacion_pecuaria == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.nombre_organizacion_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_organizacion_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_no_pertenece_pecuaria,
+                                      expression:
+                                        "item.texto_no_pertenece_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_no_pertenece_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_no_pertenece_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_no_pertenece_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_beneficios_pecuaria,
+                                      expression:
+                                        "item.texto_beneficios_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_beneficios_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_beneficios_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_beneficios_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.trabaja_asociacion_pecuaria,
+                                      expression:
+                                        "item.trabaja_asociacion_pecuaria"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.trabaja_asociacion_pecuaria == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.trabaja_asociacion_pecuaria
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "trabaja_asociacion_pecuaria",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c("div", { staticStyle: { width: "70px" } }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-danger",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Eliminar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.eliminarItemEP(index)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-trash" })]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-warning",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Editar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editarItemEP(index, item)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-edit" })]
                                   )
-                                ]
-                              )
-                            ]
-                          )
+                                ])
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -18043,9 +17661,7 @@ var render = function() {
                           _vm._v("Agremiaciones.")
                         ]),
                         _vm._v(" "),
-                        _c("option", { attrs: { value: "NO" } }, [
-                          _vm._v("NO.")
-                        ])
+                        _c("option", { attrs: { value: "NO" } }, [_vm._v("NO")])
                       ]
                     )
                   ],
@@ -18460,1471 +18076,1425 @@ var render = function() {
                       _c(
                         "tbody",
                         _vm._l(_vm.cultivos_forestales, function(item, index) {
-                          return _c(
-                            "tr",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: item.estado == "Activo",
-                                  expression: "item.estado=='Activo'"
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
                                 }
-                              ],
-                              key: index
-                            },
-                            [
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [_vm._v(_vm._s(index + 1))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.importancia_forestales,
-                                        expression:
-                                          "item.importancia_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.importancia_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.importancia_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "importancia_forestales",
-                                          $event.target.value
-                                        )
-                                      }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.importancia_forestales,
+                                      expression: "item.importancia_forestales"
                                     }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.producto_forestales,
-                                        expression: "item.producto_forestales"
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.importancia_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.importancia_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
                                       }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.producto_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.producto_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "producto_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_variedad_forestales,
-                                        expression:
-                                          "item.texto_variedad_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_variedad_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_variedad_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_variedad_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.edad_plantacion,
-                                        expression: "item.edad_plantacion"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.edad_plantacion == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.edad_plantacion },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "edad_plantacion",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.tipo_edad,
-                                        expression: "item.tipo_edad"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.tipo_edad == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.tipo_edad },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "tipo_edad",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.area_sembrada_forestales,
-                                        expression:
-                                          "item.area_sembrada_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.area_sembrada_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.area_sembrada_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "area_sembrada_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_area_forestales,
-                                        expression:
-                                          "item.texto_unidad_area_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_area_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_unidad_area_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_area_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.rendimiento_arbol,
-                                        expression: "item.rendimiento_arbol"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.rendimiento_arbol == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.rendimiento_arbol },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "rendimiento_arbol",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.costo_total_forestales,
-                                        expression:
-                                          "item.costo_total_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_total_forestales == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.costo_total_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_total_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.costo_establecimiento_forestales,
-                                        expression:
-                                          "item.costo_establecimiento_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_establecimiento_forestales ==
-                                      ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.costo_establecimiento_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_establecimiento_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.costo_sostenimiento_forestales,
-                                        expression:
-                                          "item.costo_sostenimiento_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.costo_sostenimiento_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.costo_sostenimiento_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "costo_sostenimiento_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.problematica_productos_forestales,
-                                        expression:
-                                          "item.problematica_productos_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.problematica_productos_forestales ==
-                                      ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.problematica_productos_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "problematica_productos_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.otros_problematica_productos_forestales,
-                                        expression:
-                                          "item.otros_problematica_productos_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.otros_problematica_productos_forestales ==
-                                      ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.otros_problematica_productos_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "otros_problematica_productos_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.produccion_destinada_forestales,
-                                        expression:
-                                          "item.produccion_destinada_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.produccion_destinada_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.produccion_destinada_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "produccion_destinada_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_unidad_producion_destinada_forestales,
-                                        expression:
-                                          "item.texto_unidad_producion_destinada_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_unidad_producion_destinada_forestales ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.texto_unidad_producion_destinada_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_unidad_producion_destinada_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.numero_arboles,
-                                        expression: "item.numero_arboles"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.numero_arboles == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: { value: item.numero_arboles },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "numero_arboles",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.compradores_forestales,
-                                        expression:
-                                          "item.compradores_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.compradores_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.compradores_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "compradores_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.metodo_pago_forestales,
-                                        expression:
-                                          "item.metodo_pago_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.metodo_pago_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.metodo_pago_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "metodo_pago_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.precio_promedio_venta_forestales,
-                                        expression:
-                                          "item.precio_promedio_venta_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.precio_promedio_venta_forestales ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "250px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.precio_promedio_venta_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "precio_promedio_venta_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.subproductos_produccion_forestales,
-                                        expression:
-                                          "item.subproductos_produccion_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.subproductos_produccion_forestales ==
-                                      ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.subproductos_produccion_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "subproductos_produccion_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.pertenece_forestales,
-                                        expression: "item.pertenece_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.pertenece_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.pertenece_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "pertenece_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.nombre_programa_forestales,
-                                        expression:
-                                          "item.nombre_programa_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_programa_forestales == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.nombre_programa_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_programa_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.entidad_forestales,
-                                        expression: "item.entidad_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.entidad_forestales == ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.entidad_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "entidad_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.pertenece_organizacion_forestales,
-                                        expression:
-                                          "item.pertenece_organizacion_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.pertenece_organizacion_forestales ==
-                                      ""
-                                        ? ""
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value:
-                                        item.pertenece_organizacion_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "pertenece_organizacion_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.tipo_pertenece_forestales,
-                                        expression:
-                                          "item.tipo_pertenece_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.tipo_pertenece_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.tipo_pertenece_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "tipo_pertenece_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.nombre_organizacion_forestales,
-                                        expression:
-                                          "item.nombre_organizacion_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.nombre_organizacion_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.nombre_organizacion_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "nombre_organizacion_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.texto_no_pertenece_forestales,
-                                        expression:
-                                          "item.texto_no_pertenece_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_no_pertenece_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_no_pertenece_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_no_pertenece_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: item.texto_beneficios_forestales,
-                                        expression:
-                                          "item.texto_beneficios_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.texto_beneficios_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.texto_beneficios_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "texto_beneficios_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "font-weight": "normal",
-                                    "vertical-align": "middle",
-                                    "text-align": "left",
-                                    "text-transform": "capitalize"
-                                  }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value:
-                                          item.trabaja_asociacion_forestales,
-                                        expression:
-                                          "item.trabaja_asociacion_forestales"
-                                      }
-                                    ],
-                                    staticClass: "form-control text-capitalize",
-                                    class:
-                                      item.trabaja_asociacion_forestales == ""
-                                        ? "is-invalid"
-                                        : "is-valid",
-                                    staticStyle: { width: "200px" },
-                                    attrs: { type: "text", readonly: "" },
-                                    domProps: {
-                                      value: item.trabaja_asociacion_forestales
-                                    },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
-                                        }
-                                        _vm.$set(
-                                          item,
-                                          "trabaja_asociacion_forestales",
-                                          $event.target.value
-                                        )
-                                      }
-                                    }
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "td",
-                                {
-                                  staticStyle: {
-                                    "text-align": "center",
-                                    "vertical-align": "middle"
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticStyle: { width: "70px" } },
-                                    [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-danger",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Eliminar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.eliminarItemCF(
-                                                item,
-                                                index
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-trash"
-                                          })
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn btn-icon btn-sm btn-outline-warning",
-                                          attrs: {
-                                            type: "button",
-                                            title: "Editar"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.editarItemCF(
-                                                index,
-                                                item
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [_c("i", { staticClass: "fa fa-edit" })]
+                                      _vm.$set(
+                                        item,
+                                        "importancia_forestales",
+                                        $event.target.value
                                       )
-                                    ]
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.producto_forestales,
+                                      expression: "item.producto_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.producto_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.producto_forestales },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "producto_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_variedad_forestales,
+                                      expression:
+                                        "item.texto_variedad_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_variedad_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_variedad_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_variedad_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.edad_plantacion,
+                                      expression: "item.edad_plantacion"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.edad_plantacion == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.edad_plantacion },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "edad_plantacion",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.tipo_edad,
+                                      expression: "item.tipo_edad"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.tipo_edad == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.tipo_edad },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "tipo_edad",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.area_sembrada_forestales,
+                                      expression:
+                                        "item.area_sembrada_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.area_sembrada_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.area_sembrada_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "area_sembrada_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_unidad_area_forestales,
+                                      expression:
+                                        "item.texto_unidad_area_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_area_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_unidad_area_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_area_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.rendimiento_arbol,
+                                      expression: "item.rendimiento_arbol"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.rendimiento_arbol == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.rendimiento_arbol },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "rendimiento_arbol",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.costo_total_forestales,
+                                      expression: "item.costo_total_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_total_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.costo_total_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_total_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.costo_establecimiento_forestales,
+                                      expression:
+                                        "item.costo_establecimiento_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_establecimiento_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.costo_establecimiento_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_establecimiento_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.costo_sostenimiento_forestales,
+                                      expression:
+                                        "item.costo_sostenimiento_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.costo_sostenimiento_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.costo_sostenimiento_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "costo_sostenimiento_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.problematica_productos_forestales,
+                                      expression:
+                                        "item.problematica_productos_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.problematica_productos_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value:
+                                      item.problematica_productos_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "problematica_productos_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.otros_problematica_productos_forestales,
+                                      expression:
+                                        "item.otros_problematica_productos_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.otros_problematica_productos_forestales ==
+                                    ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value:
+                                      item.otros_problematica_productos_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "otros_problematica_productos_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.produccion_destinada_forestales,
+                                      expression:
+                                        "item.produccion_destinada_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.produccion_destinada_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.produccion_destinada_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "produccion_destinada_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.texto_unidad_producion_destinada_forestales,
+                                      expression:
+                                        "item.texto_unidad_producion_destinada_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_unidad_producion_destinada_forestales ==
+                                    ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value:
+                                      item.texto_unidad_producion_destinada_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_unidad_producion_destinada_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.numero_arboles,
+                                      expression: "item.numero_arboles"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.numero_arboles == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.numero_arboles },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "numero_arboles",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.compradores_forestales,
+                                      expression: "item.compradores_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.compradores_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.compradores_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "compradores_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.metodo_pago_forestales,
+                                      expression: "item.metodo_pago_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.metodo_pago_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.metodo_pago_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "metodo_pago_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.precio_promedio_venta_forestales,
+                                      expression:
+                                        "item.precio_promedio_venta_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.precio_promedio_venta_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "250px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.precio_promedio_venta_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "precio_promedio_venta_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.subproductos_produccion_forestales,
+                                      expression:
+                                        "item.subproductos_produccion_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.subproductos_produccion_forestales ==
+                                    ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value:
+                                      item.subproductos_produccion_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "subproductos_produccion_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.pertenece_forestales,
+                                      expression: "item.pertenece_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.pertenece_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.pertenece_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "pertenece_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.nombre_programa_forestales,
+                                      expression:
+                                        "item.nombre_programa_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_programa_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.nombre_programa_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_programa_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.entidad_forestales,
+                                      expression: "item.entidad_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.entidad_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: { value: item.entidad_forestales },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "entidad_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.pertenece_organizacion_forestales,
+                                      expression:
+                                        "item.pertenece_organizacion_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.pertenece_organizacion_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value:
+                                      item.pertenece_organizacion_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "pertenece_organizacion_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.tipo_pertenece_forestales,
+                                      expression:
+                                        "item.tipo_pertenece_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.tipo_pertenece_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.tipo_pertenece_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "tipo_pertenece_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value:
+                                        item.nombre_organizacion_forestales,
+                                      expression:
+                                        "item.nombre_organizacion_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.nombre_organizacion_forestales == ""
+                                      ? ""
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.nombre_organizacion_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "nombre_organizacion_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_no_pertenece_forestales,
+                                      expression:
+                                        "item.texto_no_pertenece_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_no_pertenece_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_no_pertenece_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_no_pertenece_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.texto_beneficios_forestales,
+                                      expression:
+                                        "item.texto_beneficios_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.texto_beneficios_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.texto_beneficios_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "texto_beneficios_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: item.trabaja_asociacion_forestales,
+                                      expression:
+                                        "item.trabaja_asociacion_forestales"
+                                    }
+                                  ],
+                                  staticClass: "form-control text-capitalize",
+                                  class:
+                                    item.trabaja_asociacion_forestales == ""
+                                      ? "is-invalid"
+                                      : "is-valid",
+                                  staticStyle: { width: "200px" },
+                                  attrs: { type: "text", readonly: "" },
+                                  domProps: {
+                                    value: item.trabaja_asociacion_forestales
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        item,
+                                        "trabaja_asociacion_forestales",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c("div", { staticStyle: { width: "70px" } }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-danger",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Eliminar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.eliminarItemCF(index)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-trash" })]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-icon btn-sm btn-outline-warning",
+                                      attrs: {
+                                        type: "button",
+                                        title: "Editar"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editarItemCF(index, item)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fa fa-edit" })]
                                   )
-                                ]
-                              )
-                            ]
-                          )
+                                ])
+                              ]
+                            )
+                          ])
                         }),
                         0
                       )
@@ -20339,8 +19909,6 @@ var staticRenderFns = [
           _vm._v("Producción destinada al mercado")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Unidad de Medida")]),
-        _vm._v(" "),
         _c("th", { staticClass: "text-center" }, [
           _vm._v("Número de animales")
         ]),
@@ -20605,19 +20173,19 @@ function exportarUnidad($data) {
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Unidades/Editar.vue":
-/*!*************************************************!*\
-  !*** ./resources/js/Vistas/Unidades/Editar.vue ***!
-  \*************************************************/
+/***/ "./resources/js/Vistas/Unidades/Unidades.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/Vistas/Unidades/Unidades.vue ***!
+  \***************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Editar.vue?vue&type=template&id=16231b1a& */ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a&");
-/* harmony import */ var _Editar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Editar.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js&");
+/* harmony import */ var _Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Unidades.vue?vue&type=template&id=caf7a7b8& */ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8&");
+/* harmony import */ var _Unidades_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Unidades.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Editar.vue?vue&type=style&index=1&lang=css& */ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&");
+/* harmony import */ var _Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Unidades.vue?vue&type=style&index=1&lang=css& */ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -20629,9 +20197,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__["default"])(
-  _Editar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Unidades_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -20641,54 +20209,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Unidades/Editar.vue"
+component.options.__file = "resources/js/Vistas/Unidades/Unidades.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js&":
-/*!**************************************************************************!*\
-  !*** ./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************/
+/***/ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Editar.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Unidades.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css& ***!
-  \**********************************************************************************/
+/***/ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css& ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Editar.vue?vue&type=style&index=1&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=style&index=1&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Unidades.vue?vue&type=style&index=1&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=style&index=1&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_style_index_1_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a&":
-/*!********************************************************************************!*\
-  !*** ./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a& ***!
-  \********************************************************************************/
+/***/ "./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8& ***!
+  \**********************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Editar.vue?vue&type=template&id=16231b1a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Editar.vue?vue&type=template&id=16231b1a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Unidades.vue?vue&type=template&id=caf7a7b8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Unidades/Unidades.vue?vue&type=template&id=caf7a7b8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Editar_vue_vue_type_template_id_16231b1a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Unidades_vue_vue_type_template_id_caf7a7b8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

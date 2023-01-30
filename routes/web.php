@@ -242,3 +242,5 @@ Route::post('/reportes/bajo-nivel-socioeconomico', 'ReportesController@bajo_nive
 Route::post('/reportes/exportar-socioeconomico', 'ReportesController@exportarSocioeconomico');
 Route::post('/reportes/riesgos-salud', 'ReportesController@riesgo_salud');
 Route::post('/reportes/exportar-riesgos-salud', 'ReportesController@exportarRiesgosSalud');
+
+Route::get('/informes/riesgos-salud', 'InformesController@riesgos_salud');

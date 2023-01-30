@@ -1,7478 +1,15632 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[6],{
 
-/***/ "./node_modules/css-line-break/dist/LineBreak.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/css-line-break/dist/LineBreak.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.LineBreaker = exports.inlineBreakOpportunities = exports.lineBreakAtIndex = exports.codePointsToCharacterClasses = exports.UnicodeTrie = exports.BREAK_ALLOWED = exports.BREAK_NOT_ALLOWED = exports.BREAK_MANDATORY = exports.classes = exports.LETTER_NUMBER_MODIFIER = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _Trie = __webpack_require__(/*! ./Trie */ "./node_modules/css-line-break/dist/Trie.js");
-
-var _linebreakTrie = __webpack_require__(/*! ./linebreak-trie */ "./node_modules/css-line-break/dist/linebreak-trie.js");
-
-var _linebreakTrie2 = _interopRequireDefault(_linebreakTrie);
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/css-line-break/dist/Util.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LETTER_NUMBER_MODIFIER = exports.LETTER_NUMBER_MODIFIER = 50;
-
-// Non-tailorable Line Breaking Classes
-var BK = 1; //  Cause a line break (after)
-var CR = 2; //  Cause a line break (after), except between CR and LF
-var LF = 3; //  Cause a line break (after)
-var CM = 4; //  Prohibit a line break between the character and the preceding character
-var NL = 5; //  Cause a line break (after)
-var SG = 6; //  Do not occur in well-formed text
-var WJ = 7; //  Prohibit line breaks before and after
-var ZW = 8; //  Provide a break opportunity
-var GL = 9; //  Prohibit line breaks before and after
-var SP = 10; // Enable indirect line breaks
-var ZWJ = 11; // Prohibit line breaks within joiner sequences
-// Break Opportunities
-var B2 = 12; //  Provide a line break opportunity before and after the character
-var BA = 13; //  Generally provide a line break opportunity after the character
-var BB = 14; //  Generally provide a line break opportunity before the character
-var HY = 15; //  Provide a line break opportunity after the character, except in numeric context
-var CB = 16; //   Provide a line break opportunity contingent on additional information
-// Characters Prohibiting Certain Breaks
-var CL = 17; //  Prohibit line breaks before
-var CP = 18; //  Prohibit line breaks before
-var EX = 19; //  Prohibit line breaks before
-var IN = 20; //  Allow only indirect line breaks between pairs
-var NS = 21; //  Allow only indirect line breaks before
-var OP = 22; //  Prohibit line breaks after
-var QU = 23; //  Act like they are both opening and closing
-// Numeric Context
-var IS = 24; //  Prevent breaks after any and before numeric
-var NU = 25; //  Form numeric expressions for line breaking purposes
-var PO = 26; //  Do not break following a numeric expression
-var PR = 27; //  Do not break in front of a numeric expression
-var SY = 28; //  Prevent a break before; and allow a break after
-// Other Characters
-var AI = 29; //  Act like AL when the resolvedEAW is N; otherwise; act as ID
-var AL = 30; //  Are alphabetic characters or symbols that are used with alphabetic characters
-var CJ = 31; //  Treat as NS or ID for strict or normal breaking.
-var EB = 32; //  Do not break from following Emoji Modifier
-var EM = 33; //  Do not break from preceding Emoji Base
-var H2 = 34; //  Form Korean syllable blocks
-var H3 = 35; //  Form Korean syllable blocks
-var HL = 36; //  Do not break around a following hyphen; otherwise act as Alphabetic
-var ID = 37; //  Break before or after; except in some numeric context
-var JL = 38; //  Form Korean syllable blocks
-var JV = 39; //  Form Korean syllable blocks
-var JT = 40; //  Form Korean syllable blocks
-var RI = 41; //  Keep pairs together. For pairs; break before and after other classes
-var SA = 42; //  Provide a line break opportunity contingent on additional, language-specific context analysis
-var XX = 43; //  Have as yet unknown line breaking behavior or unassigned code positions
-
-var classes = exports.classes = {
-    BK: BK,
-    CR: CR,
-    LF: LF,
-    CM: CM,
-    NL: NL,
-    SG: SG,
-    WJ: WJ,
-    ZW: ZW,
-    GL: GL,
-    SP: SP,
-    ZWJ: ZWJ,
-    B2: B2,
-    BA: BA,
-    BB: BB,
-    HY: HY,
-    CB: CB,
-    CL: CL,
-    CP: CP,
-    EX: EX,
-    IN: IN,
-    NS: NS,
-    OP: OP,
-    QU: QU,
-    IS: IS,
-    NU: NU,
-    PO: PO,
-    PR: PR,
-    SY: SY,
-    AI: AI,
-    AL: AL,
-    CJ: CJ,
-    EB: EB,
-    EM: EM,
-    H2: H2,
-    H3: H3,
-    HL: HL,
-    ID: ID,
-    JL: JL,
-    JV: JV,
-    JT: JT,
-    RI: RI,
-    SA: SA,
-    XX: XX
-};
-
-var BREAK_MANDATORY = exports.BREAK_MANDATORY = '!';
-var BREAK_NOT_ALLOWED = exports.BREAK_NOT_ALLOWED = '×';
-var BREAK_ALLOWED = exports.BREAK_ALLOWED = '÷';
-var UnicodeTrie = exports.UnicodeTrie = (0, _Trie.createTrieFromBase64)(_linebreakTrie2.default);
-
-var ALPHABETICS = [AL, HL];
-var HARD_LINE_BREAKS = [BK, CR, LF, NL];
-var SPACE = [SP, ZW];
-var PREFIX_POSTFIX = [PR, PO];
-var LINE_BREAKS = HARD_LINE_BREAKS.concat(SPACE);
-var KOREAN_SYLLABLE_BLOCK = [JL, JV, JT, H2, H3];
-var HYPHEN = [HY, BA];
-
-var codePointsToCharacterClasses = exports.codePointsToCharacterClasses = function codePointsToCharacterClasses(codePoints) {
-    var lineBreak = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'strict';
-
-    var types = [];
-    var indicies = [];
-    var categories = [];
-    codePoints.forEach(function (codePoint, index) {
-        var classType = UnicodeTrie.get(codePoint);
-        if (classType > LETTER_NUMBER_MODIFIER) {
-            categories.push(true);
-            classType -= LETTER_NUMBER_MODIFIER;
-        } else {
-            categories.push(false);
-        }
-
-        if (['normal', 'auto', 'loose'].indexOf(lineBreak) !== -1) {
-            // U+2010, – U+2013, 〜 U+301C, ゠ U+30A0
-            if ([0x2010, 0x2013, 0x301c, 0x30a0].indexOf(codePoint) !== -1) {
-                indicies.push(index);
-                return types.push(CB);
-            }
-        }
-
-        if (classType === CM || classType === ZWJ) {
-            // LB10 Treat any remaining combining mark or ZWJ as AL.
-            if (index === 0) {
-                indicies.push(index);
-                return types.push(AL);
-            }
-
-            // LB9 Do not break a combining character sequence; treat it as if it has the line breaking class of
-            // the base character in all of the following rules. Treat ZWJ as if it were CM.
-            var prev = types[index - 1];
-            if (LINE_BREAKS.indexOf(prev) === -1) {
-                indicies.push(indicies[index - 1]);
-                return types.push(prev);
-            }
-            indicies.push(index);
-            return types.push(AL);
-        }
-
-        indicies.push(index);
-
-        if (classType === CJ) {
-            return types.push(lineBreak === 'strict' ? NS : ID);
-        }
-
-        if (classType === SA) {
-            return types.push(AL);
-        }
-
-        if (classType === AI) {
-            return types.push(AL);
-        }
-
-        // For supplementary characters, a useful default is to treat characters in the range 10000..1FFFD as AL
-        // and characters in the ranges 20000..2FFFD and 30000..3FFFD as ID, until the implementation can be revised
-        // to take into account the actual line breaking properties for these characters.
-        if (classType === XX) {
-            if (codePoint >= 0x20000 && codePoint <= 0x2fffd || codePoint >= 0x30000 && codePoint <= 0x3fffd) {
-                return types.push(ID);
-            } else {
-                return types.push(AL);
-            }
-        }
-
-        types.push(classType);
-    });
-
-    return [indicies, types, categories];
-};
-
-var isAdjacentWithSpaceIgnored = function isAdjacentWithSpaceIgnored(a, b, currentIndex, classTypes) {
-    var current = classTypes[currentIndex];
-    if (Array.isArray(a) ? a.indexOf(current) !== -1 : a === current) {
-        var i = currentIndex;
-        while (i <= classTypes.length) {
-            i++;
-            var next = classTypes[i];
-
-            if (next === b) {
-                return true;
-            }
-
-            if (next !== SP) {
-                break;
-            }
-        }
-    }
-
-    if (current === SP) {
-        var _i = currentIndex;
-
-        while (_i > 0) {
-            _i--;
-            var prev = classTypes[_i];
-
-            if (Array.isArray(a) ? a.indexOf(prev) !== -1 : a === prev) {
-                var n = currentIndex;
-                while (n <= classTypes.length) {
-                    n++;
-                    var _next = classTypes[n];
-
-                    if (_next === b) {
-                        return true;
-                    }
-
-                    if (_next !== SP) {
-                        break;
-                    }
-                }
-            }
-
-            if (prev !== SP) {
-                break;
-            }
-        }
-    }
-    return false;
-};
-
-var previousNonSpaceClassType = function previousNonSpaceClassType(currentIndex, classTypes) {
-    var i = currentIndex;
-    while (i >= 0) {
-        var type = classTypes[i];
-        if (type === SP) {
-            i--;
-        } else {
-            return type;
-        }
-    }
-    return 0;
-};
-
-var _lineBreakAtIndex = function _lineBreakAtIndex(codePoints, classTypes, indicies, index, forbiddenBreaks) {
-    if (indicies[index] === 0) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    var currentIndex = index - 1;
-    if (Array.isArray(forbiddenBreaks) && forbiddenBreaks[currentIndex] === true) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    var beforeIndex = currentIndex - 1;
-    var afterIndex = currentIndex + 1;
-    var current = classTypes[currentIndex];
-
-    // LB4 Always break after hard line breaks.
-    // LB5 Treat CR followed by LF, as well as CR, LF, and NL as hard line breaks.
-    var before = beforeIndex >= 0 ? classTypes[beforeIndex] : 0;
-    var next = classTypes[afterIndex];
-
-    if (current === CR && next === LF) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    if (HARD_LINE_BREAKS.indexOf(current) !== -1) {
-        return BREAK_MANDATORY;
-    }
-
-    // LB6 Do not break before hard line breaks.
-    if (HARD_LINE_BREAKS.indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB7 Do not break before spaces or zero width space.
-    if (SPACE.indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB8 Break before any character following a zero-width space, even if one or more spaces intervene.
-    if (previousNonSpaceClassType(currentIndex, classTypes) === ZW) {
-        return BREAK_ALLOWED;
-    }
-
-    // LB8a Do not break between a zero width joiner and an ideograph, emoji base or emoji modifier.
-    if (UnicodeTrie.get(codePoints[currentIndex]) === ZWJ && (next === ID || next === EB || next === EM)) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB11 Do not break before or after Word joiner and related characters.
-    if (current === WJ || next === WJ) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB12 Do not break after NBSP and related characters.
-    if (current === GL) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB12a Do not break before NBSP and related characters, except after spaces and hyphens.
-    if ([SP, BA, HY].indexOf(current) === -1 && next === GL) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB13 Do not break before ‘]’ or ‘!’ or ‘;’ or ‘/’, even after spaces.
-    if ([CL, CP, EX, IS, SY].indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB14 Do not break after ‘[’, even after spaces.
-    if (previousNonSpaceClassType(currentIndex, classTypes) === OP) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB15 Do not break within ‘”[’, even with intervening spaces.
-    if (isAdjacentWithSpaceIgnored(QU, OP, currentIndex, classTypes)) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB16 Do not break between closing punctuation and a nonstarter (lb=NS), even with intervening spaces.
-    if (isAdjacentWithSpaceIgnored([CL, CP], NS, currentIndex, classTypes)) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB17 Do not break within ‘——’, even with intervening spaces.
-    if (isAdjacentWithSpaceIgnored(B2, B2, currentIndex, classTypes)) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB18 Break after spaces.
-    if (current === SP) {
-        return BREAK_ALLOWED;
-    }
-
-    // LB19 Do not break before or after quotation marks, such as ‘ ” ’.
-    if (current === QU || next === QU) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB20 Break before and after unresolved CB.
-    if (next === CB || current === CB) {
-        return BREAK_ALLOWED;
-    }
-
-    // LB21 Do not break before hyphen-minus, other hyphens, fixed-width spaces, small kana, and other non-starters, or after acute accents.
-    if ([BA, HY, NS].indexOf(next) !== -1 || current === BB) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB21a Don't break after Hebrew + Hyphen.
-    if (before === HL && HYPHEN.indexOf(current) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB21b Don’t break between Solidus and Hebrew letters.
-    if (current === SY && next === HL) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB22 Do not break between two ellipses, or between letters, numbers or exclamations and ellipsis.
-    if (next === IN && ALPHABETICS.concat(IN, EX, NU, ID, EB, EM).indexOf(current) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB23 Do not break between digits and letters.
-    if (ALPHABETICS.indexOf(next) !== -1 && current === NU || ALPHABETICS.indexOf(current) !== -1 && next === NU) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB23a Do not break between numeric prefixes and ideographs, or between ideographs and numeric postfixes.
-    if (current === PR && [ID, EB, EM].indexOf(next) !== -1 || [ID, EB, EM].indexOf(current) !== -1 && next === PO) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB24 Do not break between numeric prefix/postfix and letters, or between letters and prefix/postfix.
-    if (ALPHABETICS.indexOf(current) !== -1 && PREFIX_POSTFIX.indexOf(next) !== -1 || PREFIX_POSTFIX.indexOf(current) !== -1 && ALPHABETICS.indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB25 Do not break between the following pairs of classes relevant to numbers:
-    if (
-    // (PR | PO) × ( OP | HY )? NU
-    [PR, PO].indexOf(current) !== -1 && (next === NU || [OP, HY].indexOf(next) !== -1 && classTypes[afterIndex + 1] === NU) ||
-    // ( OP | HY ) × NU
-    [OP, HY].indexOf(current) !== -1 && next === NU ||
-    // NU ×	(NU | SY | IS)
-    current === NU && [NU, SY, IS].indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // NU (NU | SY | IS)* × (NU | SY | IS | CL | CP)
-    if ([NU, SY, IS, CL, CP].indexOf(next) !== -1) {
-        var prevIndex = currentIndex;
-        while (prevIndex >= 0) {
-            var type = classTypes[prevIndex];
-            if (type === NU) {
-                return BREAK_NOT_ALLOWED;
-            } else if ([SY, IS].indexOf(type) !== -1) {
-                prevIndex--;
-            } else {
-                break;
-            }
-        }
-    }
-
-    // NU (NU | SY | IS)* (CL | CP)? × (PO | PR))
-    if ([PR, PO].indexOf(next) !== -1) {
-        var _prevIndex = [CL, CP].indexOf(current) !== -1 ? beforeIndex : currentIndex;
-        while (_prevIndex >= 0) {
-            var _type = classTypes[_prevIndex];
-            if (_type === NU) {
-                return BREAK_NOT_ALLOWED;
-            } else if ([SY, IS].indexOf(_type) !== -1) {
-                _prevIndex--;
-            } else {
-                break;
-            }
-        }
-    }
-
-    // LB26 Do not break a Korean syllable.
-    if (JL === current && [JL, JV, H2, H3].indexOf(next) !== -1 || [JV, H2].indexOf(current) !== -1 && [JV, JT].indexOf(next) !== -1 || [JT, H3].indexOf(current) !== -1 && next === JT) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB27 Treat a Korean Syllable Block the same as ID.
-    if (KOREAN_SYLLABLE_BLOCK.indexOf(current) !== -1 && [IN, PO].indexOf(next) !== -1 || KOREAN_SYLLABLE_BLOCK.indexOf(next) !== -1 && current === PR) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB28 Do not break between alphabetics (“at”).
-    if (ALPHABETICS.indexOf(current) !== -1 && ALPHABETICS.indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB29 Do not break between numeric punctuation and alphabetics (“e.g.”).
-    if (current === IS && ALPHABETICS.indexOf(next) !== -1) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB30 Do not break between letters, numbers, or ordinary symbols and opening or closing parentheses.
-    if (ALPHABETICS.concat(NU).indexOf(current) !== -1 && next === OP || ALPHABETICS.concat(NU).indexOf(next) !== -1 && current === CP) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB30a Break between two regional indicator symbols if and only if there are an even number of regional
-    // indicators preceding the position of the break.
-    if (current === RI && next === RI) {
-        var i = indicies[currentIndex];
-        var count = 1;
-        while (i > 0) {
-            i--;
-            if (classTypes[i] === RI) {
-                count++;
-            } else {
-                break;
-            }
-        }
-        if (count % 2 !== 0) {
-            return BREAK_NOT_ALLOWED;
-        }
-    }
-
-    // LB30b Do not break between an emoji base and an emoji modifier.
-    if (current === EB && next === EM) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    return BREAK_ALLOWED;
-};
-
-var lineBreakAtIndex = exports.lineBreakAtIndex = function lineBreakAtIndex(codePoints, index) {
-    // LB2 Never break at the start of text.
-    if (index === 0) {
-        return BREAK_NOT_ALLOWED;
-    }
-
-    // LB3 Always break at the end of text.
-    if (index >= codePoints.length) {
-        return BREAK_MANDATORY;
-    }
-
-    var _codePointsToCharacte = codePointsToCharacterClasses(codePoints),
-        _codePointsToCharacte2 = _slicedToArray(_codePointsToCharacte, 2),
-        indicies = _codePointsToCharacte2[0],
-        classTypes = _codePointsToCharacte2[1];
-
-    return _lineBreakAtIndex(codePoints, classTypes, indicies, index);
-};
-
-var cssFormattedClasses = function cssFormattedClasses(codePoints, options) {
-    if (!options) {
-        options = { lineBreak: 'normal', wordBreak: 'normal' };
-    }
-
-    var _codePointsToCharacte3 = codePointsToCharacterClasses(codePoints, options.lineBreak),
-        _codePointsToCharacte4 = _slicedToArray(_codePointsToCharacte3, 3),
-        indicies = _codePointsToCharacte4[0],
-        classTypes = _codePointsToCharacte4[1],
-        isLetterNumber = _codePointsToCharacte4[2];
-
-    if (options.wordBreak === 'break-all' || options.wordBreak === 'break-word') {
-        classTypes = classTypes.map(function (type) {
-            return [NU, AL, SA].indexOf(type) !== -1 ? ID : type;
-        });
-    }
-
-    var forbiddenBreakpoints = options.wordBreak === 'keep-all' ? isLetterNumber.map(function (isLetterNumber, i) {
-        return isLetterNumber && codePoints[i] >= 0x4e00 && codePoints[i] <= 0x9fff;
-    }) : null;
-
-    return [indicies, classTypes, forbiddenBreakpoints];
-};
-
-var inlineBreakOpportunities = exports.inlineBreakOpportunities = function inlineBreakOpportunities(str, options) {
-    var codePoints = (0, _Util.toCodePoints)(str);
-    var output = BREAK_NOT_ALLOWED;
-
-    var _cssFormattedClasses = cssFormattedClasses(codePoints, options),
-        _cssFormattedClasses2 = _slicedToArray(_cssFormattedClasses, 3),
-        indicies = _cssFormattedClasses2[0],
-        classTypes = _cssFormattedClasses2[1],
-        forbiddenBreakpoints = _cssFormattedClasses2[2];
-
-    codePoints.forEach(function (codePoint, i) {
-        output += (0, _Util.fromCodePoint)(codePoint) + (i >= codePoints.length - 1 ? BREAK_MANDATORY : _lineBreakAtIndex(codePoints, classTypes, indicies, i + 1, forbiddenBreakpoints));
-    });
-
-    return output;
-};
-
-var Break = function () {
-    function Break(codePoints, lineBreak, start, end) {
-        _classCallCheck(this, Break);
-
-        this._codePoints = codePoints;
-        this.required = lineBreak === BREAK_MANDATORY;
-        this.start = start;
-        this.end = end;
-    }
-
-    _createClass(Break, [{
-        key: 'slice',
-        value: function slice() {
-            return _Util.fromCodePoint.apply(undefined, _toConsumableArray(this._codePoints.slice(this.start, this.end)));
-        }
-    }]);
-
-    return Break;
-}();
-
-var LineBreaker = exports.LineBreaker = function LineBreaker(str, options) {
-    var codePoints = (0, _Util.toCodePoints)(str);
-
-    var _cssFormattedClasses3 = cssFormattedClasses(codePoints, options),
-        _cssFormattedClasses4 = _slicedToArray(_cssFormattedClasses3, 3),
-        indicies = _cssFormattedClasses4[0],
-        classTypes = _cssFormattedClasses4[1],
-        forbiddenBreakpoints = _cssFormattedClasses4[2];
-
-    var length = codePoints.length;
-    var lastEnd = 0;
-    var nextIndex = 0;
-
-    return {
-        next: function next() {
-            if (nextIndex >= length) {
-                return { done: true };
-            }
-            var lineBreak = BREAK_NOT_ALLOWED;
-            while (nextIndex < length && (lineBreak = _lineBreakAtIndex(codePoints, classTypes, indicies, ++nextIndex, forbiddenBreakpoints)) === BREAK_NOT_ALLOWED) {}
-
-            if (lineBreak !== BREAK_NOT_ALLOWED || nextIndex === length) {
-                var value = new Break(codePoints, lineBreak, lastEnd, nextIndex);
-                lastEnd = nextIndex;
-                return { value: value, done: false };
-            }
-
-            return { done: true };
-        }
-    };
-};
-
-/***/ }),
-
-/***/ "./node_modules/css-line-break/dist/Trie.js":
-/*!**************************************************!*\
-  !*** ./node_modules/css-line-break/dist/Trie.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Trie = exports.createTrieFromBase64 = exports.UTRIE2_INDEX_2_MASK = exports.UTRIE2_INDEX_2_BLOCK_LENGTH = exports.UTRIE2_OMITTED_BMP_INDEX_1_LENGTH = exports.UTRIE2_INDEX_1_OFFSET = exports.UTRIE2_UTF8_2B_INDEX_2_LENGTH = exports.UTRIE2_UTF8_2B_INDEX_2_OFFSET = exports.UTRIE2_INDEX_2_BMP_LENGTH = exports.UTRIE2_LSCP_INDEX_2_LENGTH = exports.UTRIE2_DATA_MASK = exports.UTRIE2_DATA_BLOCK_LENGTH = exports.UTRIE2_LSCP_INDEX_2_OFFSET = exports.UTRIE2_SHIFT_1_2 = exports.UTRIE2_INDEX_SHIFT = exports.UTRIE2_SHIFT_1 = exports.UTRIE2_SHIFT_2 = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/css-line-break/dist/Util.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/** Shift size for getting the index-2 table offset. */
-var UTRIE2_SHIFT_2 = exports.UTRIE2_SHIFT_2 = 5;
-
-/** Shift size for getting the index-1 table offset. */
-var UTRIE2_SHIFT_1 = exports.UTRIE2_SHIFT_1 = 6 + 5;
-
-/**
- * Shift size for shifting left the index array values.
- * Increases possible data size with 16-bit index values at the cost
- * of compactability.
- * This requires data blocks to be aligned by UTRIE2_DATA_GRANULARITY.
- */
-var UTRIE2_INDEX_SHIFT = exports.UTRIE2_INDEX_SHIFT = 2;
-
-/**
- * Difference between the two shift sizes,
- * for getting an index-1 offset from an index-2 offset. 6=11-5
- */
-var UTRIE2_SHIFT_1_2 = exports.UTRIE2_SHIFT_1_2 = UTRIE2_SHIFT_1 - UTRIE2_SHIFT_2;
-
-/**
- * The part of the index-2 table for U+D800..U+DBFF stores values for
- * lead surrogate code _units_ not code _points_.
- * Values for lead surrogate code _points_ are indexed with this portion of the table.
- * Length=32=0x20=0x400>>UTRIE2_SHIFT_2. (There are 1024=0x400 lead surrogates.)
- */
-var UTRIE2_LSCP_INDEX_2_OFFSET = exports.UTRIE2_LSCP_INDEX_2_OFFSET = 0x10000 >> UTRIE2_SHIFT_2;
-
-/** Number of entries in a data block. 32=0x20 */
-var UTRIE2_DATA_BLOCK_LENGTH = exports.UTRIE2_DATA_BLOCK_LENGTH = 1 << UTRIE2_SHIFT_2;
-/** Mask for getting the lower bits for the in-data-block offset. */
-var UTRIE2_DATA_MASK = exports.UTRIE2_DATA_MASK = UTRIE2_DATA_BLOCK_LENGTH - 1;
-
-var UTRIE2_LSCP_INDEX_2_LENGTH = exports.UTRIE2_LSCP_INDEX_2_LENGTH = 0x400 >> UTRIE2_SHIFT_2;
-/** Count the lengths of both BMP pieces. 2080=0x820 */
-var UTRIE2_INDEX_2_BMP_LENGTH = exports.UTRIE2_INDEX_2_BMP_LENGTH = UTRIE2_LSCP_INDEX_2_OFFSET + UTRIE2_LSCP_INDEX_2_LENGTH;
-/**
- * The 2-byte UTF-8 version of the index-2 table follows at offset 2080=0x820.
- * Length 32=0x20 for lead bytes C0..DF, regardless of UTRIE2_SHIFT_2.
- */
-var UTRIE2_UTF8_2B_INDEX_2_OFFSET = exports.UTRIE2_UTF8_2B_INDEX_2_OFFSET = UTRIE2_INDEX_2_BMP_LENGTH;
-var UTRIE2_UTF8_2B_INDEX_2_LENGTH = exports.UTRIE2_UTF8_2B_INDEX_2_LENGTH = 0x800 >> 6; /* U+0800 is the first code point after 2-byte UTF-8 */
-/**
- * The index-1 table, only used for supplementary code points, at offset 2112=0x840.
- * Variable length, for code points up to highStart, where the last single-value range starts.
- * Maximum length 512=0x200=0x100000>>UTRIE2_SHIFT_1.
- * (For 0x100000 supplementary code points U+10000..U+10ffff.)
- *
- * The part of the index-2 table for supplementary code points starts
- * after this index-1 table.
- *
- * Both the index-1 table and the following part of the index-2 table
- * are omitted completely if there is only BMP data.
- */
-var UTRIE2_INDEX_1_OFFSET = exports.UTRIE2_INDEX_1_OFFSET = UTRIE2_UTF8_2B_INDEX_2_OFFSET + UTRIE2_UTF8_2B_INDEX_2_LENGTH;
-
-/**
- * Number of index-1 entries for the BMP. 32=0x20
- * This part of the index-1 table is omitted from the serialized form.
- */
-var UTRIE2_OMITTED_BMP_INDEX_1_LENGTH = exports.UTRIE2_OMITTED_BMP_INDEX_1_LENGTH = 0x10000 >> UTRIE2_SHIFT_1;
-
-/** Number of entries in an index-2 block. 64=0x40 */
-var UTRIE2_INDEX_2_BLOCK_LENGTH = exports.UTRIE2_INDEX_2_BLOCK_LENGTH = 1 << UTRIE2_SHIFT_1_2;
-/** Mask for getting the lower bits for the in-index-2-block offset. */
-var UTRIE2_INDEX_2_MASK = exports.UTRIE2_INDEX_2_MASK = UTRIE2_INDEX_2_BLOCK_LENGTH - 1;
-
-var createTrieFromBase64 = exports.createTrieFromBase64 = function createTrieFromBase64(base64) {
-    var buffer = (0, _Util.decode)(base64);
-    var view32 = Array.isArray(buffer) ? (0, _Util.polyUint32Array)(buffer) : new Uint32Array(buffer);
-    var view16 = Array.isArray(buffer) ? (0, _Util.polyUint16Array)(buffer) : new Uint16Array(buffer);
-    var headerLength = 24;
-
-    var index = view16.slice(headerLength / 2, view32[4] / 2);
-    var data = view32[5] === 2 ? view16.slice((headerLength + view32[4]) / 2) : view32.slice(Math.ceil((headerLength + view32[4]) / 4));
-
-    return new Trie(view32[0], view32[1], view32[2], view32[3], index, data);
-};
-
-var Trie = exports.Trie = function () {
-    function Trie(initialValue, errorValue, highStart, highValueIndex, index, data) {
-        _classCallCheck(this, Trie);
-
-        this.initialValue = initialValue;
-        this.errorValue = errorValue;
-        this.highStart = highStart;
-        this.highValueIndex = highValueIndex;
-        this.index = index;
-        this.data = data;
-    }
-
-    /**
-     * Get the value for a code point as stored in the Trie.
-     *
-     * @param codePoint the code point
-     * @return the value
-     */
-
-
-    _createClass(Trie, [{
-        key: 'get',
-        value: function get(codePoint) {
-            var ix = void 0;
-            if (codePoint >= 0) {
-                if (codePoint < 0x0d800 || codePoint > 0x0dbff && codePoint <= 0x0ffff) {
-                    // Ordinary BMP code point, excluding leading surrogates.
-                    // BMP uses a single level lookup.  BMP index starts at offset 0 in the Trie2 index.
-                    // 16 bit data is stored in the index array itself.
-                    ix = this.index[codePoint >> UTRIE2_SHIFT_2];
-                    ix = (ix << UTRIE2_INDEX_SHIFT) + (codePoint & UTRIE2_DATA_MASK);
-                    return this.data[ix];
-                }
-
-                if (codePoint <= 0xffff) {
-                    // Lead Surrogate Code Point.  A Separate index section is stored for
-                    // lead surrogate code units and code points.
-                    //   The main index has the code unit data.
-                    //   For this function, we need the code point data.
-                    // Note: this expression could be refactored for slightly improved efficiency, but
-                    //       surrogate code points will be so rare in practice that it's not worth it.
-                    ix = this.index[UTRIE2_LSCP_INDEX_2_OFFSET + (codePoint - 0xd800 >> UTRIE2_SHIFT_2)];
-                    ix = (ix << UTRIE2_INDEX_SHIFT) + (codePoint & UTRIE2_DATA_MASK);
-                    return this.data[ix];
-                }
-
-                if (codePoint < this.highStart) {
-                    // Supplemental code point, use two-level lookup.
-                    ix = UTRIE2_INDEX_1_OFFSET - UTRIE2_OMITTED_BMP_INDEX_1_LENGTH + (codePoint >> UTRIE2_SHIFT_1);
-                    ix = this.index[ix];
-                    ix += codePoint >> UTRIE2_SHIFT_2 & UTRIE2_INDEX_2_MASK;
-                    ix = this.index[ix];
-                    ix = (ix << UTRIE2_INDEX_SHIFT) + (codePoint & UTRIE2_DATA_MASK);
-                    return this.data[ix];
-                }
-                if (codePoint <= 0x10ffff) {
-                    return this.data[this.highValueIndex];
-                }
-            }
-
-            // Fall through.  The code point is outside of the legal range of 0..0x10ffff.
-            return this.errorValue;
-        }
-    }]);
-
-    return Trie;
-}();
-
-/***/ }),
-
-/***/ "./node_modules/css-line-break/dist/Util.js":
-/*!**************************************************!*\
-  !*** ./node_modules/css-line-break/dist/Util.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var toCodePoints = exports.toCodePoints = function toCodePoints(str) {
-    var codePoints = [];
-    var i = 0;
-    var length = str.length;
-    while (i < length) {
-        var value = str.charCodeAt(i++);
-        if (value >= 0xd800 && value <= 0xdbff && i < length) {
-            var extra = str.charCodeAt(i++);
-            if ((extra & 0xfc00) === 0xdc00) {
-                codePoints.push(((value & 0x3ff) << 10) + (extra & 0x3ff) + 0x10000);
-            } else {
-                codePoints.push(value);
-                i--;
-            }
-        } else {
-            codePoints.push(value);
-        }
-    }
-    return codePoints;
-};
-
-var fromCodePoint = exports.fromCodePoint = function fromCodePoint() {
-    if (String.fromCodePoint) {
-        return String.fromCodePoint.apply(String, arguments);
-    }
-
-    var length = arguments.length;
-    if (!length) {
-        return '';
-    }
-
-    var codeUnits = [];
-
-    var index = -1;
-    var result = '';
-    while (++index < length) {
-        var codePoint = arguments.length <= index ? undefined : arguments[index];
-        if (codePoint <= 0xffff) {
-            codeUnits.push(codePoint);
-        } else {
-            codePoint -= 0x10000;
-            codeUnits.push((codePoint >> 10) + 0xd800, codePoint % 0x400 + 0xdc00);
-        }
-        if (index + 1 === length || codeUnits.length > 0x4000) {
-            result += String.fromCharCode.apply(String, codeUnits);
-            codeUnits.length = 0;
-        }
-    }
-    return result;
-};
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-// Use a lookup table to find the index.
-var lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
-for (var i = 0; i < chars.length; i++) {
-    lookup[chars.charCodeAt(i)] = i;
-}
-
-var decode = exports.decode = function decode(base64) {
-    var bufferLength = base64.length * 0.75,
-        len = base64.length,
-        i = void 0,
-        p = 0,
-        encoded1 = void 0,
-        encoded2 = void 0,
-        encoded3 = void 0,
-        encoded4 = void 0;
-
-    if (base64[base64.length - 1] === '=') {
-        bufferLength--;
-        if (base64[base64.length - 2] === '=') {
-            bufferLength--;
-        }
-    }
-
-    var buffer = typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined' && typeof Uint8Array.prototype.slice !== 'undefined' ? new ArrayBuffer(bufferLength) : new Array(bufferLength);
-    var bytes = Array.isArray(buffer) ? buffer : new Uint8Array(buffer);
-
-    for (i = 0; i < len; i += 4) {
-        encoded1 = lookup[base64.charCodeAt(i)];
-        encoded2 = lookup[base64.charCodeAt(i + 1)];
-        encoded3 = lookup[base64.charCodeAt(i + 2)];
-        encoded4 = lookup[base64.charCodeAt(i + 3)];
-
-        bytes[p++] = encoded1 << 2 | encoded2 >> 4;
-        bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
-        bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
-    }
-
-    return buffer;
-};
-
-var polyUint16Array = exports.polyUint16Array = function polyUint16Array(buffer) {
-    var length = buffer.length;
-    var bytes = [];
-    for (var _i = 0; _i < length; _i += 2) {
-        bytes.push(buffer[_i + 1] << 8 | buffer[_i]);
-    }
-    return bytes;
-};
-
-var polyUint32Array = exports.polyUint32Array = function polyUint32Array(buffer) {
-    var length = buffer.length;
-    var bytes = [];
-    for (var _i2 = 0; _i2 < length; _i2 += 4) {
-        bytes.push(buffer[_i2 + 3] << 24 | buffer[_i2 + 2] << 16 | buffer[_i2 + 1] << 8 | buffer[_i2]);
-    }
-    return bytes;
-};
-
-/***/ }),
-
-/***/ "./node_modules/css-line-break/dist/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/css-line-break/dist/index.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/css-line-break/dist/Util.js");
-
-Object.defineProperty(exports, 'toCodePoints', {
-  enumerable: true,
-  get: function get() {
-    return _Util.toCodePoints;
-  }
-});
-Object.defineProperty(exports, 'fromCodePoint', {
-  enumerable: true,
-  get: function get() {
-    return _Util.fromCodePoint;
-  }
-});
-
-var _LineBreak = __webpack_require__(/*! ./LineBreak */ "./node_modules/css-line-break/dist/LineBreak.js");
-
-Object.defineProperty(exports, 'LineBreaker', {
-  enumerable: true,
-  get: function get() {
-    return _LineBreak.LineBreaker;
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/css-line-break/dist/linebreak-trie.js":
-/*!************************************************************!*\
-  !*** ./node_modules/css-line-break/dist/linebreak-trie.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = 'KwAAAAAAAAAACA4AIDoAAPAfAAACAAAAAAAIABAAGABAAEgAUABYAF4AZgBeAGYAYABoAHAAeABeAGYAfACEAIAAiACQAJgAoACoAK0AtQC9AMUAXgBmAF4AZgBeAGYAzQDVAF4AZgDRANkA3gDmAOwA9AD8AAQBDAEUARoBIgGAAIgAJwEvATcBPwFFAU0BTAFUAVwBZAFsAXMBewGDATAAiwGTAZsBogGkAawBtAG8AcIBygHSAdoB4AHoAfAB+AH+AQYCDgIWAv4BHgImAi4CNgI+AkUCTQJTAlsCYwJrAnECeQKBAk0CiQKRApkCoQKoArACuALAAsQCzAIwANQC3ALkAjAA7AL0AvwCAQMJAxADGAMwACADJgMuAzYDPgOAAEYDSgNSA1IDUgNaA1oDYANiA2IDgACAAGoDgAByA3YDfgOAAIQDgACKA5IDmgOAAIAAogOqA4AAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAK8DtwOAAIAAvwPHA88D1wPfAyAD5wPsA/QD/AOAAIAABAQMBBIEgAAWBB4EJgQuBDMEIAM7BEEEXgBJBCADUQRZBGEEaQQwADAAcQQ+AXkEgQSJBJEEgACYBIAAoASoBK8EtwQwAL8ExQSAAIAAgACAAIAAgACgAM0EXgBeAF4AXgBeAF4AXgBeANUEXgDZBOEEXgDpBPEE+QQBBQkFEQUZBSEFKQUxBTUFPQVFBUwFVAVcBV4AYwVeAGsFcwV7BYMFiwWSBV4AmgWgBacFXgBeAF4AXgBeAKsFXgCyBbEFugW7BcIFwgXIBcIFwgXQBdQF3AXkBesF8wX7BQMGCwYTBhsGIwYrBjMGOwZeAD8GRwZNBl4AVAZbBl4AXgBeAF4AXgBeAF4AXgBeAF4AXgBeAGMGXgBqBnEGXgBeAF4AXgBeAF4AXgBeAF4AXgB5BoAG4wSGBo4GkwaAAIADHgR5AF4AXgBeAJsGgABGA4AAowarBrMGswagALsGwwbLBjAA0wbaBtoG3QbaBtoG2gbaBtoG2gblBusG8wb7BgMHCwcTBxsHCwcjBysHMAc1BzUHOgdCB9oGSgdSB1oHYAfaBloHaAfaBlIH2gbaBtoG2gbaBtoG2gbaBjUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHbQdeAF4ANQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQd1B30HNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B4MH2gaKB68EgACAAIAAgACAAIAAgACAAI8HlwdeAJ8HpweAAIAArwe3B14AXgC/B8UHygcwANAH2AfgB4AA6AfwBz4B+AcACFwBCAgPCBcIogEYAR8IJwiAAC8INwg/CCADRwhPCFcIXwhnCEoDGgSAAIAAgABvCHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIhAiLCI4IMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlggwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAANQc1BzUHNQc1BzUHNQc1BzUHNQc1B54INQc1B6II2gaqCLIIugiAAIAAvgjGCIAAgACAAIAAgACAAIAAgACAAIAAywiHAYAA0wiAANkI3QjlCO0I9Aj8CIAAgACAAAIJCgkSCRoJIgknCTYHLwk3CZYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiAAIAAAAFAAXgBeAGAAcABeAHwAQACQAKAArQC9AJ4AXgBeAE0A3gBRAN4A7AD8AMwBGgEAAKcBNwEFAUwBXAF4QkhCmEKnArcCgAHHAsABz4LAAcABwAHAAd+C6ABoAG+C/4LAAcABwAHAAc+DF4MAAcAB54M3gweDV4Nng3eDaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAEeDqABVg6WDqABoQ6gAaABoAHXDvcONw/3DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DncPAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcAB7cPPwlGCU4JMACAAIAAgABWCV4JYQmAAGkJcAl4CXwJgAkwADAAMAAwAIgJgACLCZMJgACZCZ8JowmrCYAAswkwAF4AXgB8AIAAuwkABMMJyQmAAM4JgADVCTAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAqwYWBNkIMAAwADAAMADdCeAJ6AnuCR4E9gkwAP4JBQoNCjAAMACAABUK0wiAAB0KJAosCjQKgAAwADwKQwqAAEsKvQmdCVMKWwowADAAgACAALcEMACAAGMKgABrCjAAMAAwADAAMAAwADAAMAAwADAAMAAeBDAAMAAwADAAMAAwADAAMAAwADAAMAAwAIkEPQFzCnoKiQSCCooKkAqJBJgKoAqkCokEGAGsCrQKvArBCjAAMADJCtEKFQHZCuEK/gHpCvEKMAAwADAAMACAAIwE+QowAIAAPwEBCzAAMAAwADAAMACAAAkLEQswAIAAPwEZCyELgAAOCCkLMAAxCzkLMAAwADAAMAAwADAAXgBeAEELMAAwADAAMAAwADAAMAAwAEkLTQtVC4AAXAtkC4AAiQkwADAAMAAwADAAMAAwADAAbAtxC3kLgAuFC4sLMAAwAJMLlwufCzAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAApwswADAAMACAAIAAgACvC4AAgACAAIAAgACAALcLMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAvwuAAMcLgACAAIAAgACAAIAAyguAAIAAgACAAIAA0QswADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAANkLgACAAIAA4AswADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACJCR4E6AswADAAhwHwC4AA+AsADAgMEAwwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMACAAIAAGAwdDCUMMAAwAC0MNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQw1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHPQwwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADUHNQc1BzUHNQc1BzUHNQc2BzAAMAA5DDUHNQc1BzUHNQc1BzUHNQc1BzUHNQdFDDAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAATQxSDFoMMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAF4AXgBeAF4AXgBeAF4AYgxeAGoMXgBxDHkMfwxeAIUMXgBeAI0MMAAwADAAMAAwAF4AXgCVDJ0MMAAwADAAMABeAF4ApQxeAKsMswy7DF4Awgy9DMoMXgBeAF4AXgBeAF4AXgBeAF4AXgDRDNkMeQBqCeAM3Ax8AOYM7Az0DPgMXgBeAF4AXgBeAF4AXgBeAF4AXgBeAF4AXgBeAF4AXgCgAAANoAAHDQ4NFg0wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAeDSYNMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAC4NMABeAF4ANg0wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAD4NRg1ODVYNXg1mDTAAbQ0wADAAMAAwADAAMAAwADAA2gbaBtoG2gbaBtoG2gbaBnUNeg3CBYANwgWFDdoGjA3aBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gaUDZwNpA2oDdoG2gawDbcNvw3HDdoG2gbPDdYN3A3fDeYN2gbsDfMN2gbaBvoN/g3aBgYODg7aBl4AXgBeABYOXgBeACUG2gYeDl4AJA5eACwO2w3aBtoGMQ45DtoG2gbaBtoGQQ7aBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gZJDjUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B1EO2gY1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQdZDjUHNQc1BzUHNQc1B2EONQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHaA41BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B3AO2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gY1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B2EO2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gZJDtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBkkOeA6gAKAAoAAwADAAMAAwAKAAoACgAKAAoACgAKAAgA4wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAD//wQABAAEAAQABAAEAAQABAAEAA0AAwABAAEAAgAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAKABMAFwAeABsAGgAeABcAFgASAB4AGwAYAA8AGAAcAEsASwBLAEsASwBLAEsASwBLAEsAGAAYAB4AHgAeABMAHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAFgAbABIAHgAeAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABYADQARAB4ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAUABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAkAFgAaABsAGwAbAB4AHQAdAB4ATwAXAB4ADQAeAB4AGgAbAE8ATwAOAFAAHQAdAB0ATwBPABcATwBPAE8AFgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AHgAeAB4AUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAFAATwBAAE8ATwBPAEAATwBQAFAATwBQAB4AHgAeAB4AHgAeAB0AHQAdAB0AHgAdAB4ADgBQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgBQAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAJAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAkACQAJAAkACQAJAAkABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAeAB4AHgAeAFAAHgAeAB4AKwArAFAAUABQAFAAGABQACsAKwArACsAHgAeAFAAHgBQAFAAUAArAFAAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAAQABAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAUAAeAB4AHgAeAB4AHgArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwAYAA0AKwArAB4AHgAbACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQADQAEAB4ABAAEAB4ABAAEABMABAArACsAKwArACsAKwArACsAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAKwArACsAKwArAFYAVgBWAB4AHgArACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AGgAaABoAGAAYAB4AHgAEAAQABAAEAAQABAAEAAQABAAEAAQAEwAEACsAEwATAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABLAEsASwBLAEsASwBLAEsASwBLABoAGQAZAB4AUABQAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABMAUAAEAAQABAAEAAQABAAEAB4AHgAEAAQABAAEAAQABABQAFAABAAEAB4ABAAEAAQABABQAFAASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUAAeAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAFAABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQAUABQAB4AHgAYABMAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAFAABAAEAAQABAAEAFAABAAEAAQAUAAEAAQABAAEAAQAKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAArACsAHgArAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAeAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAFAABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAAQABAANAA0ASwBLAEsASwBLAEsASwBLAEsASwAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAKwArACsAUABQAFAAUAArACsABABQAAQABAAEAAQABAAEAAQAKwArAAQABAArACsABAAEAAQAUAArACsAKwArACsAKwArACsABAArACsAKwArAFAAUAArAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwBQAFAAGgAaAFAAUABQAFAAUABMAB4AGwBQAB4AKwArACsABAAEAAQAKwBQAFAAUABQAFAAUAArACsAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUAArAFAAUAArAFAAUAArACsABAArAAQABAAEAAQABAArACsAKwArAAQABAArACsABAAEAAQAKwArACsABAArACsAKwArACsAKwArAFAAUABQAFAAKwBQACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwAEAAQAUABQAFAABAArACsAKwArACsAKwArACsAKwArACsABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUAArAFAAUABQAFAAUAArACsABABQAAQABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQAKwArAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwAeABsAKwArACsAKwArACsAKwBQAAQABAAEAAQABAAEACsABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAKwArAAQABAArACsABAAEAAQAKwArACsAKwArACsAKwArAAQABAArACsAKwArAFAAUAArAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwAeAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwAEAFAAKwBQAFAAUABQAFAAUAArACsAKwBQAFAAUAArAFAAUABQAFAAKwArACsAUABQACsAUAArAFAAUAArACsAKwBQAFAAKwArACsAUABQAFAAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwAEAAQABAAEAAQAKwArACsABAAEAAQAKwAEAAQABAAEACsAKwBQACsAKwArACsAKwArAAQAKwArACsAKwArACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAB4AHgAeAB4AHgAeABsAHgArACsAKwArACsABAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABAArACsAKwArACsAKwArAAQABAArAFAAUABQACsAKwArACsAKwBQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAB4AUAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQACsAKwAEAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABAArACsAKwArACsAKwArAAQABAArACsAKwArACsAKwArAFAAKwBQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABABQAB4AKwArACsAKwBQAFAAUAAEAFAAUABQAFAAUABQAFAAUABQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAFAAUABQAFAAUABQABoAUABQAFAAUABQAFAAKwArAAQABAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQACsAUAArACsAUABQAFAAUABQAFAAUAArACsAKwAEACsAKwArACsABAAEAAQABAAEAAQAKwAEACsABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArAAQABAAeACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqAFwAXAAqACoAKgAqACoAKgAqACsAKwArACsAGwBcAFwAXABcAFwAXABcACoAKgAqACoAKgAqACoAKgAeAEsASwBLAEsASwBLAEsASwBLAEsADQANACsAKwArACsAKwBcAFwAKwBcACsAKwBcAFwAKwBcACsAKwBcACsAKwArACsAKwArAFwAXABcAFwAKwBcAFwAXABcAFwAXABcACsAXABcAFwAKwBcACsAXAArACsAXABcACsAXABcAFwAXAAqAFwAXAAqACoAKgAqACoAKgArACoAKgBcACsAKwBcAFwAXABcAFwAKwBcACsAKgAqACoAKgAqACoAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArAFwAXABcAFwAUAAOAA4ADgAOAB4ADgAOAAkADgAOAA0ACQATABMAEwATABMACQAeABMAHgAeAB4ABAAEAB4AHgAeAB4AHgAeAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAFAAUAANAAQAHgAEAB4ABAAWABEAFgARAAQABABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAANAAQABAAEAAQABAANAAQABABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsADQANAB4AHgAeAB4AHgAeAAQAHgAeAB4AHgAeAB4AKwAeAB4ADgAOAA0ADgAeAB4AHgAeAB4ACQAJACsAKwArACsAKwBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqAFwASwBLAEsASwBLAEsASwBLAEsASwANAA0AHgAeAB4AHgBcAFwAXABcAFwAXAAqACoAKgAqAFwAXABcAFwAKgAqACoAXAAqACoAKgBcAFwAKgAqACoAKgAqACoAKgBcAFwAXAAqACoAKgAqAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgAqACoAXAAqAEsASwBLAEsASwBLAEsASwBLAEsAKgAqACoAKgAqACoAUABQAFAAUABQAFAAKwBQACsAKwArACsAKwBQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAFAAUABQAFAAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQACsAKwBQAFAAUABQAFAAUABQACsAUAArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArACsAUABQAFAAUABQAFAAUAArAFAAKwBQAFAAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwAEAAQABAAeAA0AHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQACsAKwANAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABYAEQArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAADQANAA0AUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAABAAEAAQAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAA0ADQArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsABAAEACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoADQANABUAXAANAB4ADQAbAFwAKgArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArAB4AHgATABMADQANAA4AHgATABMAHgAEAAQABAAJACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAUABQAFAAUABQAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABABQACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwAeACsAKwArABMAEwBLAEsASwBLAEsASwBLAEsASwBLAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcACsAKwBcAFwAXABcAFwAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcACsAKwArACsAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwBcACsAKwArACoAKgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEACsAKwAeAB4AXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgArACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgArACsABABLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAKgAqACoAKgAqACoAKgBcACoAKgAqACoAKgAqACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAUABQAFAAUABQAFAAUAArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsADQANAB4ADQANAA0ADQAeAB4AHgAeAB4AHgAeAB4AHgAeAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArAAQABAAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAUABQAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAHgAeAB4AHgBQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwANAA0ADQANAA0ASwBLAEsASwBLAEsASwBLAEsASwArACsAKwBQAFAAUABLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAANAA0AUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsABAAEAAQAHgAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAFAAUABQAFAABABQAFAAUABQAAQABAAEAFAAUAAEAAQABAArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwAEAAQABAAEAAQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUAArAFAAKwBQACsAUAArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAFAAHgAeAB4AUABQAFAAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAKwArAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAKwAeAB4AHgAeAB4AHgAeAA4AHgArAA0ADQANAA0ADQANAA0ACQANAA0ADQAIAAQACwAEAAQADQAJAA0ADQAMAB0AHQAeABcAFwAWABcAFwAXABYAFwAdAB0AHgAeABQAFAAUAA0AAQABAAQABAAEAAQABAAJABoAGgAaABoAGgAaABoAGgAeABcAFwAdABUAFQAeAB4AHgAeAB4AHgAYABYAEQAVABUAFQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgANAB4ADQANAA0ADQAeAA0ADQANAAcAHgAeAB4AHgArAAQABAAEAAQABAAEAAQABAAEAAQAUABQACsAKwBPAFAAUABQAFAAUAAeAB4AHgAWABEATwBQAE8ATwBPAE8AUABQAFAAUABQAB4AHgAeABYAEQArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAGwAbABsAGwAbABsAGwAaABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsAGwAaABsAGwAbABsAGgAbABsAGgAbABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgBQABoAHgAdAB4AUAAeABoAHgAeAB4AHgAeAB4AHgAeAB4ATwAeAFAAGwAeAB4AUABQAFAAUABQAB4AHgAeAB0AHQAeAFAAHgBQAB4AUAAeAFAATwBQAFAAHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AUABQAFAAUABPAE8AUABQAFAAUABQAE8AUABQAE8AUABPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBQAFAAUABQAE8ATwBPAE8ATwBPAE8ATwBPAE8AUABQAFAAUABQAFAAUABQAFAAHgAeAFAAUABQAFAATwAeAB4AKwArACsAKwAdAB0AHQAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAeAB0AHQAeAB4AHgAdAB0AHgAeAB0AHgAeAB4AHQAeAB0AGwAbAB4AHQAeAB4AHgAeAB0AHgAeAB0AHQAdAB0AHgAeAB0AHgAdAB4AHQAdAB0AHQAdAB0AHgAdAB4AHgAeAB4AHgAdAB0AHQAdAB4AHgAeAB4AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAeAB4AHgAdAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB4AHgAdAB0AHQAdAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHQAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAWABEAFgARAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAlACUAHgAeAB4AHgAeAB4AHgAeAB4AFgARAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBQAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeAB0AHQAdAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB0AHQAeAB4AHgAeAB0AHQAdAB4AHgAdAB4AHgAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAeAB0AHQAeAB4AHQAeAB4AHgAeAB0AHQAeAB4AHgAeACUAJQAdAB0AJQAeACUAJQAlACAAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAHgAeAB4AHgAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB4AHQAdAB0AHgAdACUAHQAdAB4AHQAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAHQAdAB0AHQAlAB4AJQAlACUAHQAlACUAHQAdAB0AJQAlAB0AHQAlAB0AHQAlACUAJQAeAB0AHgAeAB4AHgAdAB0AJQAdAB0AHQAdAB0AHQAlACUAJQAlACUAHQAlACUAIAAlAB0AHQAlACUAJQAlACUAJQAlACUAHgAeAB4AJQAlACAAIAAgACAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeABcAFwAXABcAFwAXAB4AEwATACUAHgAeAB4AFgARABYAEQAWABEAFgARABYAEQAWABEAFgARAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAWABEAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFgARABYAEQAWABEAFgARABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABYAEQAWABEAFgARABYAEQAWABEAFgARABYAEQAWABEAFgARABYAEQAWABEAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFgARABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAEAAQABAAeAB4AKwArACsAKwArABMADQANAA0AUAATAA0AUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUAANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQACsAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAA0ADQANAA0ADQANAA0ADQAeAA0AFgANAB4AHgAXABcAHgAeABcAFwAWABEAFgARABYAEQAWABEADQANAA0ADQATAFAADQANAB4ADQANAB4AHgAeAB4AHgAMAAwADQANAA0AHgANAA0AFgANAA0ADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAKwArACsAKwArACsAKwArACsAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArAA0AEQARACUAJQBHAFcAVwAWABEAFgARABYAEQAWABEAFgARACUAJQAWABEAFgARABYAEQAWABEAFQAWABEAEQAlAFcAVwBXAFcAVwBXAFcAVwBXAAQABAAEAAQABAAEACUAVwBXAFcAVwA2ACUAJQBXAFcAVwBHAEcAJQAlACUAKwBRAFcAUQBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFEAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBRAFcAUQBXAFEAVwBXAFcAVwBXAFcAUQBXAFcAVwBXAFcAVwBRAFEAKwArAAQABAAVABUARwBHAFcAFQBRAFcAUQBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBRAFcAVwBXAFcAVwBXAFEAUQBXAFcAVwBXABUAUQBHAEcAVwArACsAKwArACsAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwArACUAJQBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAKwArACUAJQAlACUAKwArACsAKwArACsAKwArACsAKwArACsAUQBRAFEAUQBRAFEAUQBRAFEAUQBRAFEAUQBRAFEAUQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAVwBXAFcAVwBXAFcAVwBXAFcAVwAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAE8ATwBPAE8ATwBPAE8ATwAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAEcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAADQATAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABLAEsASwBLAEsASwBLAEsASwBLAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAABAAEAAQABAAeAAQABAAEAAQABAAEAAQABAAEAAQAHgBQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AUABQAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAeAA0ADQANAA0ADQArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AHgAeAB4AHgAeAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAAQAUABQAFAABABQAFAAUABQAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAeAB4AHgAeACsAKwArACsAUABQAFAAUABQAFAAHgAeABoAHgArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAADgAOABMAEwArACsAKwArACsAKwArACsABAAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwANAA0ASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUAAeAB4AHgBQAA4AUAArACsAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAA0ADQBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwArACsAKwArACsAKwArAB4AWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYACsAKwArAAQAHgAeAB4AHgAeAB4ADQANAA0AHgAeAB4AHgArAFAASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArAB4AHgBcAFwAXABcAFwAKgBcAFwAXABcAFwAXABcAFwAXABcAEsASwBLAEsASwBLAEsASwBLAEsAXABcAFwAXABcACsAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArAFAAUABQAAQAUABQAFAAUABQAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAHgANAA0ADQBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAXAAqACoAKgBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqAFwAKgAqACoAXABcACoAKgBcAFwAXABcAFwAKgAqAFwAKgBcACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcACoAKgBQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAA0ADQBQAFAAUAAEAAQAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAArACsAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQADQAEAAQAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAVABVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBUAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVACsAKwArACsAKwArACsAKwArACsAKwArAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAKwArACsAKwBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAKwArACsAKwAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAKwArACsAKwArAFYABABWAFYAVgBWAFYAVgBWAFYAVgBWAB4AVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgArAFYAVgBWAFYAVgArAFYAKwBWAFYAKwBWAFYAKwBWAFYAVgBWAFYAVgBWAFYAVgBWAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAEQAWAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUAAaAB4AKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAGAARABEAGAAYABMAEwAWABEAFAArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACUAJQAlACUAJQAWABEAFgARABYAEQAWABEAFgARABYAEQAlACUAFgARACUAJQAlACUAJQAlACUAEQAlABEAKwAVABUAEwATACUAFgARABYAEQAWABEAJQAlACUAJQAlACUAJQAlACsAJQAbABoAJQArACsAKwArAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAcAKwATACUAJQAbABoAJQAlABYAEQAlACUAEQAlABEAJQBXAFcAVwBXAFcAVwBXAFcAVwBXABUAFQAlACUAJQATACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXABYAJQARACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwAWACUAEQAlABYAEQARABYAEQARABUAVwBRAFEAUQBRAFEAUQBRAFEAUQBRAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAEcARwArACsAVwBXAFcAVwBXAFcAKwArAFcAVwBXAFcAVwBXACsAKwBXAFcAVwBXAFcAVwArACsAVwBXAFcAKwArACsAGgAbACUAJQAlABsAGwArAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwAEAAQABAAQAB0AKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsADQANAA0AKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAFAAHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAKwArAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsADQBQAFAAUABQACsAKwArACsAUABQAFAAUABQAFAAUABQAA0AUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAArACsAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQACsAKwArAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AHgBQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsADQBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwBQAFAAUABQAFAABAAEAAQAKwAEAAQAKwArACsAKwArAAQABAAEAAQAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsABAAEAAQAKwArACsAKwAEAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsADQANAA0ADQANAA0ADQANAB4AKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AUABQAFAAUABQAFAAUABQAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEACsAKwArACsAUABQAFAAUABQAA0ADQANAA0ADQANABQAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwANAA0ADQANAA0ADQANAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAA0ADQAeAB4AHgAeAB4AKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAeAB4AHgANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsASwBLAEsASwBLAEsASwBLAEsASwANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAeAA4AUAArACsAKwArACsAKwArACsAKwAEAFAAUABQAFAADQANAB4ADQAeAAQABAAEAB4AKwArAEsASwBLAEsASwBLAEsASwBLAEsAUAAOAFAADQANAA0AKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAANAA0AHgANAA0AHgAEACsAUABQAFAAUABQAFAAUAArAFAAKwBQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAA0AKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsABAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArACsAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAArACsABAAEACsAKwAEAAQABAArACsAUAArACsAKwArACsAKwAEACsAKwArACsAKwBQAFAAUABQAFAABAAEACsAKwAEAAQABAAEAAQABAAEACsAKwArAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABABQAFAAUABQAA0ADQANAA0AHgBLAEsASwBLAEsASwBLAEsASwBLACsADQArAB4AKwArAAQABAAEAAQAUABQAB4AUAArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEACsAKwAEAAQABAAEAAQABAAEAAQABAAOAA0ADQATABMAHgAeAB4ADQANAA0ADQANAA0ADQANAA0ADQANAA0ADQANAA0AUABQAFAAUAAEAAQAKwArAAQADQANAB4AUAArACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwAOAA4ADgAOAA4ADgAOAA4ADgAOAA4ADgAOACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAArACsAKwAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAXABcAA0ADQANACoASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwBQAFAABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAFAABAAEAAQABAAOAB4ADQANAA0ADQAOAB4ABAArACsAKwArACsAKwArACsAUAAEAAQABAAEAAQABAAEAAQABAAEAAQAUABQAFAAUAArACsAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAA0ADQANACsADgAOAA4ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEACsABAAEAAQABAAEAAQABAAEAFAADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwAOABMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAArACsAKwAEACsABAAEACsABAAEAAQABAAEAAQABABQAAQAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAASABIAEgAQwBDAEMAUABQAFAAUABDAFAAUABQAEgAQwBIAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAASABDAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABIAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwANAA0AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAQABAAEAAQABAANACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAA0ADQANAB4AHgAeAB4AHgAeAFAAUABQAFAADQAeACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAEcARwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwArACsAKwArACsAKwArACsAKwArACsAKwArAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQACsAKwAeAAQABAANAAQABAAEAAQAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAB4AHgAeAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAHgAeAAQABAAEAAQABAAEAAQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAEAAQABAAeACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUAArACsAUAArACsAUABQACsAKwBQAFAAUABQACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwBQACsAUABQAFAAUABQAFAAUAArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwAeAB4AUABQAFAAUABQACsAUAArACsAKwBQAFAAUABQAFAAUABQACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AKwArAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4ABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAEAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAeAB4ADQANAA0ADQAeACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsABAAEAAQABAAEAAQABAArAAQABAArAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAEAAQABAAEAAQABAAEACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAFgAWAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUAArAFAAKwArAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArAFAAKwBQACsAKwArACsAKwArAFAAKwArACsAKwBQACsAUAArAFAAKwBQAFAAUAArAFAAUAArAFAAKwArAFAAKwBQACsAUAArAFAAKwBQACsAUABQACsAUAArACsAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQACsAUABQAFAAUAArAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwBQAFAAUAArAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArACsATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwAlACUAJQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAeACUAHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeACUAJQAlACUAHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAHgAeACUAJQAlACUAJQAeACUAJQAlACUAJQAgACAAIAAlACUAIAAlACUAIAAgACAAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIQAhACEAIQAhACUAJQAgACAAJQAlACAAIAAgACAAIAAgACAAIAAgACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACAAIAAlACUAJQAlACAAJQAgACAAIAAgACAAIAAgACAAIAAlACUAJQAgACUAJQAlACUAIAAgACAAJQAgACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeACUAHgAlAB4AJQAlACUAJQAlACAAJQAlACUAJQAeACUAHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAHgAeAB4AHgAeAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAIAAgACAAJQAlACUAIAAgACAAIAAgAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFwAXABcAFQAVABUAHgAeAB4AHgAlACUAJQAgACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACAAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAlACAAIAAlACUAJQAlACUAJQAgACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAgACAAIAAgACAAJQAlACUAIAAgACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAKwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArAAQAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsA';
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Angle.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Angle.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var ANGLE = /([+-]?\d*\.?\d+)(deg|grad|rad|turn)/i;
-
-var parseAngle = exports.parseAngle = function parseAngle(angle) {
-    var match = angle.match(ANGLE);
-
-    if (match) {
-        var value = parseFloat(match[1]);
-        switch (match[2].toLowerCase()) {
-            case 'deg':
-                return Math.PI * value / 180;
-            case 'grad':
-                return Math.PI / 200 * value;
-            case 'rad':
-                return value;
-            case 'turn':
-                return Math.PI * 2 * value;
-        }
-    }
-
-    return null;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Bounds.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Bounds.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseBoundCurves = exports.calculatePaddingBoxPath = exports.calculateBorderBoxPath = exports.parsePathForBorder = exports.parseDocumentSize = exports.calculateContentBox = exports.calculatePaddingBox = exports.parseBounds = exports.Bounds = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Vector = __webpack_require__(/*! ./drawing/Vector */ "./node_modules/html2canvas/dist/npm/drawing/Vector.js");
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-var _BezierCurve = __webpack_require__(/*! ./drawing/BezierCurve */ "./node_modules/html2canvas/dist/npm/drawing/BezierCurve.js");
-
-var _BezierCurve2 = _interopRequireDefault(_BezierCurve);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TOP = 0;
-var RIGHT = 1;
-var BOTTOM = 2;
-var LEFT = 3;
-
-var H = 0;
-var V = 1;
-
-var Bounds = exports.Bounds = function () {
-    function Bounds(x, y, w, h) {
-        _classCallCheck(this, Bounds);
-
-        this.left = x;
-        this.top = y;
-        this.width = w;
-        this.height = h;
-    }
-
-    _createClass(Bounds, null, [{
-        key: 'fromClientRect',
-        value: function fromClientRect(clientRect, scrollX, scrollY) {
-            return new Bounds(clientRect.left + scrollX, clientRect.top + scrollY, clientRect.width, clientRect.height);
-        }
-    }]);
-
-    return Bounds;
-}();
-
-var parseBounds = exports.parseBounds = function parseBounds(node, scrollX, scrollY) {
-    return Bounds.fromClientRect(node.getBoundingClientRect(), scrollX, scrollY);
-};
-
-var calculatePaddingBox = exports.calculatePaddingBox = function calculatePaddingBox(bounds, borders) {
-    return new Bounds(bounds.left + borders[LEFT].borderWidth, bounds.top + borders[TOP].borderWidth, bounds.width - (borders[RIGHT].borderWidth + borders[LEFT].borderWidth), bounds.height - (borders[TOP].borderWidth + borders[BOTTOM].borderWidth));
-};
-
-var calculateContentBox = exports.calculateContentBox = function calculateContentBox(bounds, padding, borders) {
-    // TODO support percentage paddings
-    var paddingTop = padding[TOP].value;
-    var paddingRight = padding[RIGHT].value;
-    var paddingBottom = padding[BOTTOM].value;
-    var paddingLeft = padding[LEFT].value;
-
-    return new Bounds(bounds.left + paddingLeft + borders[LEFT].borderWidth, bounds.top + paddingTop + borders[TOP].borderWidth, bounds.width - (borders[RIGHT].borderWidth + borders[LEFT].borderWidth + paddingLeft + paddingRight), bounds.height - (borders[TOP].borderWidth + borders[BOTTOM].borderWidth + paddingTop + paddingBottom));
-};
-
-var parseDocumentSize = exports.parseDocumentSize = function parseDocumentSize(document) {
-    var body = document.body;
-    var documentElement = document.documentElement;
-
-    if (!body || !documentElement) {
-        throw new Error( true ? 'Unable to get document size' : undefined);
-    }
-    var width = Math.max(Math.max(body.scrollWidth, documentElement.scrollWidth), Math.max(body.offsetWidth, documentElement.offsetWidth), Math.max(body.clientWidth, documentElement.clientWidth));
-
-    var height = Math.max(Math.max(body.scrollHeight, documentElement.scrollHeight), Math.max(body.offsetHeight, documentElement.offsetHeight), Math.max(body.clientHeight, documentElement.clientHeight));
-
-    return new Bounds(0, 0, width, height);
-};
-
-var parsePathForBorder = exports.parsePathForBorder = function parsePathForBorder(curves, borderSide) {
-    switch (borderSide) {
-        case TOP:
-            return createPathFromCurves(curves.topLeftOuter, curves.topLeftInner, curves.topRightOuter, curves.topRightInner);
-        case RIGHT:
-            return createPathFromCurves(curves.topRightOuter, curves.topRightInner, curves.bottomRightOuter, curves.bottomRightInner);
-        case BOTTOM:
-            return createPathFromCurves(curves.bottomRightOuter, curves.bottomRightInner, curves.bottomLeftOuter, curves.bottomLeftInner);
-        case LEFT:
-        default:
-            return createPathFromCurves(curves.bottomLeftOuter, curves.bottomLeftInner, curves.topLeftOuter, curves.topLeftInner);
-    }
-};
-
-var createPathFromCurves = function createPathFromCurves(outer1, inner1, outer2, inner2) {
-    var path = [];
-    if (outer1 instanceof _BezierCurve2.default) {
-        path.push(outer1.subdivide(0.5, false));
-    } else {
-        path.push(outer1);
-    }
-
-    if (outer2 instanceof _BezierCurve2.default) {
-        path.push(outer2.subdivide(0.5, true));
-    } else {
-        path.push(outer2);
-    }
-
-    if (inner2 instanceof _BezierCurve2.default) {
-        path.push(inner2.subdivide(0.5, true).reverse());
-    } else {
-        path.push(inner2);
-    }
-
-    if (inner1 instanceof _BezierCurve2.default) {
-        path.push(inner1.subdivide(0.5, false).reverse());
-    } else {
-        path.push(inner1);
-    }
-
-    return path;
-};
-
-var calculateBorderBoxPath = exports.calculateBorderBoxPath = function calculateBorderBoxPath(curves) {
-    return [curves.topLeftOuter, curves.topRightOuter, curves.bottomRightOuter, curves.bottomLeftOuter];
-};
-
-var calculatePaddingBoxPath = exports.calculatePaddingBoxPath = function calculatePaddingBoxPath(curves) {
-    return [curves.topLeftInner, curves.topRightInner, curves.bottomRightInner, curves.bottomLeftInner];
-};
-
-var parseBoundCurves = exports.parseBoundCurves = function parseBoundCurves(bounds, borders, borderRadius) {
-    var tlh = borderRadius[CORNER.TOP_LEFT][H].getAbsoluteValue(bounds.width);
-    var tlv = borderRadius[CORNER.TOP_LEFT][V].getAbsoluteValue(bounds.height);
-    var trh = borderRadius[CORNER.TOP_RIGHT][H].getAbsoluteValue(bounds.width);
-    var trv = borderRadius[CORNER.TOP_RIGHT][V].getAbsoluteValue(bounds.height);
-    var brh = borderRadius[CORNER.BOTTOM_RIGHT][H].getAbsoluteValue(bounds.width);
-    var brv = borderRadius[CORNER.BOTTOM_RIGHT][V].getAbsoluteValue(bounds.height);
-    var blh = borderRadius[CORNER.BOTTOM_LEFT][H].getAbsoluteValue(bounds.width);
-    var blv = borderRadius[CORNER.BOTTOM_LEFT][V].getAbsoluteValue(bounds.height);
-
-    var factors = [];
-    factors.push((tlh + trh) / bounds.width);
-    factors.push((blh + brh) / bounds.width);
-    factors.push((tlv + blv) / bounds.height);
-    factors.push((trv + brv) / bounds.height);
-    var maxFactor = Math.max.apply(Math, factors);
-
-    if (maxFactor > 1) {
-        tlh /= maxFactor;
-        tlv /= maxFactor;
-        trh /= maxFactor;
-        trv /= maxFactor;
-        brh /= maxFactor;
-        brv /= maxFactor;
-        blh /= maxFactor;
-        blv /= maxFactor;
-    }
-
-    var topWidth = bounds.width - trh;
-    var rightHeight = bounds.height - brv;
-    var bottomWidth = bounds.width - brh;
-    var leftHeight = bounds.height - blv;
-
-    return {
-        topLeftOuter: tlh > 0 || tlv > 0 ? getCurvePoints(bounds.left, bounds.top, tlh, tlv, CORNER.TOP_LEFT) : new _Vector2.default(bounds.left, bounds.top),
-        topLeftInner: tlh > 0 || tlv > 0 ? getCurvePoints(bounds.left + borders[LEFT].borderWidth, bounds.top + borders[TOP].borderWidth, Math.max(0, tlh - borders[LEFT].borderWidth), Math.max(0, tlv - borders[TOP].borderWidth), CORNER.TOP_LEFT) : new _Vector2.default(bounds.left + borders[LEFT].borderWidth, bounds.top + borders[TOP].borderWidth),
-        topRightOuter: trh > 0 || trv > 0 ? getCurvePoints(bounds.left + topWidth, bounds.top, trh, trv, CORNER.TOP_RIGHT) : new _Vector2.default(bounds.left + bounds.width, bounds.top),
-        topRightInner: trh > 0 || trv > 0 ? getCurvePoints(bounds.left + Math.min(topWidth, bounds.width + borders[LEFT].borderWidth), bounds.top + borders[TOP].borderWidth, topWidth > bounds.width + borders[LEFT].borderWidth ? 0 : trh - borders[LEFT].borderWidth, trv - borders[TOP].borderWidth, CORNER.TOP_RIGHT) : new _Vector2.default(bounds.left + bounds.width - borders[RIGHT].borderWidth, bounds.top + borders[TOP].borderWidth),
-        bottomRightOuter: brh > 0 || brv > 0 ? getCurvePoints(bounds.left + bottomWidth, bounds.top + rightHeight, brh, brv, CORNER.BOTTOM_RIGHT) : new _Vector2.default(bounds.left + bounds.width, bounds.top + bounds.height),
-        bottomRightInner: brh > 0 || brv > 0 ? getCurvePoints(bounds.left + Math.min(bottomWidth, bounds.width - borders[LEFT].borderWidth), bounds.top + Math.min(rightHeight, bounds.height + borders[TOP].borderWidth), Math.max(0, brh - borders[RIGHT].borderWidth), brv - borders[BOTTOM].borderWidth, CORNER.BOTTOM_RIGHT) : new _Vector2.default(bounds.left + bounds.width - borders[RIGHT].borderWidth, bounds.top + bounds.height - borders[BOTTOM].borderWidth),
-        bottomLeftOuter: blh > 0 || blv > 0 ? getCurvePoints(bounds.left, bounds.top + leftHeight, blh, blv, CORNER.BOTTOM_LEFT) : new _Vector2.default(bounds.left, bounds.top + bounds.height),
-        bottomLeftInner: blh > 0 || blv > 0 ? getCurvePoints(bounds.left + borders[LEFT].borderWidth, bounds.top + leftHeight, Math.max(0, blh - borders[LEFT].borderWidth), blv - borders[BOTTOM].borderWidth, CORNER.BOTTOM_LEFT) : new _Vector2.default(bounds.left + borders[LEFT].borderWidth, bounds.top + bounds.height - borders[BOTTOM].borderWidth)
-    };
-};
-
-var CORNER = {
-    TOP_LEFT: 0,
-    TOP_RIGHT: 1,
-    BOTTOM_RIGHT: 2,
-    BOTTOM_LEFT: 3
-};
-
-var getCurvePoints = function getCurvePoints(x, y, r1, r2, position) {
-    var kappa = 4 * ((Math.sqrt(2) - 1) / 3);
-    var ox = r1 * kappa; // control point offset horizontal
-    var oy = r2 * kappa; // control point offset vertical
-    var xm = x + r1; // x-middle
-    var ym = y + r2; // y-middle
-
-    switch (position) {
-        case CORNER.TOP_LEFT:
-            return new _BezierCurve2.default(new _Vector2.default(x, ym), new _Vector2.default(x, ym - oy), new _Vector2.default(xm - ox, y), new _Vector2.default(xm, y));
-        case CORNER.TOP_RIGHT:
-            return new _BezierCurve2.default(new _Vector2.default(x, y), new _Vector2.default(x + ox, y), new _Vector2.default(xm, ym - oy), new _Vector2.default(xm, ym));
-        case CORNER.BOTTOM_RIGHT:
-            return new _BezierCurve2.default(new _Vector2.default(xm, y), new _Vector2.default(xm, y + oy), new _Vector2.default(x + ox, ym), new _Vector2.default(x, ym));
-        case CORNER.BOTTOM_LEFT:
-        default:
-            return new _BezierCurve2.default(new _Vector2.default(xm, ym), new _Vector2.default(xm - ox, ym), new _Vector2.default(x, y + oy), new _Vector2.default(x, y));
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Clone.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Clone.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.cloneWindow = exports.DocumentCloner = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _Proxy = __webpack_require__(/*! ./Proxy */ "./node_modules/html2canvas/dist/npm/Proxy.js");
-
-var _ResourceLoader = __webpack_require__(/*! ./ResourceLoader */ "./node_modules/html2canvas/dist/npm/ResourceLoader.js");
-
-var _ResourceLoader2 = _interopRequireDefault(_ResourceLoader);
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-var _background = __webpack_require__(/*! ./parsing/background */ "./node_modules/html2canvas/dist/npm/parsing/background.js");
-
-var _CanvasRenderer = __webpack_require__(/*! ./renderer/CanvasRenderer */ "./node_modules/html2canvas/dist/npm/renderer/CanvasRenderer.js");
-
-var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
-
-var _PseudoNodeContent = __webpack_require__(/*! ./PseudoNodeContent */ "./node_modules/html2canvas/dist/npm/PseudoNodeContent.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var IGNORE_ATTRIBUTE = 'data-html2canvas-ignore';
-
-var DocumentCloner = exports.DocumentCloner = function () {
-    function DocumentCloner(element, options, logger, copyInline, renderer) {
-        _classCallCheck(this, DocumentCloner);
-
-        this.referenceElement = element;
-        this.scrolledElements = [];
-        this.copyStyles = copyInline;
-        this.inlineImages = copyInline;
-        this.logger = logger;
-        this.options = options;
-        this.renderer = renderer;
-        this.resourceLoader = new _ResourceLoader2.default(options, logger, window);
-        this.pseudoContentData = {
-            counters: {},
-            quoteDepth: 0
-        };
-        // $FlowFixMe
-        this.documentElement = this.cloneNode(element.ownerDocument.documentElement);
-    }
-
-    _createClass(DocumentCloner, [{
-        key: 'inlineAllImages',
-        value: function inlineAllImages(node) {
-            var _this = this;
-
-            if (this.inlineImages && node) {
-                var style = node.style;
-                Promise.all((0, _background.parseBackgroundImage)(style.backgroundImage).map(function (backgroundImage) {
-                    if (backgroundImage.method === 'url') {
-                        return _this.resourceLoader.inlineImage(backgroundImage.args[0]).then(function (img) {
-                            return img && typeof img.src === 'string' ? 'url("' + img.src + '")' : 'none';
-                        }).catch(function (e) {
-                            if (true) {
-                                _this.logger.log('Unable to load image', e);
-                            }
-                        });
-                    }
-                    return Promise.resolve('' + backgroundImage.prefix + backgroundImage.method + '(' + backgroundImage.args.join(',') + ')');
-                })).then(function (backgroundImages) {
-                    if (backgroundImages.length > 1) {
-                        // TODO Multiple backgrounds somehow broken in Chrome
-                        style.backgroundColor = '';
-                    }
-                    style.backgroundImage = backgroundImages.join(',');
-                });
-
-                if (node instanceof HTMLImageElement) {
-                    this.resourceLoader.inlineImage(node.src).then(function (img) {
-                        if (img && node instanceof HTMLImageElement && node.parentNode) {
-                            var parentNode = node.parentNode;
-                            var clonedChild = (0, _Util.copyCSSStyles)(node.style, img.cloneNode(false));
-                            parentNode.replaceChild(clonedChild, node);
-                        }
-                    }).catch(function (e) {
-                        if (true) {
-                            _this.logger.log('Unable to load image', e);
-                        }
-                    });
-                }
-            }
-        }
-    }, {
-        key: 'inlineFonts',
-        value: function inlineFonts(document) {
-            var _this2 = this;
-
-            return Promise.all(Array.from(document.styleSheets).map(function (sheet) {
-                if (sheet.href) {
-                    return fetch(sheet.href).then(function (res) {
-                        return res.text();
-                    }).then(function (text) {
-                        return createStyleSheetFontsFromText(text, sheet.href);
-                    }).catch(function (e) {
-                        if (true) {
-                            _this2.logger.log('Unable to load stylesheet', e);
-                        }
-                        return [];
-                    });
-                }
-                return getSheetFonts(sheet, document);
-            })).then(function (fonts) {
-                return fonts.reduce(function (acc, font) {
-                    return acc.concat(font);
-                }, []);
-            }).then(function (fonts) {
-                return Promise.all(fonts.map(function (font) {
-                    return fetch(font.formats[0].src).then(function (response) {
-                        return response.blob();
-                    }).then(function (blob) {
-                        return new Promise(function (resolve, reject) {
-                            var reader = new FileReader();
-                            reader.onerror = reject;
-                            reader.onload = function () {
-                                // $FlowFixMe
-                                var result = reader.result;
-                                resolve(result);
-                            };
-                            reader.readAsDataURL(blob);
-                        });
-                    }).then(function (dataUri) {
-                        font.fontFace.setProperty('src', 'url("' + dataUri + '")');
-                        return '@font-face {' + font.fontFace.cssText + ' ';
-                    });
-                }));
-            }).then(function (fontCss) {
-                var style = document.createElement('style');
-                style.textContent = fontCss.join('\n');
-                _this2.documentElement.appendChild(style);
-            });
-        }
-    }, {
-        key: 'createElementClone',
-        value: function createElementClone(node) {
-            var _this3 = this;
-
-            if (this.copyStyles && node instanceof HTMLCanvasElement) {
-                var img = node.ownerDocument.createElement('img');
-                try {
-                    img.src = node.toDataURL();
-                    return img;
-                } catch (e) {
-                    if (true) {
-                        this.logger.log('Unable to clone canvas contents, canvas is tainted');
-                    }
-                }
-            }
-
-            if (node instanceof HTMLIFrameElement) {
-                var tempIframe = node.cloneNode(false);
-                var iframeKey = generateIframeKey();
-                tempIframe.setAttribute('data-html2canvas-internal-iframe-key', iframeKey);
-
-                var _parseBounds = (0, _Bounds.parseBounds)(node, 0, 0),
-                    width = _parseBounds.width,
-                    height = _parseBounds.height;
-
-                this.resourceLoader.cache[iframeKey] = getIframeDocumentElement(node, this.options).then(function (documentElement) {
-                    return _this3.renderer(documentElement, {
-                        async: _this3.options.async,
-                        allowTaint: _this3.options.allowTaint,
-                        backgroundColor: '#ffffff',
-                        canvas: null,
-                        imageTimeout: _this3.options.imageTimeout,
-                        logging: _this3.options.logging,
-                        proxy: _this3.options.proxy,
-                        removeContainer: _this3.options.removeContainer,
-                        scale: _this3.options.scale,
-                        foreignObjectRendering: _this3.options.foreignObjectRendering,
-                        useCORS: _this3.options.useCORS,
-                        target: new _CanvasRenderer2.default(),
-                        width: width,
-                        height: height,
-                        x: 0,
-                        y: 0,
-                        windowWidth: documentElement.ownerDocument.defaultView.innerWidth,
-                        windowHeight: documentElement.ownerDocument.defaultView.innerHeight,
-                        scrollX: documentElement.ownerDocument.defaultView.pageXOffset,
-                        scrollY: documentElement.ownerDocument.defaultView.pageYOffset
-                    }, _this3.logger.child(iframeKey));
-                }).then(function (canvas) {
-                    return new Promise(function (resolve, reject) {
-                        var iframeCanvas = document.createElement('img');
-                        iframeCanvas.onload = function () {
-                            return resolve(canvas);
-                        };
-                        iframeCanvas.onerror = reject;
-                        iframeCanvas.src = canvas.toDataURL();
-                        if (tempIframe.parentNode) {
-                            tempIframe.parentNode.replaceChild((0, _Util.copyCSSStyles)(node.ownerDocument.defaultView.getComputedStyle(node), iframeCanvas), tempIframe);
-                        }
-                    });
-                });
-                return tempIframe;
-            }
-
-            if (node instanceof HTMLStyleElement && node.sheet && node.sheet.cssRules) {
-                var css = [].slice.call(node.sheet.cssRules, 0).reduce(function (css, rule) {
-                    try {
-                        if (rule && rule.cssText) {
-                            return css + rule.cssText;
-                        }
-                        return css;
-                    } catch (err) {
-                        _this3.logger.log('Unable to access cssText property', rule.name);
-                        return css;
-                    }
-                }, '');
-                var style = node.cloneNode(false);
-                style.textContent = css;
-                return style;
-            }
-
-            return node.cloneNode(false);
-        }
-    }, {
-        key: 'cloneNode',
-        value: function cloneNode(node) {
-            var clone = node.nodeType === Node.TEXT_NODE ? document.createTextNode(node.nodeValue) : this.createElementClone(node);
-
-            var window = node.ownerDocument.defaultView;
-            var style = node instanceof window.HTMLElement ? window.getComputedStyle(node) : null;
-            var styleBefore = node instanceof window.HTMLElement ? window.getComputedStyle(node, ':before') : null;
-            var styleAfter = node instanceof window.HTMLElement ? window.getComputedStyle(node, ':after') : null;
-
-            if (this.referenceElement === node && clone instanceof window.HTMLElement) {
-                this.clonedReferenceElement = clone;
-            }
-
-            if (clone instanceof window.HTMLBodyElement) {
-                createPseudoHideStyles(clone);
-            }
-
-            var counters = (0, _PseudoNodeContent.parseCounterReset)(style, this.pseudoContentData);
-            var contentBefore = (0, _PseudoNodeContent.resolvePseudoContent)(node, styleBefore, this.pseudoContentData);
-
-            for (var child = node.firstChild; child; child = child.nextSibling) {
-                if (child.nodeType !== Node.ELEMENT_NODE || child.nodeName !== 'SCRIPT' &&
-                // $FlowFixMe
-                !child.hasAttribute(IGNORE_ATTRIBUTE) && (typeof this.options.ignoreElements !== 'function' ||
-                // $FlowFixMe
-                !this.options.ignoreElements(child))) {
-                    if (!this.copyStyles || child.nodeName !== 'STYLE') {
-                        clone.appendChild(this.cloneNode(child));
-                    }
-                }
-            }
-
-            var contentAfter = (0, _PseudoNodeContent.resolvePseudoContent)(node, styleAfter, this.pseudoContentData);
-            (0, _PseudoNodeContent.popCounters)(counters, this.pseudoContentData);
-
-            if (node instanceof window.HTMLElement && clone instanceof window.HTMLElement) {
-                if (styleBefore) {
-                    this.inlineAllImages(inlinePseudoElement(node, clone, styleBefore, contentBefore, PSEUDO_BEFORE));
-                }
-                if (styleAfter) {
-                    this.inlineAllImages(inlinePseudoElement(node, clone, styleAfter, contentAfter, PSEUDO_AFTER));
-                }
-                if (style && this.copyStyles && !(node instanceof HTMLIFrameElement)) {
-                    (0, _Util.copyCSSStyles)(style, clone);
-                }
-                this.inlineAllImages(clone);
-                if (node.scrollTop !== 0 || node.scrollLeft !== 0) {
-                    this.scrolledElements.push([clone, node.scrollLeft, node.scrollTop]);
-                }
-                switch (node.nodeName) {
-                    case 'CANVAS':
-                        if (!this.copyStyles) {
-                            cloneCanvasContents(node, clone);
-                        }
-                        break;
-                    case 'TEXTAREA':
-                    case 'SELECT':
-                        clone.value = node.value;
-                        break;
-                }
-            }
-            return clone;
-        }
-    }]);
-
-    return DocumentCloner;
-}();
-
-var getSheetFonts = function getSheetFonts(sheet, document) {
-    // $FlowFixMe
-    return (sheet.cssRules ? Array.from(sheet.cssRules) : []).filter(function (rule) {
-        return rule.type === CSSRule.FONT_FACE_RULE;
-    }).map(function (rule) {
-        var src = (0, _background.parseBackgroundImage)(rule.style.getPropertyValue('src'));
-        var formats = [];
-        for (var i = 0; i < src.length; i++) {
-            if (src[i].method === 'url' && src[i + 1] && src[i + 1].method === 'format') {
-                var a = document.createElement('a');
-                a.href = src[i].args[0];
-                if (document.body) {
-                    document.body.appendChild(a);
-                }
-
-                var font = {
-                    src: a.href,
-                    format: src[i + 1].args[0]
-                };
-                formats.push(font);
-            }
-        }
-
-        return {
-            // TODO select correct format for browser),
-
-            formats: formats.filter(function (font) {
-                return (/^woff/i.test(font.format)
-                );
-            }),
-            fontFace: rule.style
-        };
-    }).filter(function (font) {
-        return font.formats.length;
-    });
-};
-
-var createStyleSheetFontsFromText = function createStyleSheetFontsFromText(text, baseHref) {
-    var doc = document.implementation.createHTMLDocument('');
-    var base = document.createElement('base');
-    // $FlowFixMe
-    base.href = baseHref;
-    var style = document.createElement('style');
-
-    style.textContent = text;
-    if (doc.head) {
-        doc.head.appendChild(base);
-    }
-    if (doc.body) {
-        doc.body.appendChild(style);
-    }
-
-    return style.sheet ? getSheetFonts(style.sheet, doc) : [];
-};
-
-var restoreOwnerScroll = function restoreOwnerScroll(ownerDocument, x, y) {
-    if (ownerDocument.defaultView && (x !== ownerDocument.defaultView.pageXOffset || y !== ownerDocument.defaultView.pageYOffset)) {
-        ownerDocument.defaultView.scrollTo(x, y);
-    }
-};
-
-var cloneCanvasContents = function cloneCanvasContents(canvas, clonedCanvas) {
-    try {
-        if (clonedCanvas) {
-            clonedCanvas.width = canvas.width;
-            clonedCanvas.height = canvas.height;
-            var ctx = canvas.getContext('2d');
-            var clonedCtx = clonedCanvas.getContext('2d');
-            if (ctx) {
-                clonedCtx.putImageData(ctx.getImageData(0, 0, canvas.width, canvas.height), 0, 0);
-            } else {
-                clonedCtx.drawImage(canvas, 0, 0);
-            }
-        }
-    } catch (e) {}
-};
-
-var inlinePseudoElement = function inlinePseudoElement(node, clone, style, contentItems, pseudoElt) {
-    if (!style || !style.content || style.content === 'none' || style.content === '-moz-alt-content' || style.display === 'none') {
-        return;
-    }
-
-    var anonymousReplacedElement = clone.ownerDocument.createElement('html2canvaspseudoelement');
-    (0, _Util.copyCSSStyles)(style, anonymousReplacedElement);
-
-    if (contentItems) {
-        var len = contentItems.length;
-        for (var i = 0; i < len; i++) {
-            var item = contentItems[i];
-            switch (item.type) {
-                case _PseudoNodeContent.PSEUDO_CONTENT_ITEM_TYPE.IMAGE:
-                    var img = clone.ownerDocument.createElement('img');
-                    img.src = (0, _background.parseBackgroundImage)('url(' + item.value + ')')[0].args[0];
-                    img.style.opacity = '1';
-                    anonymousReplacedElement.appendChild(img);
-                    break;
-                case _PseudoNodeContent.PSEUDO_CONTENT_ITEM_TYPE.TEXT:
-                    anonymousReplacedElement.appendChild(clone.ownerDocument.createTextNode(item.value));
-                    break;
-            }
-        }
-    }
-
-    anonymousReplacedElement.className = PSEUDO_HIDE_ELEMENT_CLASS_BEFORE + ' ' + PSEUDO_HIDE_ELEMENT_CLASS_AFTER;
-    clone.className += pseudoElt === PSEUDO_BEFORE ? ' ' + PSEUDO_HIDE_ELEMENT_CLASS_BEFORE : ' ' + PSEUDO_HIDE_ELEMENT_CLASS_AFTER;
-    if (pseudoElt === PSEUDO_BEFORE) {
-        clone.insertBefore(anonymousReplacedElement, clone.firstChild);
-    } else {
-        clone.appendChild(anonymousReplacedElement);
-    }
-
-    return anonymousReplacedElement;
-};
-
-var URL_REGEXP = /^url\((.+)\)$/i;
-var PSEUDO_BEFORE = ':before';
-var PSEUDO_AFTER = ':after';
-var PSEUDO_HIDE_ELEMENT_CLASS_BEFORE = '___html2canvas___pseudoelement_before';
-var PSEUDO_HIDE_ELEMENT_CLASS_AFTER = '___html2canvas___pseudoelement_after';
-
-var PSEUDO_HIDE_ELEMENT_STYLE = '{\n    content: "" !important;\n    display: none !important;\n}';
-
-var createPseudoHideStyles = function createPseudoHideStyles(body) {
-    createStyles(body, '.' + PSEUDO_HIDE_ELEMENT_CLASS_BEFORE + PSEUDO_BEFORE + PSEUDO_HIDE_ELEMENT_STYLE + '\n         .' + PSEUDO_HIDE_ELEMENT_CLASS_AFTER + PSEUDO_AFTER + PSEUDO_HIDE_ELEMENT_STYLE);
-};
-
-var createStyles = function createStyles(body, styles) {
-    var style = body.ownerDocument.createElement('style');
-    style.innerHTML = styles;
-    body.appendChild(style);
-};
-
-var initNode = function initNode(_ref) {
-    var _ref2 = _slicedToArray(_ref, 3),
-        element = _ref2[0],
-        x = _ref2[1],
-        y = _ref2[2];
-
-    element.scrollLeft = x;
-    element.scrollTop = y;
-};
-
-var generateIframeKey = function generateIframeKey() {
-    return Math.ceil(Date.now() + Math.random() * 10000000).toString(16);
-};
-
-var DATA_URI_REGEXP = /^data:text\/(.+);(base64)?,(.*)$/i;
-
-var getIframeDocumentElement = function getIframeDocumentElement(node, options) {
-    try {
-        return Promise.resolve(node.contentWindow.document.documentElement);
-    } catch (e) {
-        return options.proxy ? (0, _Proxy.Proxy)(node.src, options).then(function (html) {
-            var match = html.match(DATA_URI_REGEXP);
-            if (!match) {
-                return Promise.reject();
-            }
-
-            return match[2] === 'base64' ? window.atob(decodeURIComponent(match[3])) : decodeURIComponent(match[3]);
-        }).then(function (html) {
-            return createIframeContainer(node.ownerDocument, (0, _Bounds.parseBounds)(node, 0, 0)).then(function (cloneIframeContainer) {
-                var cloneWindow = cloneIframeContainer.contentWindow;
-                var documentClone = cloneWindow.document;
-
-                documentClone.open();
-                documentClone.write(html);
-                var iframeLoad = iframeLoader(cloneIframeContainer).then(function () {
-                    return documentClone.documentElement;
-                });
-
-                documentClone.close();
-                return iframeLoad;
-            });
-        }) : Promise.reject();
-    }
-};
-
-var createIframeContainer = function createIframeContainer(ownerDocument, bounds) {
-    var cloneIframeContainer = ownerDocument.createElement('iframe');
-
-    cloneIframeContainer.className = 'html2canvas-container';
-    cloneIframeContainer.style.visibility = 'hidden';
-    cloneIframeContainer.style.position = 'fixed';
-    cloneIframeContainer.style.left = '-10000px';
-    cloneIframeContainer.style.top = '0px';
-    cloneIframeContainer.style.border = '0';
-    cloneIframeContainer.width = bounds.width.toString();
-    cloneIframeContainer.height = bounds.height.toString();
-    cloneIframeContainer.scrolling = 'no'; // ios won't scroll without it
-    cloneIframeContainer.setAttribute(IGNORE_ATTRIBUTE, 'true');
-    if (!ownerDocument.body) {
-        return Promise.reject( true ? 'Body element not found in Document that is getting rendered' : undefined);
-    }
-
-    ownerDocument.body.appendChild(cloneIframeContainer);
-
-    return Promise.resolve(cloneIframeContainer);
-};
-
-var iframeLoader = function iframeLoader(cloneIframeContainer) {
-    var cloneWindow = cloneIframeContainer.contentWindow;
-    var documentClone = cloneWindow.document;
-
-    return new Promise(function (resolve, reject) {
-        cloneWindow.onload = cloneIframeContainer.onload = documentClone.onreadystatechange = function () {
-            var interval = setInterval(function () {
-                if (documentClone.body.childNodes.length > 0 && documentClone.readyState === 'complete') {
-                    clearInterval(interval);
-                    resolve(cloneIframeContainer);
-                }
-            }, 50);
-        };
-    });
-};
-
-var cloneWindow = exports.cloneWindow = function cloneWindow(ownerDocument, bounds, referenceElement, options, logger, renderer) {
-    var cloner = new DocumentCloner(referenceElement, options, logger, false, renderer);
-    var scrollX = ownerDocument.defaultView.pageXOffset;
-    var scrollY = ownerDocument.defaultView.pageYOffset;
-
-    return createIframeContainer(ownerDocument, bounds).then(function (cloneIframeContainer) {
-        var cloneWindow = cloneIframeContainer.contentWindow;
-        var documentClone = cloneWindow.document;
-
-        /* Chrome doesn't detect relative background-images assigned in inline <style> sheets when fetched through getComputedStyle
-             if window url is about:blank, we can assign the url to current by writing onto the document
-             */
-
-        var iframeLoad = iframeLoader(cloneIframeContainer).then(function () {
-            cloner.scrolledElements.forEach(initNode);
-            cloneWindow.scrollTo(bounds.left, bounds.top);
-            if (/(iPad|iPhone|iPod)/g.test(navigator.userAgent) && (cloneWindow.scrollY !== bounds.top || cloneWindow.scrollX !== bounds.left)) {
-                documentClone.documentElement.style.top = -bounds.top + 'px';
-                documentClone.documentElement.style.left = -bounds.left + 'px';
-                documentClone.documentElement.style.position = 'absolute';
-            }
-
-            var result = Promise.resolve([cloneIframeContainer, cloner.clonedReferenceElement, cloner.resourceLoader]);
-
-            var onclone = options.onclone;
-
-            return cloner.clonedReferenceElement instanceof cloneWindow.HTMLElement || cloner.clonedReferenceElement instanceof ownerDocument.defaultView.HTMLElement || cloner.clonedReferenceElement instanceof HTMLElement ? typeof onclone === 'function' ? Promise.resolve().then(function () {
-                return onclone(documentClone);
-            }).then(function () {
-                return result;
-            }) : result : Promise.reject( true ? 'Error finding the ' + referenceElement.nodeName + ' in the cloned document' : undefined);
-        });
-
-        documentClone.open();
-        documentClone.write(serializeDoctype(document.doctype) + '<html></html>');
-        // Chrome scrolls the parent document for some reason after the write to the cloned window???
-        restoreOwnerScroll(referenceElement.ownerDocument, scrollX, scrollY);
-        documentClone.replaceChild(documentClone.adoptNode(cloner.documentElement), documentClone.documentElement);
-        documentClone.close();
-
-        return iframeLoad;
-    });
-};
-
-var serializeDoctype = function serializeDoctype(doctype) {
-    var str = '';
-    if (doctype) {
-        str += '<!DOCTYPE ';
-        if (doctype.name) {
-            str += doctype.name;
-        }
-
-        if (doctype.internalSubset) {
-            str += doctype.internalSubset;
-        }
-
-        if (doctype.publicId) {
-            str += '"' + doctype.publicId + '"';
-        }
-
-        if (doctype.systemId) {
-            str += '"' + doctype.systemId + '"';
-        }
-
-        str += '>';
-    }
-
-    return str;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Color.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Color.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-// http://dev.w3.org/csswg/css-color/
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var HEX3 = /^#([a-f0-9]{3})$/i;
-var hex3 = function hex3(value) {
-    var match = value.match(HEX3);
-    if (match) {
-        return [parseInt(match[1][0] + match[1][0], 16), parseInt(match[1][1] + match[1][1], 16), parseInt(match[1][2] + match[1][2], 16), null];
-    }
-    return false;
-};
-
-var HEX6 = /^#([a-f0-9]{6})$/i;
-var hex6 = function hex6(value) {
-    var match = value.match(HEX6);
-    if (match) {
-        return [parseInt(match[1].substring(0, 2), 16), parseInt(match[1].substring(2, 4), 16), parseInt(match[1].substring(4, 6), 16), null];
-    }
-    return false;
-};
-
-var RGB = /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/;
-var rgb = function rgb(value) {
-    var match = value.match(RGB);
-    if (match) {
-        return [Number(match[1]), Number(match[2]), Number(match[3]), null];
-    }
-    return false;
-};
-
-var RGBA = /^rgba\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d?\.?\d+)\s*\)$/;
-var rgba = function rgba(value) {
-    var match = value.match(RGBA);
-    if (match && match.length > 4) {
-        return [Number(match[1]), Number(match[2]), Number(match[3]), Number(match[4])];
-    }
-    return false;
-};
-
-var fromArray = function fromArray(array) {
-    return [Math.min(array[0], 255), Math.min(array[1], 255), Math.min(array[2], 255), array.length > 3 ? array[3] : null];
-};
-
-var namedColor = function namedColor(name) {
-    var color = NAMED_COLORS[name.toLowerCase()];
-    return color ? color : false;
-};
-
-var Color = function () {
-    function Color(value) {
-        _classCallCheck(this, Color);
-
-        var _ref = Array.isArray(value) ? fromArray(value) : hex3(value) || rgb(value) || rgba(value) || namedColor(value) || hex6(value) || [0, 0, 0, null],
-            _ref2 = _slicedToArray(_ref, 4),
-            r = _ref2[0],
-            g = _ref2[1],
-            b = _ref2[2],
-            a = _ref2[3];
-
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-
-    _createClass(Color, [{
-        key: 'isTransparent',
-        value: function isTransparent() {
-            return this.a === 0;
-        }
-    }, {
-        key: 'toString',
-        value: function toString() {
-            return this.a !== null && this.a !== 1 ? 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + this.a + ')' : 'rgb(' + this.r + ',' + this.g + ',' + this.b + ')';
-        }
-    }]);
-
-    return Color;
-}();
-
-exports.default = Color;
-
-
-var NAMED_COLORS = {
-    transparent: [0, 0, 0, 0],
-    aliceblue: [240, 248, 255, null],
-    antiquewhite: [250, 235, 215, null],
-    aqua: [0, 255, 255, null],
-    aquamarine: [127, 255, 212, null],
-    azure: [240, 255, 255, null],
-    beige: [245, 245, 220, null],
-    bisque: [255, 228, 196, null],
-    black: [0, 0, 0, null],
-    blanchedalmond: [255, 235, 205, null],
-    blue: [0, 0, 255, null],
-    blueviolet: [138, 43, 226, null],
-    brown: [165, 42, 42, null],
-    burlywood: [222, 184, 135, null],
-    cadetblue: [95, 158, 160, null],
-    chartreuse: [127, 255, 0, null],
-    chocolate: [210, 105, 30, null],
-    coral: [255, 127, 80, null],
-    cornflowerblue: [100, 149, 237, null],
-    cornsilk: [255, 248, 220, null],
-    crimson: [220, 20, 60, null],
-    cyan: [0, 255, 255, null],
-    darkblue: [0, 0, 139, null],
-    darkcyan: [0, 139, 139, null],
-    darkgoldenrod: [184, 134, 11, null],
-    darkgray: [169, 169, 169, null],
-    darkgreen: [0, 100, 0, null],
-    darkgrey: [169, 169, 169, null],
-    darkkhaki: [189, 183, 107, null],
-    darkmagenta: [139, 0, 139, null],
-    darkolivegreen: [85, 107, 47, null],
-    darkorange: [255, 140, 0, null],
-    darkorchid: [153, 50, 204, null],
-    darkred: [139, 0, 0, null],
-    darksalmon: [233, 150, 122, null],
-    darkseagreen: [143, 188, 143, null],
-    darkslateblue: [72, 61, 139, null],
-    darkslategray: [47, 79, 79, null],
-    darkslategrey: [47, 79, 79, null],
-    darkturquoise: [0, 206, 209, null],
-    darkviolet: [148, 0, 211, null],
-    deeppink: [255, 20, 147, null],
-    deepskyblue: [0, 191, 255, null],
-    dimgray: [105, 105, 105, null],
-    dimgrey: [105, 105, 105, null],
-    dodgerblue: [30, 144, 255, null],
-    firebrick: [178, 34, 34, null],
-    floralwhite: [255, 250, 240, null],
-    forestgreen: [34, 139, 34, null],
-    fuchsia: [255, 0, 255, null],
-    gainsboro: [220, 220, 220, null],
-    ghostwhite: [248, 248, 255, null],
-    gold: [255, 215, 0, null],
-    goldenrod: [218, 165, 32, null],
-    gray: [128, 128, 128, null],
-    green: [0, 128, 0, null],
-    greenyellow: [173, 255, 47, null],
-    grey: [128, 128, 128, null],
-    honeydew: [240, 255, 240, null],
-    hotpink: [255, 105, 180, null],
-    indianred: [205, 92, 92, null],
-    indigo: [75, 0, 130, null],
-    ivory: [255, 255, 240, null],
-    khaki: [240, 230, 140, null],
-    lavender: [230, 230, 250, null],
-    lavenderblush: [255, 240, 245, null],
-    lawngreen: [124, 252, 0, null],
-    lemonchiffon: [255, 250, 205, null],
-    lightblue: [173, 216, 230, null],
-    lightcoral: [240, 128, 128, null],
-    lightcyan: [224, 255, 255, null],
-    lightgoldenrodyellow: [250, 250, 210, null],
-    lightgray: [211, 211, 211, null],
-    lightgreen: [144, 238, 144, null],
-    lightgrey: [211, 211, 211, null],
-    lightpink: [255, 182, 193, null],
-    lightsalmon: [255, 160, 122, null],
-    lightseagreen: [32, 178, 170, null],
-    lightskyblue: [135, 206, 250, null],
-    lightslategray: [119, 136, 153, null],
-    lightslategrey: [119, 136, 153, null],
-    lightsteelblue: [176, 196, 222, null],
-    lightyellow: [255, 255, 224, null],
-    lime: [0, 255, 0, null],
-    limegreen: [50, 205, 50, null],
-    linen: [250, 240, 230, null],
-    magenta: [255, 0, 255, null],
-    maroon: [128, 0, 0, null],
-    mediumaquamarine: [102, 205, 170, null],
-    mediumblue: [0, 0, 205, null],
-    mediumorchid: [186, 85, 211, null],
-    mediumpurple: [147, 112, 219, null],
-    mediumseagreen: [60, 179, 113, null],
-    mediumslateblue: [123, 104, 238, null],
-    mediumspringgreen: [0, 250, 154, null],
-    mediumturquoise: [72, 209, 204, null],
-    mediumvioletred: [199, 21, 133, null],
-    midnightblue: [25, 25, 112, null],
-    mintcream: [245, 255, 250, null],
-    mistyrose: [255, 228, 225, null],
-    moccasin: [255, 228, 181, null],
-    navajowhite: [255, 222, 173, null],
-    navy: [0, 0, 128, null],
-    oldlace: [253, 245, 230, null],
-    olive: [128, 128, 0, null],
-    olivedrab: [107, 142, 35, null],
-    orange: [255, 165, 0, null],
-    orangered: [255, 69, 0, null],
-    orchid: [218, 112, 214, null],
-    palegoldenrod: [238, 232, 170, null],
-    palegreen: [152, 251, 152, null],
-    paleturquoise: [175, 238, 238, null],
-    palevioletred: [219, 112, 147, null],
-    papayawhip: [255, 239, 213, null],
-    peachpuff: [255, 218, 185, null],
-    peru: [205, 133, 63, null],
-    pink: [255, 192, 203, null],
-    plum: [221, 160, 221, null],
-    powderblue: [176, 224, 230, null],
-    purple: [128, 0, 128, null],
-    rebeccapurple: [102, 51, 153, null],
-    red: [255, 0, 0, null],
-    rosybrown: [188, 143, 143, null],
-    royalblue: [65, 105, 225, null],
-    saddlebrown: [139, 69, 19, null],
-    salmon: [250, 128, 114, null],
-    sandybrown: [244, 164, 96, null],
-    seagreen: [46, 139, 87, null],
-    seashell: [255, 245, 238, null],
-    sienna: [160, 82, 45, null],
-    silver: [192, 192, 192, null],
-    skyblue: [135, 206, 235, null],
-    slateblue: [106, 90, 205, null],
-    slategray: [112, 128, 144, null],
-    slategrey: [112, 128, 144, null],
-    snow: [255, 250, 250, null],
-    springgreen: [0, 255, 127, null],
-    steelblue: [70, 130, 180, null],
-    tan: [210, 180, 140, null],
-    teal: [0, 128, 128, null],
-    thistle: [216, 191, 216, null],
-    tomato: [255, 99, 71, null],
-    turquoise: [64, 224, 208, null],
-    violet: [238, 130, 238, null],
-    wheat: [245, 222, 179, null],
-    white: [255, 255, 255, null],
-    whitesmoke: [245, 245, 245, null],
-    yellow: [255, 255, 0, null],
-    yellowgreen: [154, 205, 50, null]
-};
-
-var TRANSPARENT = exports.TRANSPARENT = new Color([0, 0, 0, 0]);
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Feature.js":
-/*!******************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Feature.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _ForeignObjectRenderer = __webpack_require__(/*! ./renderer/ForeignObjectRenderer */ "./node_modules/html2canvas/dist/npm/renderer/ForeignObjectRenderer.js");
-
-var testRangeBounds = function testRangeBounds(document) {
-    var TEST_HEIGHT = 123;
-
-    if (document.createRange) {
-        var range = document.createRange();
-        if (range.getBoundingClientRect) {
-            var testElement = document.createElement('boundtest');
-            testElement.style.height = TEST_HEIGHT + 'px';
-            testElement.style.display = 'block';
-            document.body.appendChild(testElement);
-
-            range.selectNode(testElement);
-            var rangeBounds = range.getBoundingClientRect();
-            var rangeHeight = Math.round(rangeBounds.height);
-            document.body.removeChild(testElement);
-            if (rangeHeight === TEST_HEIGHT) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-};
-
-// iOS 10.3 taints canvas with base64 images unless crossOrigin = 'anonymous'
-var testBase64 = function testBase64(document, src) {
-    var img = new Image();
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-
-    return new Promise(function (resolve) {
-        // Single pixel base64 image renders fine on iOS 10.3???
-        img.src = src;
-
-        var onload = function onload() {
-            try {
-                ctx.drawImage(img, 0, 0);
-                canvas.toDataURL();
-            } catch (e) {
-                return resolve(false);
-            }
-
-            return resolve(true);
-        };
-
-        img.onload = onload;
-        img.onerror = function () {
-            return resolve(false);
-        };
-
-        if (img.complete === true) {
-            setTimeout(function () {
-                onload();
-            }, 500);
-        }
-    });
-};
-
-var testCORS = function testCORS() {
-    return typeof new Image().crossOrigin !== 'undefined';
-};
-
-var testResponseType = function testResponseType() {
-    return typeof new XMLHttpRequest().responseType === 'string';
-};
-
-var testSVG = function testSVG(document) {
-    var img = new Image();
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    img.src = 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\'></svg>';
-
-    try {
-        ctx.drawImage(img, 0, 0);
-        canvas.toDataURL();
-    } catch (e) {
-        return false;
-    }
-    return true;
-};
-
-var isGreenPixel = function isGreenPixel(data) {
-    return data[0] === 0 && data[1] === 255 && data[2] === 0 && data[3] === 255;
-};
-
-var testForeignObject = function testForeignObject(document) {
-    var canvas = document.createElement('canvas');
-    var size = 100;
-    canvas.width = size;
-    canvas.height = size;
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'rgb(0, 255, 0)';
-    ctx.fillRect(0, 0, size, size);
-
-    var img = new Image();
-    var greenImageSrc = canvas.toDataURL();
-    img.src = greenImageSrc;
-    var svg = (0, _ForeignObjectRenderer.createForeignObjectSVG)(size, size, 0, 0, img);
-    ctx.fillStyle = 'red';
-    ctx.fillRect(0, 0, size, size);
-
-    return (0, _ForeignObjectRenderer.loadSerializedSVG)(svg).then(function (img) {
-        ctx.drawImage(img, 0, 0);
-        var data = ctx.getImageData(0, 0, size, size).data;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(0, 0, size, size);
-
-        var node = document.createElement('div');
-        node.style.backgroundImage = 'url(' + greenImageSrc + ')';
-        node.style.height = size + 'px';
-        // Firefox 55 does not render inline <img /> tags
-        return isGreenPixel(data) ? (0, _ForeignObjectRenderer.loadSerializedSVG)((0, _ForeignObjectRenderer.createForeignObjectSVG)(size, size, 0, 0, node)) : Promise.reject(false);
-    }).then(function (img) {
-        ctx.drawImage(img, 0, 0);
-        // Edge does not render background-images
-        return isGreenPixel(ctx.getImageData(0, 0, size, size).data);
-    }).catch(function (e) {
-        return false;
-    });
-};
-
-var FEATURES = {
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_RANGE_BOUNDS() {
-        'use strict';
-
-        var value = testRangeBounds(document);
-        Object.defineProperty(FEATURES, 'SUPPORT_RANGE_BOUNDS', { value: value });
-        return value;
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_SVG_DRAWING() {
-        'use strict';
-
-        var value = testSVG(document);
-        Object.defineProperty(FEATURES, 'SUPPORT_SVG_DRAWING', { value: value });
-        return value;
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_BASE64_DRAWING() {
-        'use strict';
-
-        return function (src) {
-            var _value = testBase64(document, src);
-            Object.defineProperty(FEATURES, 'SUPPORT_BASE64_DRAWING', { value: function value() {
-                    return _value;
-                } });
-            return _value;
-        };
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_FOREIGNOBJECT_DRAWING() {
-        'use strict';
-
-        var value = typeof Array.from === 'function' && typeof window.fetch === 'function' ? testForeignObject(document) : Promise.resolve(false);
-        Object.defineProperty(FEATURES, 'SUPPORT_FOREIGNOBJECT_DRAWING', { value: value });
-        return value;
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_CORS_IMAGES() {
-        'use strict';
-
-        var value = testCORS();
-        Object.defineProperty(FEATURES, 'SUPPORT_CORS_IMAGES', { value: value });
-        return value;
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_RESPONSE_TYPE() {
-        'use strict';
-
-        var value = testResponseType();
-        Object.defineProperty(FEATURES, 'SUPPORT_RESPONSE_TYPE', { value: value });
-        return value;
-    },
-    // $FlowFixMe - get/set properties not yet supported
-    get SUPPORT_CORS_XHR() {
-        'use strict';
-
-        var value = 'withCredentials' in new XMLHttpRequest();
-        Object.defineProperty(FEATURES, 'SUPPORT_CORS_XHR', { value: value });
-        return value;
-    }
-};
-
-exports.default = FEATURES;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Font.js":
-/*!***************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Font.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.FontMetrics = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SAMPLE_TEXT = 'Hidden Text';
-
-var FontMetrics = exports.FontMetrics = function () {
-    function FontMetrics(document) {
-        _classCallCheck(this, FontMetrics);
-
-        this._data = {};
-        this._document = document;
-    }
-
-    _createClass(FontMetrics, [{
-        key: '_parseMetrics',
-        value: function _parseMetrics(font) {
-            var container = this._document.createElement('div');
-            var img = this._document.createElement('img');
-            var span = this._document.createElement('span');
-
-            var body = this._document.body;
-            if (!body) {
-                throw new Error( true ? 'No document found for font metrics' : undefined);
-            }
-
-            container.style.visibility = 'hidden';
-            container.style.fontFamily = font.fontFamily;
-            container.style.fontSize = font.fontSize;
-            container.style.margin = '0';
-            container.style.padding = '0';
-
-            body.appendChild(container);
-
-            img.src = _Util.SMALL_IMAGE;
-            img.width = 1;
-            img.height = 1;
-
-            img.style.margin = '0';
-            img.style.padding = '0';
-            img.style.verticalAlign = 'baseline';
-
-            span.style.fontFamily = font.fontFamily;
-            span.style.fontSize = font.fontSize;
-            span.style.margin = '0';
-            span.style.padding = '0';
-
-            span.appendChild(this._document.createTextNode(SAMPLE_TEXT));
-            container.appendChild(span);
-            container.appendChild(img);
-            var baseline = img.offsetTop - span.offsetTop + 2;
-
-            container.removeChild(span);
-            container.appendChild(this._document.createTextNode(SAMPLE_TEXT));
-
-            container.style.lineHeight = 'normal';
-            img.style.verticalAlign = 'super';
-
-            var middle = img.offsetTop - container.offsetTop + 2;
-
-            body.removeChild(container);
-
-            return { baseline: baseline, middle: middle };
-        }
-    }, {
-        key: 'getMetrics',
-        value: function getMetrics(font) {
-            var key = font.fontFamily + ' ' + font.fontSize;
-            if (this._data[key] === undefined) {
-                this._data[key] = this._parseMetrics(font);
-            }
-
-            return this._data[key];
-        }
-    }]);
-
-    return FontMetrics;
-}();
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Gradient.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Gradient.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.transformWebkitRadialGradientArgs = exports.parseGradient = exports.RadialGradient = exports.LinearGradient = exports.RADIAL_GRADIENT_SHAPE = exports.GRADIENT_TYPE = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-var _Angle = __webpack_require__(/*! ./Angle */ "./node_modules/html2canvas/dist/npm/Angle.js");
-
-var _Color = __webpack_require__(/*! ./Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-var _Length = __webpack_require__(/*! ./Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var SIDE_OR_CORNER = /^(to )?(left|top|right|bottom)( (left|top|right|bottom))?$/i;
-var PERCENTAGE_ANGLES = /^([+-]?\d*\.?\d+)% ([+-]?\d*\.?\d+)%$/i;
-var ENDS_WITH_LENGTH = /(px)|%|( 0)$/i;
-var FROM_TO_COLORSTOP = /^(from|to|color-stop)\((?:([\d.]+)(%)?,\s*)?(.+?)\)$/i;
-var RADIAL_SHAPE_DEFINITION = /^\s*(circle|ellipse)?\s*((?:([\d.]+)(px|r?em|%)\s*(?:([\d.]+)(px|r?em|%))?)|closest-side|closest-corner|farthest-side|farthest-corner)?\s*(?:at\s*(?:(left|center|right)|([\d.]+)(px|r?em|%))\s+(?:(top|center|bottom)|([\d.]+)(px|r?em|%)))?(?:\s|$)/i;
-
-var GRADIENT_TYPE = exports.GRADIENT_TYPE = {
-    LINEAR_GRADIENT: 0,
-    RADIAL_GRADIENT: 1
-};
-
-var RADIAL_GRADIENT_SHAPE = exports.RADIAL_GRADIENT_SHAPE = {
-    CIRCLE: 0,
-    ELLIPSE: 1
-};
-
-var LENGTH_FOR_POSITION = {
-    left: new _Length2.default('0%'),
-    top: new _Length2.default('0%'),
-    center: new _Length2.default('50%'),
-    right: new _Length2.default('100%'),
-    bottom: new _Length2.default('100%')
-};
-
-var LinearGradient = exports.LinearGradient = function LinearGradient(colorStops, direction) {
-    _classCallCheck(this, LinearGradient);
-
-    this.type = GRADIENT_TYPE.LINEAR_GRADIENT;
-    this.colorStops = colorStops;
-    this.direction = direction;
-};
-
-var RadialGradient = exports.RadialGradient = function RadialGradient(colorStops, shape, center, radius) {
-    _classCallCheck(this, RadialGradient);
-
-    this.type = GRADIENT_TYPE.RADIAL_GRADIENT;
-    this.colorStops = colorStops;
-    this.shape = shape;
-    this.center = center;
-    this.radius = radius;
-};
-
-var parseGradient = exports.parseGradient = function parseGradient(container, _ref, bounds) {
-    var args = _ref.args,
-        method = _ref.method,
-        prefix = _ref.prefix;
-
-    if (method === 'linear-gradient') {
-        return parseLinearGradient(args, bounds, !!prefix);
-    } else if (method === 'gradient' && args[0] === 'linear') {
-        // TODO handle correct angle
-        return parseLinearGradient(['to bottom'].concat(transformObsoleteColorStops(args.slice(3))), bounds, !!prefix);
-    } else if (method === 'radial-gradient') {
-        return parseRadialGradient(container, prefix === '-webkit-' ? transformWebkitRadialGradientArgs(args) : args, bounds);
-    } else if (method === 'gradient' && args[0] === 'radial') {
-        return parseRadialGradient(container, transformObsoleteColorStops(transformWebkitRadialGradientArgs(args.slice(1))), bounds);
-    }
-};
-
-var parseColorStops = function parseColorStops(args, firstColorStopIndex, lineLength) {
-    var colorStops = [];
-
-    for (var i = firstColorStopIndex; i < args.length; i++) {
-        var value = args[i];
-        var HAS_LENGTH = ENDS_WITH_LENGTH.test(value);
-        var lastSpaceIndex = value.lastIndexOf(' ');
-        var _color = new _Color2.default(HAS_LENGTH ? value.substring(0, lastSpaceIndex) : value);
-        var _stop = HAS_LENGTH ? new _Length2.default(value.substring(lastSpaceIndex + 1)) : i === firstColorStopIndex ? new _Length2.default('0%') : i === args.length - 1 ? new _Length2.default('100%') : null;
-        colorStops.push({ color: _color, stop: _stop });
-    }
-
-    var absoluteValuedColorStops = colorStops.map(function (_ref2) {
-        var color = _ref2.color,
-            stop = _ref2.stop;
-
-        var absoluteStop = lineLength === 0 ? 0 : stop ? stop.getAbsoluteValue(lineLength) / lineLength : null;
-
-        return {
-            color: color,
-            // $FlowFixMe
-            stop: absoluteStop
-        };
-    });
-
-    var previousColorStop = absoluteValuedColorStops[0].stop;
-    for (var _i = 0; _i < absoluteValuedColorStops.length; _i++) {
-        if (previousColorStop !== null) {
-            var _stop2 = absoluteValuedColorStops[_i].stop;
-            if (_stop2 === null) {
-                var n = _i;
-                while (absoluteValuedColorStops[n].stop === null) {
-                    n++;
-                }
-                var steps = n - _i + 1;
-                var nextColorStep = absoluteValuedColorStops[n].stop;
-                var stepSize = (nextColorStep - previousColorStop) / steps;
-                for (; _i < n; _i++) {
-                    previousColorStop = absoluteValuedColorStops[_i].stop = previousColorStop + stepSize;
-                }
-            } else {
-                previousColorStop = _stop2;
-            }
-        }
-    }
-
-    return absoluteValuedColorStops;
-};
-
-var parseLinearGradient = function parseLinearGradient(args, bounds, hasPrefix) {
-    var angle = (0, _Angle.parseAngle)(args[0]);
-    var HAS_SIDE_OR_CORNER = SIDE_OR_CORNER.test(args[0]);
-    var HAS_DIRECTION = HAS_SIDE_OR_CORNER || angle !== null || PERCENTAGE_ANGLES.test(args[0]);
-    var direction = HAS_DIRECTION ? angle !== null ? calculateGradientDirection(
-    // if there is a prefix, the 0° angle points due East (instead of North per W3C)
-    hasPrefix ? angle - Math.PI * 0.5 : angle, bounds) : HAS_SIDE_OR_CORNER ? parseSideOrCorner(args[0], bounds) : parsePercentageAngle(args[0], bounds) : calculateGradientDirection(Math.PI, bounds);
-    var firstColorStopIndex = HAS_DIRECTION ? 1 : 0;
-
-    // TODO: Fix some inaccuracy with color stops with px values
-    var lineLength = Math.min((0, _Util.distance)(Math.abs(direction.x0) + Math.abs(direction.x1), Math.abs(direction.y0) + Math.abs(direction.y1)), bounds.width * 2, bounds.height * 2);
-
-    return new LinearGradient(parseColorStops(args, firstColorStopIndex, lineLength), direction);
-};
-
-var parseRadialGradient = function parseRadialGradient(container, args, bounds) {
-    var m = args[0].match(RADIAL_SHAPE_DEFINITION);
-    var shape = m && (m[1] === 'circle' || // explicit shape specification
-    m[3] !== undefined && m[5] === undefined) // only one radius coordinate
-    ? RADIAL_GRADIENT_SHAPE.CIRCLE : RADIAL_GRADIENT_SHAPE.ELLIPSE;
-    var radius = {};
-    var center = {};
-
-    if (m) {
-        // Radius
-        if (m[3] !== undefined) {
-            radius.x = (0, _Length.calculateLengthFromValueWithUnit)(container, m[3], m[4]).getAbsoluteValue(bounds.width);
-        }
-
-        if (m[5] !== undefined) {
-            radius.y = (0, _Length.calculateLengthFromValueWithUnit)(container, m[5], m[6]).getAbsoluteValue(bounds.height);
-        }
-
-        // Position
-        if (m[7]) {
-            center.x = LENGTH_FOR_POSITION[m[7].toLowerCase()];
-        } else if (m[8] !== undefined) {
-            center.x = (0, _Length.calculateLengthFromValueWithUnit)(container, m[8], m[9]);
-        }
-
-        if (m[10]) {
-            center.y = LENGTH_FOR_POSITION[m[10].toLowerCase()];
-        } else if (m[11] !== undefined) {
-            center.y = (0, _Length.calculateLengthFromValueWithUnit)(container, m[11], m[12]);
-        }
-    }
-
-    var gradientCenter = {
-        x: center.x === undefined ? bounds.width / 2 : center.x.getAbsoluteValue(bounds.width),
-        y: center.y === undefined ? bounds.height / 2 : center.y.getAbsoluteValue(bounds.height)
-    };
-    var gradientRadius = calculateRadius(m && m[2] || 'farthest-corner', shape, gradientCenter, radius, bounds);
-
-    return new RadialGradient(parseColorStops(args, m ? 1 : 0, Math.min(gradientRadius.x, gradientRadius.y)), shape, gradientCenter, gradientRadius);
-};
-
-var calculateGradientDirection = function calculateGradientDirection(radian, bounds) {
-    var width = bounds.width;
-    var height = bounds.height;
-    var HALF_WIDTH = width * 0.5;
-    var HALF_HEIGHT = height * 0.5;
-    var lineLength = Math.abs(width * Math.sin(radian)) + Math.abs(height * Math.cos(radian));
-    var HALF_LINE_LENGTH = lineLength / 2;
-
-    var x0 = HALF_WIDTH + Math.sin(radian) * HALF_LINE_LENGTH;
-    var y0 = HALF_HEIGHT - Math.cos(radian) * HALF_LINE_LENGTH;
-    var x1 = width - x0;
-    var y1 = height - y0;
-
-    return { x0: x0, x1: x1, y0: y0, y1: y1 };
-};
-
-var parseTopRight = function parseTopRight(bounds) {
-    return Math.acos(bounds.width / 2 / ((0, _Util.distance)(bounds.width, bounds.height) / 2));
-};
-
-var parseSideOrCorner = function parseSideOrCorner(side, bounds) {
-    switch (side) {
-        case 'bottom':
-        case 'to top':
-            return calculateGradientDirection(0, bounds);
-        case 'left':
-        case 'to right':
-            return calculateGradientDirection(Math.PI / 2, bounds);
-        case 'right':
-        case 'to left':
-            return calculateGradientDirection(3 * Math.PI / 2, bounds);
-        case 'top right':
-        case 'right top':
-        case 'to bottom left':
-        case 'to left bottom':
-            return calculateGradientDirection(Math.PI + parseTopRight(bounds), bounds);
-        case 'top left':
-        case 'left top':
-        case 'to bottom right':
-        case 'to right bottom':
-            return calculateGradientDirection(Math.PI - parseTopRight(bounds), bounds);
-        case 'bottom left':
-        case 'left bottom':
-        case 'to top right':
-        case 'to right top':
-            return calculateGradientDirection(parseTopRight(bounds), bounds);
-        case 'bottom right':
-        case 'right bottom':
-        case 'to top left':
-        case 'to left top':
-            return calculateGradientDirection(2 * Math.PI - parseTopRight(bounds), bounds);
-        case 'top':
-        case 'to bottom':
-        default:
-            return calculateGradientDirection(Math.PI, bounds);
-    }
-};
-
-var parsePercentageAngle = function parsePercentageAngle(angle, bounds) {
-    var _angle$split$map = angle.split(' ').map(parseFloat),
-        _angle$split$map2 = _slicedToArray(_angle$split$map, 2),
-        left = _angle$split$map2[0],
-        top = _angle$split$map2[1];
-
-    var ratio = left / 100 * bounds.width / (top / 100 * bounds.height);
-
-    return calculateGradientDirection(Math.atan(isNaN(ratio) ? 1 : ratio) + Math.PI / 2, bounds);
-};
-
-var findCorner = function findCorner(bounds, x, y, closest) {
-    var corners = [{ x: 0, y: 0 }, { x: 0, y: bounds.height }, { x: bounds.width, y: 0 }, { x: bounds.width, y: bounds.height }];
-
-    // $FlowFixMe
-    return corners.reduce(function (stat, corner) {
-        var d = (0, _Util.distance)(x - corner.x, y - corner.y);
-        if (closest ? d < stat.optimumDistance : d > stat.optimumDistance) {
-            return {
-                optimumCorner: corner,
-                optimumDistance: d
-            };
-        }
-
-        return stat;
-    }, {
-        optimumDistance: closest ? Infinity : -Infinity,
-        optimumCorner: null
-    }).optimumCorner;
-};
-
-var calculateRadius = function calculateRadius(extent, shape, center, radius, bounds) {
-    var x = center.x;
-    var y = center.y;
-    var rx = 0;
-    var ry = 0;
-
-    switch (extent) {
-        case 'closest-side':
-            // The ending shape is sized so that that it exactly meets the side of the gradient box closest to the gradient’s center.
-            // If the shape is an ellipse, it exactly meets the closest side in each dimension.
-            if (shape === RADIAL_GRADIENT_SHAPE.CIRCLE) {
-                rx = ry = Math.min(Math.abs(x), Math.abs(x - bounds.width), Math.abs(y), Math.abs(y - bounds.height));
-            } else if (shape === RADIAL_GRADIENT_SHAPE.ELLIPSE) {
-                rx = Math.min(Math.abs(x), Math.abs(x - bounds.width));
-                ry = Math.min(Math.abs(y), Math.abs(y - bounds.height));
-            }
-            break;
-
-        case 'closest-corner':
-            // The ending shape is sized so that that it passes through the corner of the gradient box closest to the gradient’s center.
-            // If the shape is an ellipse, the ending shape is given the same aspect-ratio it would have if closest-side were specified.
-            if (shape === RADIAL_GRADIENT_SHAPE.CIRCLE) {
-                rx = ry = Math.min((0, _Util.distance)(x, y), (0, _Util.distance)(x, y - bounds.height), (0, _Util.distance)(x - bounds.width, y), (0, _Util.distance)(x - bounds.width, y - bounds.height));
-            } else if (shape === RADIAL_GRADIENT_SHAPE.ELLIPSE) {
-                // Compute the ratio ry/rx (which is to be the same as for "closest-side")
-                var c = Math.min(Math.abs(y), Math.abs(y - bounds.height)) / Math.min(Math.abs(x), Math.abs(x - bounds.width));
-                var corner = findCorner(bounds, x, y, true);
-                rx = (0, _Util.distance)(corner.x - x, (corner.y - y) / c);
-                ry = c * rx;
-            }
-            break;
-
-        case 'farthest-side':
-            // Same as closest-side, except the ending shape is sized based on the farthest side(s)
-            if (shape === RADIAL_GRADIENT_SHAPE.CIRCLE) {
-                rx = ry = Math.max(Math.abs(x), Math.abs(x - bounds.width), Math.abs(y), Math.abs(y - bounds.height));
-            } else if (shape === RADIAL_GRADIENT_SHAPE.ELLIPSE) {
-                rx = Math.max(Math.abs(x), Math.abs(x - bounds.width));
-                ry = Math.max(Math.abs(y), Math.abs(y - bounds.height));
-            }
-            break;
-
-        case 'farthest-corner':
-            // Same as closest-corner, except the ending shape is sized based on the farthest corner.
-            // If the shape is an ellipse, the ending shape is given the same aspect ratio it would have if farthest-side were specified.
-            if (shape === RADIAL_GRADIENT_SHAPE.CIRCLE) {
-                rx = ry = Math.max((0, _Util.distance)(x, y), (0, _Util.distance)(x, y - bounds.height), (0, _Util.distance)(x - bounds.width, y), (0, _Util.distance)(x - bounds.width, y - bounds.height));
-            } else if (shape === RADIAL_GRADIENT_SHAPE.ELLIPSE) {
-                // Compute the ratio ry/rx (which is to be the same as for "farthest-side")
-                var _c = Math.max(Math.abs(y), Math.abs(y - bounds.height)) / Math.max(Math.abs(x), Math.abs(x - bounds.width));
-                var _corner = findCorner(bounds, x, y, false);
-                rx = (0, _Util.distance)(_corner.x - x, (_corner.y - y) / _c);
-                ry = _c * rx;
-            }
-            break;
-
-        default:
-            // pixel or percentage values
-            rx = radius.x || 0;
-            ry = radius.y !== undefined ? radius.y : rx;
-            break;
-    }
-
-    return {
-        x: rx,
-        y: ry
-    };
-};
-
-var transformWebkitRadialGradientArgs = exports.transformWebkitRadialGradientArgs = function transformWebkitRadialGradientArgs(args) {
-    var shape = '';
-    var radius = '';
-    var extent = '';
-    var position = '';
-    var idx = 0;
-
-    var POSITION = /^(left|center|right|\d+(?:px|r?em|%)?)(?:\s+(top|center|bottom|\d+(?:px|r?em|%)?))?$/i;
-    var SHAPE_AND_EXTENT = /^(circle|ellipse)?\s*(closest-side|closest-corner|farthest-side|farthest-corner|contain|cover)?$/i;
-    var RADIUS = /^\d+(px|r?em|%)?(?:\s+\d+(px|r?em|%)?)?$/i;
-
-    var matchStartPosition = args[idx].match(POSITION);
-    if (matchStartPosition) {
-        idx++;
-    }
-
-    var matchShapeExtent = args[idx].match(SHAPE_AND_EXTENT);
-    if (matchShapeExtent) {
-        shape = matchShapeExtent[1] || '';
-        extent = matchShapeExtent[2] || '';
-        if (extent === 'contain') {
-            extent = 'closest-side';
-        } else if (extent === 'cover') {
-            extent = 'farthest-corner';
-        }
-        idx++;
-    }
-
-    var matchStartRadius = args[idx].match(RADIUS);
-    if (matchStartRadius) {
-        idx++;
-    }
-
-    var matchEndPosition = args[idx].match(POSITION);
-    if (matchEndPosition) {
-        idx++;
-    }
-
-    var matchEndRadius = args[idx].match(RADIUS);
-    if (matchEndRadius) {
-        idx++;
-    }
-
-    var matchPosition = matchEndPosition || matchStartPosition;
-    if (matchPosition && matchPosition[1]) {
-        position = matchPosition[1] + (/^\d+$/.test(matchPosition[1]) ? 'px' : '');
-        if (matchPosition[2]) {
-            position += ' ' + matchPosition[2] + (/^\d+$/.test(matchPosition[2]) ? 'px' : '');
-        }
-    }
-
-    var matchRadius = matchEndRadius || matchStartRadius;
-    if (matchRadius) {
-        radius = matchRadius[0];
-        if (!matchRadius[1]) {
-            radius += 'px';
-        }
-    }
-
-    if (position && !shape && !radius && !extent) {
-        radius = position;
-        position = '';
-    }
-
-    if (position) {
-        position = 'at ' + position;
-    }
-
-    return [[shape, extent, radius, position].filter(function (s) {
-        return !!s;
-    }).join(' ')].concat(args.slice(idx));
-};
-
-var transformObsoleteColorStops = function transformObsoleteColorStops(args) {
-    return args.map(function (color) {
-        return color.match(FROM_TO_COLORSTOP);
-    })
-    // $FlowFixMe
-    .map(function (v, index) {
-        if (!v) {
-            return args[index];
-        }
-
-        switch (v[1]) {
-            case 'from':
-                return v[4] + ' 0%';
-            case 'to':
-                return v[4] + ' 100%';
-            case 'color-stop':
-                if (v[3] === '%') {
-                    return v[4] + ' ' + v[2];
-                }
-                return v[4] + ' ' + parseFloat(v[2]) * 100 + '%';
-        }
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Input.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Input.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.reformatInputBounds = exports.inlineSelectElement = exports.inlineTextAreaElement = exports.inlineInputElement = exports.getInputBorderRadius = exports.INPUT_BACKGROUND = exports.INPUT_BORDERS = exports.INPUT_COLOR = undefined;
-
-var _TextContainer = __webpack_require__(/*! ./TextContainer */ "./node_modules/html2canvas/dist/npm/TextContainer.js");
-
-var _TextContainer2 = _interopRequireDefault(_TextContainer);
-
-var _background = __webpack_require__(/*! ./parsing/background */ "./node_modules/html2canvas/dist/npm/parsing/background.js");
-
-var _border = __webpack_require__(/*! ./parsing/border */ "./node_modules/html2canvas/dist/npm/parsing/border.js");
-
-var _Circle = __webpack_require__(/*! ./drawing/Circle */ "./node_modules/html2canvas/dist/npm/drawing/Circle.js");
-
-var _Circle2 = _interopRequireDefault(_Circle);
-
-var _Vector = __webpack_require__(/*! ./drawing/Vector */ "./node_modules/html2canvas/dist/npm/drawing/Vector.js");
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-var _Color = __webpack_require__(/*! ./Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-var _Length = __webpack_require__(/*! ./Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _TextBounds = __webpack_require__(/*! ./TextBounds */ "./node_modules/html2canvas/dist/npm/TextBounds.js");
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var INPUT_COLOR = exports.INPUT_COLOR = new _Color2.default([42, 42, 42]);
-var INPUT_BORDER_COLOR = new _Color2.default([165, 165, 165]);
-var INPUT_BACKGROUND_COLOR = new _Color2.default([222, 222, 222]);
-var INPUT_BORDER = {
-    borderWidth: 1,
-    borderColor: INPUT_BORDER_COLOR,
-    borderStyle: _border.BORDER_STYLE.SOLID
-};
-var INPUT_BORDERS = exports.INPUT_BORDERS = [INPUT_BORDER, INPUT_BORDER, INPUT_BORDER, INPUT_BORDER];
-var INPUT_BACKGROUND = exports.INPUT_BACKGROUND = {
-    backgroundColor: INPUT_BACKGROUND_COLOR,
-    backgroundImage: [],
-    backgroundClip: _background.BACKGROUND_CLIP.PADDING_BOX,
-    backgroundOrigin: _background.BACKGROUND_ORIGIN.PADDING_BOX
-};
-
-var RADIO_BORDER_RADIUS = new _Length2.default('50%');
-var RADIO_BORDER_RADIUS_TUPLE = [RADIO_BORDER_RADIUS, RADIO_BORDER_RADIUS];
-var INPUT_RADIO_BORDER_RADIUS = [RADIO_BORDER_RADIUS_TUPLE, RADIO_BORDER_RADIUS_TUPLE, RADIO_BORDER_RADIUS_TUPLE, RADIO_BORDER_RADIUS_TUPLE];
-
-var CHECKBOX_BORDER_RADIUS = new _Length2.default('3px');
-var CHECKBOX_BORDER_RADIUS_TUPLE = [CHECKBOX_BORDER_RADIUS, CHECKBOX_BORDER_RADIUS];
-var INPUT_CHECKBOX_BORDER_RADIUS = [CHECKBOX_BORDER_RADIUS_TUPLE, CHECKBOX_BORDER_RADIUS_TUPLE, CHECKBOX_BORDER_RADIUS_TUPLE, CHECKBOX_BORDER_RADIUS_TUPLE];
-
-var getInputBorderRadius = exports.getInputBorderRadius = function getInputBorderRadius(node) {
-    return node.type === 'radio' ? INPUT_RADIO_BORDER_RADIUS : INPUT_CHECKBOX_BORDER_RADIUS;
-};
-
-var inlineInputElement = exports.inlineInputElement = function inlineInputElement(node, container) {
-    if (node.type === 'radio' || node.type === 'checkbox') {
-        if (node.checked) {
-            var size = Math.min(container.bounds.width, container.bounds.height);
-            container.childNodes.push(node.type === 'checkbox' ? [new _Vector2.default(container.bounds.left + size * 0.39363, container.bounds.top + size * 0.79), new _Vector2.default(container.bounds.left + size * 0.16, container.bounds.top + size * 0.5549), new _Vector2.default(container.bounds.left + size * 0.27347, container.bounds.top + size * 0.44071), new _Vector2.default(container.bounds.left + size * 0.39694, container.bounds.top + size * 0.5649), new _Vector2.default(container.bounds.left + size * 0.72983, container.bounds.top + size * 0.23), new _Vector2.default(container.bounds.left + size * 0.84, container.bounds.top + size * 0.34085), new _Vector2.default(container.bounds.left + size * 0.39363, container.bounds.top + size * 0.79)] : new _Circle2.default(container.bounds.left + size / 4, container.bounds.top + size / 4, size / 4));
-        }
-    } else {
-        inlineFormElement(getInputValue(node), node, container, false);
-    }
-};
-
-var inlineTextAreaElement = exports.inlineTextAreaElement = function inlineTextAreaElement(node, container) {
-    inlineFormElement(node.value, node, container, true);
-};
-
-var inlineSelectElement = exports.inlineSelectElement = function inlineSelectElement(node, container) {
-    var option = node.options[node.selectedIndex || 0];
-    inlineFormElement(option ? option.text || '' : '', node, container, false);
-};
-
-var reformatInputBounds = exports.reformatInputBounds = function reformatInputBounds(bounds) {
-    if (bounds.width > bounds.height) {
-        bounds.left += (bounds.width - bounds.height) / 2;
-        bounds.width = bounds.height;
-    } else if (bounds.width < bounds.height) {
-        bounds.top += (bounds.height - bounds.width) / 2;
-        bounds.height = bounds.width;
-    }
-    return bounds;
-};
-
-var inlineFormElement = function inlineFormElement(value, node, container, allowLinebreak) {
-    var body = node.ownerDocument.body;
-    if (value.length > 0 && body) {
-        var wrapper = node.ownerDocument.createElement('html2canvaswrapper');
-        (0, _Util.copyCSSStyles)(node.ownerDocument.defaultView.getComputedStyle(node, null), wrapper);
-        wrapper.style.position = 'absolute';
-        wrapper.style.left = container.bounds.left + 'px';
-        wrapper.style.top = container.bounds.top + 'px';
-        if (!allowLinebreak) {
-            wrapper.style.whiteSpace = 'nowrap';
-        }
-        var text = node.ownerDocument.createTextNode(value);
-        wrapper.appendChild(text);
-        body.appendChild(wrapper);
-        container.childNodes.push(_TextContainer2.default.fromTextNode(text, container));
-        body.removeChild(wrapper);
-    }
-};
-
-var getInputValue = function getInputValue(node) {
-    var value = node.type === 'password' ? new Array(node.value.length + 1).join('\u2022') : node.value;
-
-    return value.length === 0 ? node.placeholder || '' : value;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Length.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Length.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.calculateLengthFromValueWithUnit = exports.LENGTH_TYPE = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LENGTH_WITH_UNIT = /([\d.]+)(px|r?em|%)/i;
-
-var LENGTH_TYPE = exports.LENGTH_TYPE = {
-    PX: 0,
-    PERCENTAGE: 1
-};
-
-var Length = function () {
-    function Length(value) {
-        _classCallCheck(this, Length);
-
-        this.type = value.substr(value.length - 1) === '%' ? LENGTH_TYPE.PERCENTAGE : LENGTH_TYPE.PX;
-        var parsedValue = parseFloat(value);
-        if ( true && isNaN(parsedValue)) {
-            console.error('Invalid value given for Length: "' + value + '"');
-        }
-        this.value = isNaN(parsedValue) ? 0 : parsedValue;
-    }
-
-    _createClass(Length, [{
-        key: 'isPercentage',
-        value: function isPercentage() {
-            return this.type === LENGTH_TYPE.PERCENTAGE;
-        }
-    }, {
-        key: 'getAbsoluteValue',
-        value: function getAbsoluteValue(parentLength) {
-            return this.isPercentage() ? parentLength * (this.value / 100) : this.value;
-        }
-    }], [{
-        key: 'create',
-        value: function create(v) {
-            return new Length(v);
-        }
-    }]);
-
-    return Length;
-}();
-
-exports.default = Length;
-
-
-var getRootFontSize = function getRootFontSize(container) {
-    var parent = container.parent;
-    return parent ? getRootFontSize(parent) : parseFloat(container.style.font.fontSize);
-};
-
-var calculateLengthFromValueWithUnit = exports.calculateLengthFromValueWithUnit = function calculateLengthFromValueWithUnit(container, value, unit) {
-    switch (unit) {
-        case 'px':
-        case '%':
-            return new Length(value + unit);
-        case 'em':
-        case 'rem':
-            var length = new Length(value);
-            length.value *= unit === 'em' ? parseFloat(container.style.font.fontSize) : getRootFontSize(container);
-            return length;
-        default:
-            // TODO: handle correctly if unknown unit is used
-            return new Length('0');
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/ListItem.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/ListItem.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.createCounterText = exports.inlineListItemElement = exports.getListOwner = undefined;
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-var _TextContainer = __webpack_require__(/*! ./TextContainer */ "./node_modules/html2canvas/dist/npm/TextContainer.js");
-
-var _TextContainer2 = _interopRequireDefault(_TextContainer);
-
-var _listStyle = __webpack_require__(/*! ./parsing/listStyle */ "./node_modules/html2canvas/dist/npm/parsing/listStyle.js");
-
-var _Unicode = __webpack_require__(/*! ./Unicode */ "./node_modules/html2canvas/dist/npm/Unicode.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Margin between the enumeration and the list item content
-var MARGIN_RIGHT = 7;
-
-var ancestorTypes = ['OL', 'UL', 'MENU'];
-
-var getListOwner = exports.getListOwner = function getListOwner(container) {
-    var parent = container.parent;
-    if (!parent) {
-        return null;
-    }
-
-    do {
-        var isAncestor = ancestorTypes.indexOf(parent.tagName) !== -1;
-        if (isAncestor) {
-            return parent;
-        }
-        parent = parent.parent;
-    } while (parent);
-
-    return container.parent;
-};
-
-var inlineListItemElement = exports.inlineListItemElement = function inlineListItemElement(node, container, resourceLoader) {
-    var listStyle = container.style.listStyle;
-
-    if (!listStyle) {
-        return;
-    }
-
-    var style = node.ownerDocument.defaultView.getComputedStyle(node, null);
-    var wrapper = node.ownerDocument.createElement('html2canvaswrapper');
-    (0, _Util.copyCSSStyles)(style, wrapper);
-
-    wrapper.style.position = 'absolute';
-    wrapper.style.bottom = 'auto';
-    wrapper.style.display = 'block';
-    wrapper.style.letterSpacing = 'normal';
-
-    switch (listStyle.listStylePosition) {
-        case _listStyle.LIST_STYLE_POSITION.OUTSIDE:
-            wrapper.style.left = 'auto';
-            wrapper.style.right = node.ownerDocument.defaultView.innerWidth - container.bounds.left - container.style.margin[1].getAbsoluteValue(container.bounds.width) + MARGIN_RIGHT + 'px';
-            wrapper.style.textAlign = 'right';
-            break;
-        case _listStyle.LIST_STYLE_POSITION.INSIDE:
-            wrapper.style.left = container.bounds.left - container.style.margin[3].getAbsoluteValue(container.bounds.width) + 'px';
-            wrapper.style.right = 'auto';
-            wrapper.style.textAlign = 'left';
-            break;
-    }
-
-    var text = void 0;
-    var MARGIN_TOP = container.style.margin[0].getAbsoluteValue(container.bounds.width);
-    var styleImage = listStyle.listStyleImage;
-    if (styleImage) {
-        if (styleImage.method === 'url') {
-            var image = node.ownerDocument.createElement('img');
-            image.src = styleImage.args[0];
-            wrapper.style.top = container.bounds.top - MARGIN_TOP + 'px';
-            wrapper.style.width = 'auto';
-            wrapper.style.height = 'auto';
-            wrapper.appendChild(image);
-        } else {
-            var size = parseFloat(container.style.font.fontSize) * 0.5;
-            wrapper.style.top = container.bounds.top - MARGIN_TOP + container.bounds.height - 1.5 * size + 'px';
-            wrapper.style.width = size + 'px';
-            wrapper.style.height = size + 'px';
-            wrapper.style.backgroundImage = style.listStyleImage;
-        }
-    } else if (typeof container.listIndex === 'number') {
-        text = node.ownerDocument.createTextNode(createCounterText(container.listIndex, listStyle.listStyleType, true));
-        wrapper.appendChild(text);
-        wrapper.style.top = container.bounds.top - MARGIN_TOP + 'px';
-    }
-
-    // $FlowFixMe
-    var body = node.ownerDocument.body;
-    body.appendChild(wrapper);
-
-    if (text) {
-        container.childNodes.push(_TextContainer2.default.fromTextNode(text, container));
-        body.removeChild(wrapper);
-    } else {
-        // $FlowFixMe
-        container.childNodes.push(new _NodeContainer2.default(wrapper, container, resourceLoader, 0));
-    }
-};
-
-var ROMAN_UPPER = {
-    integers: [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1],
-    values: ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I']
-};
-
-var ARMENIAN = {
-    integers: [9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    values: ['Ք', 'Փ', 'Ւ', 'Ց', 'Ր', 'Տ', 'Վ', 'Ս', 'Ռ', 'Ջ', 'Պ', 'Չ', 'Ո', 'Շ', 'Ն', 'Յ', 'Մ', 'Ճ', 'Ղ', 'Ձ', 'Հ', 'Կ', 'Ծ', 'Խ', 'Լ', 'Ի', 'Ժ', 'Թ', 'Ը', 'Է', 'Զ', 'Ե', 'Դ', 'Գ', 'Բ', 'Ա']
-};
-
-var HEBREW = {
-    integers: [10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 400, 300, 200, 100, 90, 80, 70, 60, 50, 40, 30, 20, 19, 18, 17, 16, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    values: ['י׳', 'ט׳', 'ח׳', 'ז׳', 'ו׳', 'ה׳', 'ד׳', 'ג׳', 'ב׳', 'א׳', 'ת', 'ש', 'ר', 'ק', 'צ', 'פ', 'ע', 'ס', 'נ', 'מ', 'ל', 'כ', 'יט', 'יח', 'יז', 'טז', 'טו', 'י', 'ט', 'ח', 'ז', 'ו', 'ה', 'ד', 'ג', 'ב', 'א']
-};
-
-var GEORGIAN = {
-    integers: [10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-    values: ['ჵ', 'ჰ', 'ჯ', 'ჴ', 'ხ', 'ჭ', 'წ', 'ძ', 'ც', 'ჩ', 'შ', 'ყ', 'ღ', 'ქ', 'ფ', 'ჳ', 'ტ', 'ს', 'რ', 'ჟ', 'პ', 'ო', 'ჲ', 'ნ', 'მ', 'ლ', 'კ', 'ი', 'თ', 'ჱ', 'ზ', 'ვ', 'ე', 'დ', 'გ', 'ბ', 'ა']
-};
-
-var createAdditiveCounter = function createAdditiveCounter(value, min, max, symbols, fallback, suffix) {
-    if (value < min || value > max) {
-        return createCounterText(value, fallback, suffix.length > 0);
-    }
-
-    return symbols.integers.reduce(function (string, integer, index) {
-        while (value >= integer) {
-            value -= integer;
-            string += symbols.values[index];
-        }
-        return string;
-    }, '') + suffix;
-};
-
-var createCounterStyleWithSymbolResolver = function createCounterStyleWithSymbolResolver(value, codePointRangeLength, isNumeric, resolver) {
-    var string = '';
-
-    do {
-        if (!isNumeric) {
-            value--;
-        }
-        string = resolver(value) + string;
-        value /= codePointRangeLength;
-    } while (value * codePointRangeLength >= codePointRangeLength);
-
-    return string;
-};
-
-var createCounterStyleFromRange = function createCounterStyleFromRange(value, codePointRangeStart, codePointRangeEnd, isNumeric, suffix) {
-    var codePointRangeLength = codePointRangeEnd - codePointRangeStart + 1;
-
-    return (value < 0 ? '-' : '') + (createCounterStyleWithSymbolResolver(Math.abs(value), codePointRangeLength, isNumeric, function (codePoint) {
-        return (0, _Unicode.fromCodePoint)(Math.floor(codePoint % codePointRangeLength) + codePointRangeStart);
-    }) + suffix);
-};
-
-var createCounterStyleFromSymbols = function createCounterStyleFromSymbols(value, symbols) {
-    var suffix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '. ';
-
-    var codePointRangeLength = symbols.length;
-    return createCounterStyleWithSymbolResolver(Math.abs(value), codePointRangeLength, false, function (codePoint) {
-        return symbols[Math.floor(codePoint % codePointRangeLength)];
-    }) + suffix;
-};
-
-var CJK_ZEROS = 1 << 0;
-var CJK_TEN_COEFFICIENTS = 1 << 1;
-var CJK_TEN_HIGH_COEFFICIENTS = 1 << 2;
-var CJK_HUNDRED_COEFFICIENTS = 1 << 3;
-
-var createCJKCounter = function createCJKCounter(value, numbers, multipliers, negativeSign, suffix, flags) {
-    if (value < -9999 || value > 9999) {
-        return createCounterText(value, _listStyle.LIST_STYLE_TYPE.CJK_DECIMAL, suffix.length > 0);
-    }
-    var tmp = Math.abs(value);
-    var string = suffix;
-
-    if (tmp === 0) {
-        return numbers[0] + string;
-    }
-
-    for (var digit = 0; tmp > 0 && digit <= 4; digit++) {
-        var coefficient = tmp % 10;
-
-        if (coefficient === 0 && (0, _Util.contains)(flags, CJK_ZEROS) && string !== '') {
-            string = numbers[coefficient] + string;
-        } else if (coefficient > 1 || coefficient === 1 && digit === 0 || coefficient === 1 && digit === 1 && (0, _Util.contains)(flags, CJK_TEN_COEFFICIENTS) || coefficient === 1 && digit === 1 && (0, _Util.contains)(flags, CJK_TEN_HIGH_COEFFICIENTS) && value > 100 || coefficient === 1 && digit > 1 && (0, _Util.contains)(flags, CJK_HUNDRED_COEFFICIENTS)) {
-            string = numbers[coefficient] + (digit > 0 ? multipliers[digit - 1] : '') + string;
-        } else if (coefficient === 1 && digit > 0) {
-            string = multipliers[digit - 1] + string;
-        }
-        tmp = Math.floor(tmp / 10);
-    }
-
-    return (value < 0 ? negativeSign : '') + string;
-};
-
-var CHINESE_INFORMAL_MULTIPLIERS = '十百千萬';
-var CHINESE_FORMAL_MULTIPLIERS = '拾佰仟萬';
-var JAPANESE_NEGATIVE = 'マイナス';
-var KOREAN_NEGATIVE = '마이너스 ';
-
-var createCounterText = exports.createCounterText = function createCounterText(value, type, appendSuffix) {
-    var defaultSuffix = appendSuffix ? '. ' : '';
-    var cjkSuffix = appendSuffix ? '、' : '';
-    var koreanSuffix = appendSuffix ? ', ' : '';
-    switch (type) {
-        case _listStyle.LIST_STYLE_TYPE.DISC:
-            return '•';
-        case _listStyle.LIST_STYLE_TYPE.CIRCLE:
-            return '◦';
-        case _listStyle.LIST_STYLE_TYPE.SQUARE:
-            return '◾';
-        case _listStyle.LIST_STYLE_TYPE.DECIMAL_LEADING_ZERO:
-            var string = createCounterStyleFromRange(value, 48, 57, true, defaultSuffix);
-            return string.length < 4 ? '0' + string : string;
-        case _listStyle.LIST_STYLE_TYPE.CJK_DECIMAL:
-            return createCounterStyleFromSymbols(value, '〇一二三四五六七八九', cjkSuffix);
-        case _listStyle.LIST_STYLE_TYPE.LOWER_ROMAN:
-            return createAdditiveCounter(value, 1, 3999, ROMAN_UPPER, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix).toLowerCase();
-        case _listStyle.LIST_STYLE_TYPE.UPPER_ROMAN:
-            return createAdditiveCounter(value, 1, 3999, ROMAN_UPPER, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.LOWER_GREEK:
-            return createCounterStyleFromRange(value, 945, 969, false, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.LOWER_ALPHA:
-            return createCounterStyleFromRange(value, 97, 122, false, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.UPPER_ALPHA:
-            return createCounterStyleFromRange(value, 65, 90, false, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.ARABIC_INDIC:
-            return createCounterStyleFromRange(value, 1632, 1641, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.ARMENIAN:
-        case _listStyle.LIST_STYLE_TYPE.UPPER_ARMENIAN:
-            return createAdditiveCounter(value, 1, 9999, ARMENIAN, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.LOWER_ARMENIAN:
-            return createAdditiveCounter(value, 1, 9999, ARMENIAN, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix).toLowerCase();
-        case _listStyle.LIST_STYLE_TYPE.BENGALI:
-            return createCounterStyleFromRange(value, 2534, 2543, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.CAMBODIAN:
-        case _listStyle.LIST_STYLE_TYPE.KHMER:
-            return createCounterStyleFromRange(value, 6112, 6121, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.CJK_EARTHLY_BRANCH:
-            return createCounterStyleFromSymbols(value, '子丑寅卯辰巳午未申酉戌亥', cjkSuffix);
-        case _listStyle.LIST_STYLE_TYPE.CJK_HEAVENLY_STEM:
-            return createCounterStyleFromSymbols(value, '甲乙丙丁戊己庚辛壬癸', cjkSuffix);
-        case _listStyle.LIST_STYLE_TYPE.CJK_IDEOGRAPHIC:
-        case _listStyle.LIST_STYLE_TYPE.TRAD_CHINESE_INFORMAL:
-            return createCJKCounter(value, '零一二三四五六七八九', CHINESE_INFORMAL_MULTIPLIERS, '負', cjkSuffix, CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS | CJK_HUNDRED_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.TRAD_CHINESE_FORMAL:
-            return createCJKCounter(value, '零壹貳參肆伍陸柒捌玖', CHINESE_FORMAL_MULTIPLIERS, '負', cjkSuffix, CJK_ZEROS | CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS | CJK_HUNDRED_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.SIMP_CHINESE_INFORMAL:
-            return createCJKCounter(value, '零一二三四五六七八九', CHINESE_INFORMAL_MULTIPLIERS, '负', cjkSuffix, CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS | CJK_HUNDRED_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.SIMP_CHINESE_FORMAL:
-            return createCJKCounter(value, '零壹贰叁肆伍陆柒捌玖', CHINESE_FORMAL_MULTIPLIERS, '负', cjkSuffix, CJK_ZEROS | CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS | CJK_HUNDRED_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.JAPANESE_INFORMAL:
-            return createCJKCounter(value, '〇一二三四五六七八九', '十百千万', JAPANESE_NEGATIVE, cjkSuffix, 0);
-        case _listStyle.LIST_STYLE_TYPE.JAPANESE_FORMAL:
-            return createCJKCounter(value, '零壱弐参四伍六七八九', '拾百千万', JAPANESE_NEGATIVE, cjkSuffix, CJK_ZEROS | CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.KOREAN_HANGUL_FORMAL:
-            return createCJKCounter(value, '영일이삼사오육칠팔구', '십백천만', KOREAN_NEGATIVE, koreanSuffix, CJK_ZEROS | CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.KOREAN_HANJA_INFORMAL:
-            return createCJKCounter(value, '零一二三四五六七八九', '十百千萬', KOREAN_NEGATIVE, koreanSuffix, 0);
-        case _listStyle.LIST_STYLE_TYPE.KOREAN_HANJA_FORMAL:
-            return createCJKCounter(value, '零壹貳參四五六七八九', '拾百千', KOREAN_NEGATIVE, koreanSuffix, CJK_ZEROS | CJK_TEN_COEFFICIENTS | CJK_TEN_HIGH_COEFFICIENTS);
-        case _listStyle.LIST_STYLE_TYPE.DEVANAGARI:
-            return createCounterStyleFromRange(value, 0x966, 0x96f, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.GEORGIAN:
-            return createAdditiveCounter(value, 1, 19999, GEORGIAN, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.GUJARATI:
-            return createCounterStyleFromRange(value, 0xae6, 0xaef, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.GURMUKHI:
-            return createCounterStyleFromRange(value, 0xa66, 0xa6f, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.HEBREW:
-            return createAdditiveCounter(value, 1, 10999, HEBREW, _listStyle.LIST_STYLE_TYPE.DECIMAL, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.HIRAGANA:
-            return createCounterStyleFromSymbols(value, 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをん');
-        case _listStyle.LIST_STYLE_TYPE.HIRAGANA_IROHA:
-            return createCounterStyleFromSymbols(value, 'いろはにほへとちりぬるをわかよたれそつねならむうゐのおくやまけふこえてあさきゆめみしゑひもせす');
-        case _listStyle.LIST_STYLE_TYPE.KANNADA:
-            return createCounterStyleFromRange(value, 0xce6, 0xcef, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.KATAKANA:
-            return createCounterStyleFromSymbols(value, 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲン', cjkSuffix);
-        case _listStyle.LIST_STYLE_TYPE.KATAKANA_IROHA:
-            return createCounterStyleFromSymbols(value, 'イロハニホヘトチリヌルヲワカヨタレソツネナラムウヰノオクヤマケフコエテアサキユメミシヱヒモセス', cjkSuffix);
-        case _listStyle.LIST_STYLE_TYPE.LAO:
-            return createCounterStyleFromRange(value, 0xed0, 0xed9, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.MONGOLIAN:
-            return createCounterStyleFromRange(value, 0x1810, 0x1819, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.MYANMAR:
-            return createCounterStyleFromRange(value, 0x1040, 0x1049, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.ORIYA:
-            return createCounterStyleFromRange(value, 0xb66, 0xb6f, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.PERSIAN:
-            return createCounterStyleFromRange(value, 0x6f0, 0x6f9, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.TAMIL:
-            return createCounterStyleFromRange(value, 0xbe6, 0xbef, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.TELUGU:
-            return createCounterStyleFromRange(value, 0xc66, 0xc6f, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.THAI:
-            return createCounterStyleFromRange(value, 0xe50, 0xe59, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.TIBETAN:
-            return createCounterStyleFromRange(value, 0xf20, 0xf29, true, defaultSuffix);
-        case _listStyle.LIST_STYLE_TYPE.DECIMAL:
-        default:
-            return createCounterStyleFromRange(value, 48, 57, true, defaultSuffix);
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Logger.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Logger.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Logger = function () {
-    function Logger(enabled, id, start) {
-        _classCallCheck(this, Logger);
-
-        this.enabled = typeof window !== 'undefined' && enabled;
-        this.start = start ? start : Date.now();
-        this.id = id;
-    }
-
-    _createClass(Logger, [{
-        key: 'child',
-        value: function child(id) {
-            return new Logger(this.enabled, id, this.start);
-        }
-
-        // eslint-disable-next-line flowtype/no-weak-types
-
-    }, {
-        key: 'log',
-        value: function log() {
-            if (this.enabled && window.console && window.console.log) {
-                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                    args[_key] = arguments[_key];
-                }
-
-                Function.prototype.bind.call(window.console.log, window.console).apply(window.console, [Date.now() - this.start + 'ms', this.id ? 'html2canvas (' + this.id + '):' : 'html2canvas:'].concat([].slice.call(args, 0)));
-            }
-        }
-
-        // eslint-disable-next-line flowtype/no-weak-types
-
-    }, {
-        key: 'error',
-        value: function error() {
-            if (this.enabled && window.console && window.console.error) {
-                for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-                    args[_key2] = arguments[_key2];
-                }
-
-                Function.prototype.bind.call(window.console.error, window.console).apply(window.console, [Date.now() - this.start + 'ms', this.id ? 'html2canvas (' + this.id + '):' : 'html2canvas:'].concat([].slice.call(args, 0)));
-            }
-        }
-    }]);
-
-    return Logger;
-}();
-
-exports.default = Logger;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/NodeContainer.js":
-/*!************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/NodeContainer.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Color = __webpack_require__(/*! ./Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-var _Util = __webpack_require__(/*! ./Util */ "./node_modules/html2canvas/dist/npm/Util.js");
-
-var _background = __webpack_require__(/*! ./parsing/background */ "./node_modules/html2canvas/dist/npm/parsing/background.js");
-
-var _border = __webpack_require__(/*! ./parsing/border */ "./node_modules/html2canvas/dist/npm/parsing/border.js");
-
-var _borderRadius = __webpack_require__(/*! ./parsing/borderRadius */ "./node_modules/html2canvas/dist/npm/parsing/borderRadius.js");
-
-var _display = __webpack_require__(/*! ./parsing/display */ "./node_modules/html2canvas/dist/npm/parsing/display.js");
-
-var _float = __webpack_require__(/*! ./parsing/float */ "./node_modules/html2canvas/dist/npm/parsing/float.js");
-
-var _font = __webpack_require__(/*! ./parsing/font */ "./node_modules/html2canvas/dist/npm/parsing/font.js");
-
-var _letterSpacing = __webpack_require__(/*! ./parsing/letterSpacing */ "./node_modules/html2canvas/dist/npm/parsing/letterSpacing.js");
-
-var _lineBreak = __webpack_require__(/*! ./parsing/lineBreak */ "./node_modules/html2canvas/dist/npm/parsing/lineBreak.js");
-
-var _listStyle = __webpack_require__(/*! ./parsing/listStyle */ "./node_modules/html2canvas/dist/npm/parsing/listStyle.js");
-
-var _margin = __webpack_require__(/*! ./parsing/margin */ "./node_modules/html2canvas/dist/npm/parsing/margin.js");
-
-var _overflow = __webpack_require__(/*! ./parsing/overflow */ "./node_modules/html2canvas/dist/npm/parsing/overflow.js");
-
-var _overflowWrap = __webpack_require__(/*! ./parsing/overflowWrap */ "./node_modules/html2canvas/dist/npm/parsing/overflowWrap.js");
-
-var _padding = __webpack_require__(/*! ./parsing/padding */ "./node_modules/html2canvas/dist/npm/parsing/padding.js");
-
-var _position = __webpack_require__(/*! ./parsing/position */ "./node_modules/html2canvas/dist/npm/parsing/position.js");
-
-var _textDecoration = __webpack_require__(/*! ./parsing/textDecoration */ "./node_modules/html2canvas/dist/npm/parsing/textDecoration.js");
-
-var _textShadow = __webpack_require__(/*! ./parsing/textShadow */ "./node_modules/html2canvas/dist/npm/parsing/textShadow.js");
-
-var _textTransform = __webpack_require__(/*! ./parsing/textTransform */ "./node_modules/html2canvas/dist/npm/parsing/textTransform.js");
-
-var _transform = __webpack_require__(/*! ./parsing/transform */ "./node_modules/html2canvas/dist/npm/parsing/transform.js");
-
-var _visibility = __webpack_require__(/*! ./parsing/visibility */ "./node_modules/html2canvas/dist/npm/parsing/visibility.js");
-
-var _wordBreak = __webpack_require__(/*! ./parsing/word-break */ "./node_modules/html2canvas/dist/npm/parsing/word-break.js");
-
-var _zIndex = __webpack_require__(/*! ./parsing/zIndex */ "./node_modules/html2canvas/dist/npm/parsing/zIndex.js");
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _Input = __webpack_require__(/*! ./Input */ "./node_modules/html2canvas/dist/npm/Input.js");
-
-var _ListItem = __webpack_require__(/*! ./ListItem */ "./node_modules/html2canvas/dist/npm/ListItem.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var INPUT_TAGS = ['INPUT', 'TEXTAREA', 'SELECT'];
-
-var NodeContainer = function () {
-    function NodeContainer(node, parent, resourceLoader, index) {
-        var _this = this;
-
-        _classCallCheck(this, NodeContainer);
-
-        this.parent = parent;
-        this.tagName = node.tagName;
-        this.index = index;
-        this.childNodes = [];
-        this.listItems = [];
-        if (typeof node.start === 'number') {
-            this.listStart = node.start;
-        }
-        var defaultView = node.ownerDocument.defaultView;
-        var scrollX = defaultView.pageXOffset;
-        var scrollY = defaultView.pageYOffset;
-        var style = defaultView.getComputedStyle(node, null);
-        var display = (0, _display.parseDisplay)(style.display);
-
-        var IS_INPUT = node.type === 'radio' || node.type === 'checkbox';
-
-        var position = (0, _position.parsePosition)(style.position);
-
-        this.style = {
-            background: IS_INPUT ? _Input.INPUT_BACKGROUND : (0, _background.parseBackground)(style, resourceLoader),
-            border: IS_INPUT ? _Input.INPUT_BORDERS : (0, _border.parseBorder)(style),
-            borderRadius: (node instanceof defaultView.HTMLInputElement || node instanceof HTMLInputElement) && IS_INPUT ? (0, _Input.getInputBorderRadius)(node) : (0, _borderRadius.parseBorderRadius)(style),
-            color: IS_INPUT ? _Input.INPUT_COLOR : new _Color2.default(style.color),
-            display: display,
-            float: (0, _float.parseCSSFloat)(style.float),
-            font: (0, _font.parseFont)(style),
-            letterSpacing: (0, _letterSpacing.parseLetterSpacing)(style.letterSpacing),
-            listStyle: display === _display.DISPLAY.LIST_ITEM ? (0, _listStyle.parseListStyle)(style) : null,
-            lineBreak: (0, _lineBreak.parseLineBreak)(style.lineBreak),
-            margin: (0, _margin.parseMargin)(style),
-            opacity: parseFloat(style.opacity),
-            overflow: INPUT_TAGS.indexOf(node.tagName) === -1 ? (0, _overflow.parseOverflow)(style.overflow) : _overflow.OVERFLOW.HIDDEN,
-            overflowWrap: (0, _overflowWrap.parseOverflowWrap)(style.overflowWrap ? style.overflowWrap : style.wordWrap),
-            padding: (0, _padding.parsePadding)(style),
-            position: position,
-            textDecoration: (0, _textDecoration.parseTextDecoration)(style),
-            textShadow: (0, _textShadow.parseTextShadow)(style.textShadow),
-            textTransform: (0, _textTransform.parseTextTransform)(style.textTransform),
-            transform: (0, _transform.parseTransform)(style),
-            visibility: (0, _visibility.parseVisibility)(style.visibility),
-            wordBreak: (0, _wordBreak.parseWordBreak)(style.wordBreak),
-            zIndex: (0, _zIndex.parseZIndex)(position !== _position.POSITION.STATIC ? style.zIndex : 'auto')
-        };
-
-        if (this.isTransformed()) {
-            // getBoundingClientRect provides values post-transform, we want them without the transformation
-            node.style.transform = 'matrix(1,0,0,1,0,0)';
-        }
-
-        if (display === _display.DISPLAY.LIST_ITEM) {
-            var listOwner = (0, _ListItem.getListOwner)(this);
-            if (listOwner) {
-                var listIndex = listOwner.listItems.length;
-                listOwner.listItems.push(this);
-                this.listIndex = node.hasAttribute('value') && typeof node.value === 'number' ? node.value : listIndex === 0 ? typeof listOwner.listStart === 'number' ? listOwner.listStart : 1 : listOwner.listItems[listIndex - 1].listIndex + 1;
-            }
-        }
-
-        // TODO move bound retrieval for all nodes to a later stage?
-        if (node.tagName === 'IMG') {
-            node.addEventListener('load', function () {
-                _this.bounds = (0, _Bounds.parseBounds)(node, scrollX, scrollY);
-                _this.curvedBounds = (0, _Bounds.parseBoundCurves)(_this.bounds, _this.style.border, _this.style.borderRadius);
-            });
-        }
-        this.image = getImage(node, resourceLoader);
-        this.bounds = IS_INPUT ? (0, _Input.reformatInputBounds)((0, _Bounds.parseBounds)(node, scrollX, scrollY)) : (0, _Bounds.parseBounds)(node, scrollX, scrollY);
-        this.curvedBounds = (0, _Bounds.parseBoundCurves)(this.bounds, this.style.border, this.style.borderRadius);
-
-        if (true) {
-            this.name = '' + node.tagName.toLowerCase() + (node.id ? '#' + node.id : '') + node.className.toString().split(' ').map(function (s) {
-                return s.length ? '.' + s : '';
-            }).join('');
-        }
-    }
-
-    _createClass(NodeContainer, [{
-        key: 'getClipPaths',
-        value: function getClipPaths() {
-            var parentClips = this.parent ? this.parent.getClipPaths() : [];
-            var isClipped = this.style.overflow !== _overflow.OVERFLOW.VISIBLE;
-
-            return isClipped ? parentClips.concat([(0, _Bounds.calculatePaddingBoxPath)(this.curvedBounds)]) : parentClips;
-        }
-    }, {
-        key: 'isInFlow',
-        value: function isInFlow() {
-            return this.isRootElement() && !this.isFloating() && !this.isAbsolutelyPositioned();
-        }
-    }, {
-        key: 'isVisible',
-        value: function isVisible() {
-            return !(0, _Util.contains)(this.style.display, _display.DISPLAY.NONE) && this.style.opacity > 0 && this.style.visibility === _visibility.VISIBILITY.VISIBLE;
-        }
-    }, {
-        key: 'isAbsolutelyPositioned',
-        value: function isAbsolutelyPositioned() {
-            return this.style.position !== _position.POSITION.STATIC && this.style.position !== _position.POSITION.RELATIVE;
-        }
-    }, {
-        key: 'isPositioned',
-        value: function isPositioned() {
-            return this.style.position !== _position.POSITION.STATIC;
-        }
-    }, {
-        key: 'isFloating',
-        value: function isFloating() {
-            return this.style.float !== _float.FLOAT.NONE;
-        }
-    }, {
-        key: 'isRootElement',
-        value: function isRootElement() {
-            return this.parent === null;
-        }
-    }, {
-        key: 'isTransformed',
-        value: function isTransformed() {
-            return this.style.transform !== null;
-        }
-    }, {
-        key: 'isPositionedWithZIndex',
-        value: function isPositionedWithZIndex() {
-            return this.isPositioned() && !this.style.zIndex.auto;
-        }
-    }, {
-        key: 'isInlineLevel',
-        value: function isInlineLevel() {
-            return (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_BLOCK) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_FLEX) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_GRID) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_LIST_ITEM) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_TABLE);
-        }
-    }, {
-        key: 'isInlineBlockOrInlineTable',
-        value: function isInlineBlockOrInlineTable() {
-            return (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_BLOCK) || (0, _Util.contains)(this.style.display, _display.DISPLAY.INLINE_TABLE);
-        }
-    }]);
-
-    return NodeContainer;
-}();
-
-exports.default = NodeContainer;
-
-
-var getImage = function getImage(node, resourceLoader) {
-    if (node instanceof node.ownerDocument.defaultView.SVGSVGElement || node instanceof SVGSVGElement) {
-        var s = new XMLSerializer();
-        return resourceLoader.loadImage('data:image/svg+xml,' + encodeURIComponent(s.serializeToString(node)));
-    }
-    switch (node.tagName) {
-        case 'IMG':
-            // $FlowFixMe
-            var img = node;
-            return resourceLoader.loadImage(img.currentSrc || img.src);
-        case 'CANVAS':
-            // $FlowFixMe
-            var canvas = node;
-            return resourceLoader.loadCanvas(canvas);
-        case 'IFRAME':
-            var iframeKey = node.getAttribute('data-html2canvas-internal-iframe-key');
-            if (iframeKey) {
-                return iframeKey;
-            }
-            break;
-    }
-
-    return null;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/NodeParser.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/NodeParser.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.NodeParser = undefined;
-
-var _StackingContext = __webpack_require__(/*! ./StackingContext */ "./node_modules/html2canvas/dist/npm/StackingContext.js");
-
-var _StackingContext2 = _interopRequireDefault(_StackingContext);
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-var _TextContainer = __webpack_require__(/*! ./TextContainer */ "./node_modules/html2canvas/dist/npm/TextContainer.js");
-
-var _TextContainer2 = _interopRequireDefault(_TextContainer);
-
-var _Input = __webpack_require__(/*! ./Input */ "./node_modules/html2canvas/dist/npm/Input.js");
-
-var _ListItem = __webpack_require__(/*! ./ListItem */ "./node_modules/html2canvas/dist/npm/ListItem.js");
-
-var _listStyle = __webpack_require__(/*! ./parsing/listStyle */ "./node_modules/html2canvas/dist/npm/parsing/listStyle.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var NodeParser = exports.NodeParser = function NodeParser(node, resourceLoader, logger) {
-    if (true) {
-        logger.log('Starting node parsing');
-    }
-
-    var index = 0;
-
-    var container = new _NodeContainer2.default(node, null, resourceLoader, index++);
-    var stack = new _StackingContext2.default(container, null, true);
-
-    parseNodeTree(node, container, stack, resourceLoader, index);
-
-    if (true) {
-        logger.log('Finished parsing node tree');
-    }
-
-    return stack;
-};
-
-var IGNORED_NODE_NAMES = ['SCRIPT', 'HEAD', 'TITLE', 'OBJECT', 'BR', 'OPTION'];
-
-var parseNodeTree = function parseNodeTree(node, parent, stack, resourceLoader, index) {
-    if ( true && index > 50000) {
-        throw new Error('Recursion error while parsing node tree');
-    }
-
-    for (var childNode = node.firstChild, nextNode; childNode; childNode = nextNode) {
-        nextNode = childNode.nextSibling;
-        var defaultView = childNode.ownerDocument.defaultView;
-        if (childNode instanceof defaultView.Text || childNode instanceof Text || defaultView.parent && childNode instanceof defaultView.parent.Text) {
-            if (childNode.data.trim().length > 0) {
-                parent.childNodes.push(_TextContainer2.default.fromTextNode(childNode, parent));
-            }
-        } else if (childNode instanceof defaultView.HTMLElement || childNode instanceof HTMLElement || defaultView.parent && childNode instanceof defaultView.parent.HTMLElement) {
-            if (IGNORED_NODE_NAMES.indexOf(childNode.nodeName) === -1) {
-                var container = new _NodeContainer2.default(childNode, parent, resourceLoader, index++);
-                if (container.isVisible()) {
-                    if (childNode.tagName === 'INPUT') {
-                        // $FlowFixMe
-                        (0, _Input.inlineInputElement)(childNode, container);
-                    } else if (childNode.tagName === 'TEXTAREA') {
-                        // $FlowFixMe
-                        (0, _Input.inlineTextAreaElement)(childNode, container);
-                    } else if (childNode.tagName === 'SELECT') {
-                        // $FlowFixMe
-                        (0, _Input.inlineSelectElement)(childNode, container);
-                    } else if (container.style.listStyle && container.style.listStyle.listStyleType !== _listStyle.LIST_STYLE_TYPE.NONE) {
-                        (0, _ListItem.inlineListItemElement)(childNode, container, resourceLoader);
-                    }
-
-                    var SHOULD_TRAVERSE_CHILDREN = childNode.tagName !== 'TEXTAREA';
-                    var treatAsRealStackingContext = createsRealStackingContext(container, childNode);
-                    if (treatAsRealStackingContext || createsStackingContext(container)) {
-                        // for treatAsRealStackingContext:false, any positioned descendants and descendants
-                        // which actually create a new stacking context should be considered part of the parent stacking context
-                        var parentStack = treatAsRealStackingContext || container.isPositioned() ? stack.getRealParentStackingContext() : stack;
-                        var childStack = new _StackingContext2.default(container, parentStack, treatAsRealStackingContext);
-                        parentStack.contexts.push(childStack);
-                        if (SHOULD_TRAVERSE_CHILDREN) {
-                            parseNodeTree(childNode, container, childStack, resourceLoader, index);
-                        }
-                    } else {
-                        stack.children.push(container);
-                        if (SHOULD_TRAVERSE_CHILDREN) {
-                            parseNodeTree(childNode, container, stack, resourceLoader, index);
-                        }
-                    }
-                }
-            }
-        } else if (childNode instanceof defaultView.SVGSVGElement || childNode instanceof SVGSVGElement || defaultView.parent && childNode instanceof defaultView.parent.SVGSVGElement) {
-            var _container = new _NodeContainer2.default(childNode, parent, resourceLoader, index++);
-            var _treatAsRealStackingContext = createsRealStackingContext(_container, childNode);
-            if (_treatAsRealStackingContext || createsStackingContext(_container)) {
-                // for treatAsRealStackingContext:false, any positioned descendants and descendants
-                // which actually create a new stacking context should be considered part of the parent stacking context
-                var _parentStack = _treatAsRealStackingContext || _container.isPositioned() ? stack.getRealParentStackingContext() : stack;
-                var _childStack = new _StackingContext2.default(_container, _parentStack, _treatAsRealStackingContext);
-                _parentStack.contexts.push(_childStack);
-            } else {
-                stack.children.push(_container);
-            }
-        }
-    }
-};
-
-var createsRealStackingContext = function createsRealStackingContext(container, node) {
-    return container.isRootElement() || container.isPositionedWithZIndex() || container.style.opacity < 1 || container.isTransformed() || isBodyWithTransparentRoot(container, node);
-};
-
-var createsStackingContext = function createsStackingContext(container) {
-    return container.isPositioned() || container.isFloating();
-};
-
-var isBodyWithTransparentRoot = function isBodyWithTransparentRoot(container, node) {
-    return node.nodeName === 'BODY' && container.parent instanceof _NodeContainer2.default && container.parent.style.background.backgroundColor.isTransparent();
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Proxy.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Proxy.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Proxy = undefined;
-
-var _Feature = __webpack_require__(/*! ./Feature */ "./node_modules/html2canvas/dist/npm/Feature.js");
-
-var _Feature2 = _interopRequireDefault(_Feature);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Proxy = exports.Proxy = function Proxy(src, options) {
-    if (!options.proxy) {
-        return Promise.reject( true ? 'No proxy defined' : undefined);
-    }
-    var proxy = options.proxy;
-
-    return new Promise(function (resolve, reject) {
-        var responseType = _Feature2.default.SUPPORT_CORS_XHR && _Feature2.default.SUPPORT_RESPONSE_TYPE ? 'blob' : 'text';
-        var xhr = _Feature2.default.SUPPORT_CORS_XHR ? new XMLHttpRequest() : new XDomainRequest();
-        xhr.onload = function () {
-            if (xhr instanceof XMLHttpRequest) {
-                if (xhr.status === 200) {
-                    if (responseType === 'text') {
-                        resolve(xhr.response);
-                    } else {
-                        var reader = new FileReader();
-                        // $FlowFixMe
-                        reader.addEventListener('load', function () {
-                            return resolve(reader.result);
-                        }, false);
-                        // $FlowFixMe
-                        reader.addEventListener('error', function (e) {
-                            return reject(e);
-                        }, false);
-                        reader.readAsDataURL(xhr.response);
-                    }
-                } else {
-                    reject( true ? 'Failed to proxy resource ' + src.substring(0, 256) + ' with status code ' + xhr.status : undefined);
-                }
-            } else {
-                resolve(xhr.responseText);
-            }
-        };
-
-        xhr.onerror = reject;
-        xhr.open('GET', proxy + '?url=' + encodeURIComponent(src) + '&responseType=' + responseType);
-
-        if (responseType !== 'text' && xhr instanceof XMLHttpRequest) {
-            xhr.responseType = responseType;
-        }
-
-        if (options.imageTimeout) {
-            var timeout = options.imageTimeout;
-            xhr.timeout = timeout;
-            xhr.ontimeout = function () {
-                return reject( true ? 'Timed out (' + timeout + 'ms) proxying ' + src.substring(0, 256) : undefined);
-            };
-        }
-
-        xhr.send();
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/PseudoNodeContent.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/PseudoNodeContent.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseContent = exports.resolvePseudoContent = exports.popCounters = exports.parseCounterReset = exports.TOKEN_TYPE = exports.PSEUDO_CONTENT_ITEM_TYPE = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _ListItem = __webpack_require__(/*! ./ListItem */ "./node_modules/html2canvas/dist/npm/ListItem.js");
-
-var _listStyle = __webpack_require__(/*! ./parsing/listStyle */ "./node_modules/html2canvas/dist/npm/parsing/listStyle.js");
-
-var PSEUDO_CONTENT_ITEM_TYPE = exports.PSEUDO_CONTENT_ITEM_TYPE = {
-    TEXT: 0,
-    IMAGE: 1
-};
-
-var TOKEN_TYPE = exports.TOKEN_TYPE = {
-    STRING: 0,
-    ATTRIBUTE: 1,
-    URL: 2,
-    COUNTER: 3,
-    COUNTERS: 4,
-    OPENQUOTE: 5,
-    CLOSEQUOTE: 6
-};
-
-var parseCounterReset = exports.parseCounterReset = function parseCounterReset(style, data) {
-    if (!style || !style.counterReset || style.counterReset === 'none') {
-        return [];
-    }
-
-    var counterNames = [];
-    var counterResets = style.counterReset.split(/\s*,\s*/);
-    var lenCounterResets = counterResets.length;
-
-    for (var i = 0; i < lenCounterResets; i++) {
-        var _counterResets$i$spli = counterResets[i].split(/\s+/),
-            _counterResets$i$spli2 = _slicedToArray(_counterResets$i$spli, 2),
-            counterName = _counterResets$i$spli2[0],
-            initialValue = _counterResets$i$spli2[1];
-
-        counterNames.push(counterName);
-        var counter = data.counters[counterName];
-        if (!counter) {
-            counter = data.counters[counterName] = [];
-        }
-        counter.push(parseInt(initialValue || 0, 10));
-    }
-
-    return counterNames;
-};
-
-var popCounters = exports.popCounters = function popCounters(counterNames, data) {
-    var lenCounters = counterNames.length;
-    for (var i = 0; i < lenCounters; i++) {
-        data.counters[counterNames[i]].pop();
-    }
-};
-
-var resolvePseudoContent = exports.resolvePseudoContent = function resolvePseudoContent(node, style, data) {
-    if (!style || !style.content || style.content === 'none' || style.content === '-moz-alt-content' || style.display === 'none') {
-        return null;
-    }
-
-    var tokens = parseContent(style.content);
-
-    var len = tokens.length;
-    var contentItems = [];
-    var s = '';
-
-    // increment the counter (if there is a "counter-increment" declaration)
-    var counterIncrement = style.counterIncrement;
-    if (counterIncrement && counterIncrement !== 'none') {
-        var _counterIncrement$spl = counterIncrement.split(/\s+/),
-            _counterIncrement$spl2 = _slicedToArray(_counterIncrement$spl, 2),
-            counterName = _counterIncrement$spl2[0],
-            incrementValue = _counterIncrement$spl2[1];
-
-        var counter = data.counters[counterName];
-        if (counter) {
-            counter[counter.length - 1] += incrementValue === undefined ? 1 : parseInt(incrementValue, 10);
-        }
-    }
-
-    // build the content string
-    for (var i = 0; i < len; i++) {
-        var token = tokens[i];
-        switch (token.type) {
-            case TOKEN_TYPE.STRING:
-                s += token.value || '';
-                break;
-
-            case TOKEN_TYPE.ATTRIBUTE:
-                if (node instanceof HTMLElement && token.value) {
-                    s += node.getAttribute(token.value) || '';
-                }
-                break;
-
-            case TOKEN_TYPE.COUNTER:
-                var _counter = data.counters[token.name || ''];
-                if (_counter) {
-                    s += formatCounterValue([_counter[_counter.length - 1]], '', token.format);
-                }
-                break;
-
-            case TOKEN_TYPE.COUNTERS:
-                var _counters = data.counters[token.name || ''];
-                if (_counters) {
-                    s += formatCounterValue(_counters, token.glue, token.format);
-                }
-                break;
-
-            case TOKEN_TYPE.OPENQUOTE:
-                s += getQuote(style, true, data.quoteDepth);
-                data.quoteDepth++;
-                break;
-
-            case TOKEN_TYPE.CLOSEQUOTE:
-                data.quoteDepth--;
-                s += getQuote(style, false, data.quoteDepth);
-                break;
-
-            case TOKEN_TYPE.URL:
-                if (s) {
-                    contentItems.push({ type: PSEUDO_CONTENT_ITEM_TYPE.TEXT, value: s });
-                    s = '';
-                }
-                contentItems.push({ type: PSEUDO_CONTENT_ITEM_TYPE.IMAGE, value: token.value || '' });
-                break;
-        }
-    }
-
-    if (s) {
-        contentItems.push({ type: PSEUDO_CONTENT_ITEM_TYPE.TEXT, value: s });
-    }
-
-    return contentItems;
-};
-
-var parseContent = exports.parseContent = function parseContent(content, cache) {
-    if (cache && cache[content]) {
-        return cache[content];
-    }
-
-    var tokens = [];
-    var len = content.length;
-
-    var isString = false;
-    var isEscaped = false;
-    var isFunction = false;
-    var str = '';
-    var functionName = '';
-    var args = [];
-
-    for (var i = 0; i < len; i++) {
-        var c = content.charAt(i);
-
-        switch (c) {
-            case "'":
-            case '"':
-                if (isEscaped) {
-                    str += c;
-                } else {
-                    isString = !isString;
-                    if (!isFunction && !isString) {
-                        tokens.push({ type: TOKEN_TYPE.STRING, value: str });
-                        str = '';
-                    }
-                }
-                break;
-
-            case '\\':
-                if (isEscaped) {
-                    str += c;
-                    isEscaped = false;
-                } else {
-                    isEscaped = true;
-                }
-                break;
-
-            case '(':
-                if (isString) {
-                    str += c;
-                } else {
-                    isFunction = true;
-                    functionName = str;
-                    str = '';
-                    args = [];
-                }
-                break;
-
-            case ')':
-                if (isString) {
-                    str += c;
-                } else if (isFunction) {
-                    if (str) {
-                        args.push(str);
-                    }
-
-                    switch (functionName) {
-                        case 'attr':
-                            if (args.length > 0) {
-                                tokens.push({ type: TOKEN_TYPE.ATTRIBUTE, value: args[0] });
-                            }
-                            break;
-
-                        case 'counter':
-                            if (args.length > 0) {
-                                var counter = {
-                                    type: TOKEN_TYPE.COUNTER,
-                                    name: args[0]
-                                };
-                                if (args.length > 1) {
-                                    counter.format = args[1];
-                                }
-                                tokens.push(counter);
-                            }
-                            break;
-
-                        case 'counters':
-                            if (args.length > 0) {
-                                var _counters2 = {
-                                    type: TOKEN_TYPE.COUNTERS,
-                                    name: args[0]
-                                };
-                                if (args.length > 1) {
-                                    _counters2.glue = args[1];
-                                }
-                                if (args.length > 2) {
-                                    _counters2.format = args[2];
-                                }
-                                tokens.push(_counters2);
-                            }
-                            break;
-
-                        case 'url':
-                            if (args.length > 0) {
-                                tokens.push({ type: TOKEN_TYPE.URL, value: args[0] });
-                            }
-                            break;
-                    }
-
-                    isFunction = false;
-                    str = '';
-                }
-                break;
-
-            case ',':
-                if (isString) {
-                    str += c;
-                } else if (isFunction) {
-                    args.push(str);
-                    str = '';
-                }
-                break;
-
-            case ' ':
-            case '\t':
-                if (isString) {
-                    str += c;
-                } else if (str) {
-                    addOtherToken(tokens, str);
-                    str = '';
-                }
-                break;
-
-            default:
-                str += c;
-        }
-
-        if (c !== '\\') {
-            isEscaped = false;
-        }
-    }
-
-    if (str) {
-        addOtherToken(tokens, str);
-    }
-
-    if (cache) {
-        cache[content] = tokens;
-    }
-
-    return tokens;
-};
-
-var addOtherToken = function addOtherToken(tokens, identifier) {
-    switch (identifier) {
-        case 'open-quote':
-            tokens.push({ type: TOKEN_TYPE.OPENQUOTE });
-            break;
-        case 'close-quote':
-            tokens.push({ type: TOKEN_TYPE.CLOSEQUOTE });
-            break;
-    }
-};
-
-var getQuote = function getQuote(style, isOpening, quoteDepth) {
-    var quotes = style.quotes ? style.quotes.split(/\s+/) : ["'\"'", "'\"'"];
-    var idx = quoteDepth * 2;
-    if (idx >= quotes.length) {
-        idx = quotes.length - 2;
-    }
-    if (!isOpening) {
-        ++idx;
-    }
-    return quotes[idx].replace(/^["']|["']$/g, '');
-};
-
-var formatCounterValue = function formatCounterValue(counter, glue, format) {
-    var len = counter.length;
-    var result = '';
-
-    for (var i = 0; i < len; i++) {
-        if (i > 0) {
-            result += glue || '';
-        }
-        result += (0, _ListItem.createCounterText)(counter[i], (0, _listStyle.parseListStyleType)(format || 'decimal'), false);
-    }
-
-    return result;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Renderer.js":
-/*!*******************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Renderer.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _Font = __webpack_require__(/*! ./Font */ "./node_modules/html2canvas/dist/npm/Font.js");
-
-var _Gradient = __webpack_require__(/*! ./Gradient */ "./node_modules/html2canvas/dist/npm/Gradient.js");
-
-var _TextContainer = __webpack_require__(/*! ./TextContainer */ "./node_modules/html2canvas/dist/npm/TextContainer.js");
-
-var _TextContainer2 = _interopRequireDefault(_TextContainer);
-
-var _background = __webpack_require__(/*! ./parsing/background */ "./node_modules/html2canvas/dist/npm/parsing/background.js");
-
-var _border = __webpack_require__(/*! ./parsing/border */ "./node_modules/html2canvas/dist/npm/parsing/border.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Renderer = function () {
-    function Renderer(target, options) {
-        _classCallCheck(this, Renderer);
-
-        this.target = target;
-        this.options = options;
-        target.render(options);
-    }
-
-    _createClass(Renderer, [{
-        key: 'renderNode',
-        value: function renderNode(container) {
-            if (container.isVisible()) {
-                this.renderNodeBackgroundAndBorders(container);
-                this.renderNodeContent(container);
-            }
-        }
-    }, {
-        key: 'renderNodeContent',
-        value: function renderNodeContent(container) {
-            var _this = this;
-
-            var callback = function callback() {
-                if (container.childNodes.length) {
-                    container.childNodes.forEach(function (child) {
-                        if (child instanceof _TextContainer2.default) {
-                            var style = child.parent.style;
-                            _this.target.renderTextNode(child.bounds, style.color, style.font, style.textDecoration, style.textShadow);
-                        } else {
-                            _this.target.drawShape(child, container.style.color);
-                        }
-                    });
-                }
-
-                if (container.image) {
-                    var _image = _this.options.imageStore.get(container.image);
-                    if (_image) {
-                        var contentBox = (0, _Bounds.calculateContentBox)(container.bounds, container.style.padding, container.style.border);
-                        var _width = typeof _image.width === 'number' && _image.width > 0 ? _image.width : contentBox.width;
-                        var _height = typeof _image.height === 'number' && _image.height > 0 ? _image.height : contentBox.height;
-                        if (_width > 0 && _height > 0) {
-                            _this.target.clip([(0, _Bounds.calculatePaddingBoxPath)(container.curvedBounds)], function () {
-                                _this.target.drawImage(_image, new _Bounds.Bounds(0, 0, _width, _height), contentBox);
-                            });
-                        }
-                    }
-                }
-            };
-            var paths = container.getClipPaths();
-            if (paths.length) {
-                this.target.clip(paths, callback);
-            } else {
-                callback();
-            }
-        }
-    }, {
-        key: 'renderNodeBackgroundAndBorders',
-        value: function renderNodeBackgroundAndBorders(container) {
-            var _this2 = this;
-
-            var HAS_BACKGROUND = !container.style.background.backgroundColor.isTransparent() || container.style.background.backgroundImage.length;
-
-            var hasRenderableBorders = container.style.border.some(function (border) {
-                return border.borderStyle !== _border.BORDER_STYLE.NONE && !border.borderColor.isTransparent();
-            });
-
-            var callback = function callback() {
-                var backgroundPaintingArea = (0, _background.calculateBackgroungPaintingArea)(container.curvedBounds, container.style.background.backgroundClip);
-
-                if (HAS_BACKGROUND) {
-                    _this2.target.clip([backgroundPaintingArea], function () {
-                        if (!container.style.background.backgroundColor.isTransparent()) {
-                            _this2.target.fill(container.style.background.backgroundColor);
-                        }
-
-                        _this2.renderBackgroundImage(container);
-                    });
-                }
-
-                container.style.border.forEach(function (border, side) {
-                    if (border.borderStyle !== _border.BORDER_STYLE.NONE && !border.borderColor.isTransparent()) {
-                        _this2.renderBorder(border, side, container.curvedBounds);
-                    }
-                });
-            };
-
-            if (HAS_BACKGROUND || hasRenderableBorders) {
-                var paths = container.parent ? container.parent.getClipPaths() : [];
-                if (paths.length) {
-                    this.target.clip(paths, callback);
-                } else {
-                    callback();
-                }
-            }
-        }
-    }, {
-        key: 'renderBackgroundImage',
-        value: function renderBackgroundImage(container) {
-            var _this3 = this;
-
-            container.style.background.backgroundImage.slice(0).reverse().forEach(function (backgroundImage) {
-                if (backgroundImage.source.method === 'url' && backgroundImage.source.args.length) {
-                    _this3.renderBackgroundRepeat(container, backgroundImage);
-                } else if (/gradient/i.test(backgroundImage.source.method)) {
-                    _this3.renderBackgroundGradient(container, backgroundImage);
-                }
-            });
-        }
-    }, {
-        key: 'renderBackgroundRepeat',
-        value: function renderBackgroundRepeat(container, background) {
-            var image = this.options.imageStore.get(background.source.args[0]);
-            if (image) {
-                var backgroundPositioningArea = (0, _background.calculateBackgroungPositioningArea)(container.style.background.backgroundOrigin, container.bounds, container.style.padding, container.style.border);
-                var backgroundImageSize = (0, _background.calculateBackgroundSize)(background, image, backgroundPositioningArea);
-                var position = (0, _background.calculateBackgroundPosition)(background.position, backgroundImageSize, backgroundPositioningArea);
-                var _path = (0, _background.calculateBackgroundRepeatPath)(background, position, backgroundImageSize, backgroundPositioningArea, container.bounds);
-
-                var _offsetX = Math.round(backgroundPositioningArea.left + position.x);
-                var _offsetY = Math.round(backgroundPositioningArea.top + position.y);
-                this.target.renderRepeat(_path, image, backgroundImageSize, _offsetX, _offsetY);
-            }
-        }
-    }, {
-        key: 'renderBackgroundGradient',
-        value: function renderBackgroundGradient(container, background) {
-            var backgroundPositioningArea = (0, _background.calculateBackgroungPositioningArea)(container.style.background.backgroundOrigin, container.bounds, container.style.padding, container.style.border);
-            var backgroundImageSize = (0, _background.calculateGradientBackgroundSize)(background, backgroundPositioningArea);
-            var position = (0, _background.calculateBackgroundPosition)(background.position, backgroundImageSize, backgroundPositioningArea);
-            var gradientBounds = new _Bounds.Bounds(Math.round(backgroundPositioningArea.left + position.x), Math.round(backgroundPositioningArea.top + position.y), backgroundImageSize.width, backgroundImageSize.height);
-
-            var gradient = (0, _Gradient.parseGradient)(container, background.source, gradientBounds);
-            if (gradient) {
-                switch (gradient.type) {
-                    case _Gradient.GRADIENT_TYPE.LINEAR_GRADIENT:
-                        // $FlowFixMe
-                        this.target.renderLinearGradient(gradientBounds, gradient);
-                        break;
-                    case _Gradient.GRADIENT_TYPE.RADIAL_GRADIENT:
-                        // $FlowFixMe
-                        this.target.renderRadialGradient(gradientBounds, gradient);
-                        break;
-                }
-            }
-        }
-    }, {
-        key: 'renderBorder',
-        value: function renderBorder(border, side, curvePoints) {
-            this.target.drawShape((0, _Bounds.parsePathForBorder)(curvePoints, side), border.borderColor);
-        }
-    }, {
-        key: 'renderStack',
-        value: function renderStack(stack) {
-            var _this4 = this;
-
-            if (stack.container.isVisible()) {
-                var _opacity = stack.getOpacity();
-                if (_opacity !== this._opacity) {
-                    this.target.setOpacity(stack.getOpacity());
-                    this._opacity = _opacity;
-                }
-
-                var _transform = stack.container.style.transform;
-                if (_transform !== null) {
-                    this.target.transform(stack.container.bounds.left + _transform.transformOrigin[0].value, stack.container.bounds.top + _transform.transformOrigin[1].value, _transform.transform, function () {
-                        return _this4.renderStackContent(stack);
-                    });
-                } else {
-                    this.renderStackContent(stack);
-                }
-            }
-        }
-    }, {
-        key: 'renderStackContent',
-        value: function renderStackContent(stack) {
-            var _splitStackingContext = splitStackingContexts(stack),
-                _splitStackingContext2 = _slicedToArray(_splitStackingContext, 5),
-                negativeZIndex = _splitStackingContext2[0],
-                zeroOrAutoZIndexOrTransformedOrOpacity = _splitStackingContext2[1],
-                positiveZIndex = _splitStackingContext2[2],
-                nonPositionedFloats = _splitStackingContext2[3],
-                nonPositionedInlineLevel = _splitStackingContext2[4];
-
-            var _splitDescendants = splitDescendants(stack),
-                _splitDescendants2 = _slicedToArray(_splitDescendants, 2),
-                inlineLevel = _splitDescendants2[0],
-                nonInlineLevel = _splitDescendants2[1];
-
-            // https://www.w3.org/TR/css-position-3/#painting-order
-            // 1. the background and borders of the element forming the stacking context.
-
-
-            this.renderNodeBackgroundAndBorders(stack.container);
-            // 2. the child stacking contexts with negative stack levels (most negative first).
-            negativeZIndex.sort(sortByZIndex).forEach(this.renderStack, this);
-            // 3. For all its in-flow, non-positioned, block-level descendants in tree order:
-            this.renderNodeContent(stack.container);
-            nonInlineLevel.forEach(this.renderNode, this);
-            // 4. All non-positioned floating descendants, in tree order. For each one of these,
-            // treat the element as if it created a new stacking context, but any positioned descendants and descendants
-            // which actually create a new stacking context should be considered part of the parent stacking context,
-            // not this new one.
-            nonPositionedFloats.forEach(this.renderStack, this);
-            // 5. the in-flow, inline-level, non-positioned descendants, including inline tables and inline blocks.
-            nonPositionedInlineLevel.forEach(this.renderStack, this);
-            inlineLevel.forEach(this.renderNode, this);
-            // 6. All positioned, opacity or transform descendants, in tree order that fall into the following categories:
-            //  All positioned descendants with 'z-index: auto' or 'z-index: 0', in tree order.
-            //  For those with 'z-index: auto', treat the element as if it created a new stacking context,
-            //  but any positioned descendants and descendants which actually create a new stacking context should be
-            //  considered part of the parent stacking context, not this new one. For those with 'z-index: 0',
-            //  treat the stacking context generated atomically.
-            //
-            //  All opacity descendants with opacity less than 1
-            //
-            //  All transform descendants with transform other than none
-            zeroOrAutoZIndexOrTransformedOrOpacity.forEach(this.renderStack, this);
-            // 7. Stacking contexts formed by positioned descendants with z-indices greater than or equal to 1 in z-index
-            // order (smallest first) then tree order.
-            positiveZIndex.sort(sortByZIndex).forEach(this.renderStack, this);
-        }
-    }, {
-        key: 'render',
-        value: function render(stack) {
-            var _this5 = this;
-
-            if (this.options.backgroundColor) {
-                this.target.rectangle(this.options.x, this.options.y, this.options.width, this.options.height, this.options.backgroundColor);
-            }
-            this.renderStack(stack);
-            var target = this.target.getTarget();
-            if (true) {
-                return target.then(function (output) {
-                    _this5.options.logger.log('Render completed');
-                    return output;
-                });
-            }
-            return target;
-        }
-    }]);
-
-    return Renderer;
-}();
-
-exports.default = Renderer;
-
-
-var splitDescendants = function splitDescendants(stack) {
-    var inlineLevel = [];
-    var nonInlineLevel = [];
-
-    var length = stack.children.length;
-    for (var i = 0; i < length; i++) {
-        var child = stack.children[i];
-        if (child.isInlineLevel()) {
-            inlineLevel.push(child);
-        } else {
-            nonInlineLevel.push(child);
-        }
-    }
-    return [inlineLevel, nonInlineLevel];
-};
-
-var splitStackingContexts = function splitStackingContexts(stack) {
-    var negativeZIndex = [];
-    var zeroOrAutoZIndexOrTransformedOrOpacity = [];
-    var positiveZIndex = [];
-    var nonPositionedFloats = [];
-    var nonPositionedInlineLevel = [];
-    var length = stack.contexts.length;
-    for (var i = 0; i < length; i++) {
-        var child = stack.contexts[i];
-        if (child.container.isPositioned() || child.container.style.opacity < 1 || child.container.isTransformed()) {
-            if (child.container.style.zIndex.order < 0) {
-                negativeZIndex.push(child);
-            } else if (child.container.style.zIndex.order > 0) {
-                positiveZIndex.push(child);
-            } else {
-                zeroOrAutoZIndexOrTransformedOrOpacity.push(child);
-            }
-        } else {
-            if (child.container.isFloating()) {
-                nonPositionedFloats.push(child);
-            } else {
-                nonPositionedInlineLevel.push(child);
-            }
-        }
-    }
-    return [negativeZIndex, zeroOrAutoZIndexOrTransformedOrOpacity, positiveZIndex, nonPositionedFloats, nonPositionedInlineLevel];
-};
-
-var sortByZIndex = function sortByZIndex(a, b) {
-    if (a.container.style.zIndex.order > b.container.style.zIndex.order) {
-        return 1;
-    } else if (a.container.style.zIndex.order < b.container.style.zIndex.order) {
-        return -1;
-    }
-
-    return a.container.index > b.container.index ? 1 : -1;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/ResourceLoader.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/ResourceLoader.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.ResourceStore = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Feature = __webpack_require__(/*! ./Feature */ "./node_modules/html2canvas/dist/npm/Feature.js");
-
-var _Feature2 = _interopRequireDefault(_Feature);
-
-var _Proxy = __webpack_require__(/*! ./Proxy */ "./node_modules/html2canvas/dist/npm/Proxy.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ResourceLoader = function () {
-    function ResourceLoader(options, logger, window) {
-        _classCallCheck(this, ResourceLoader);
-
-        this.options = options;
-        this._window = window;
-        this.origin = this.getOrigin(window.location.href);
-        this.cache = {};
-        this.logger = logger;
-        this._index = 0;
-    }
-
-    _createClass(ResourceLoader, [{
-        key: 'loadImage',
-        value: function loadImage(src) {
-            var _this = this;
-
-            if (this.hasResourceInCache(src)) {
-                return src;
-            }
-            if (isBlobImage(src)) {
-                this.cache[src] = _loadImage(src, this.options.imageTimeout || 0);
-                return src;
-            }
-
-            if (!isSVG(src) || _Feature2.default.SUPPORT_SVG_DRAWING) {
-                if (this.options.allowTaint === true || isInlineImage(src) || this.isSameOrigin(src)) {
-                    return this.addImage(src, src, false);
-                } else if (!this.isSameOrigin(src)) {
-                    if (typeof this.options.proxy === 'string') {
-                        this.cache[src] = (0, _Proxy.Proxy)(src, this.options).then(function (src) {
-                            return _loadImage(src, _this.options.imageTimeout || 0);
-                        });
-                        return src;
-                    } else if (this.options.useCORS === true && _Feature2.default.SUPPORT_CORS_IMAGES) {
-                        return this.addImage(src, src, true);
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'inlineImage',
-        value: function inlineImage(src) {
-            var _this2 = this;
-
-            if (isInlineImage(src)) {
-                return _loadImage(src, this.options.imageTimeout || 0);
-            }
-            if (this.hasResourceInCache(src)) {
-                return this.cache[src];
-            }
-            if (!this.isSameOrigin(src) && typeof this.options.proxy === 'string') {
-                return this.cache[src] = (0, _Proxy.Proxy)(src, this.options).then(function (src) {
-                    return _loadImage(src, _this2.options.imageTimeout || 0);
-                });
-            }
-
-            return this.xhrImage(src);
-        }
-    }, {
-        key: 'xhrImage',
-        value: function xhrImage(src) {
-            var _this3 = this;
-
-            this.cache[src] = new Promise(function (resolve, reject) {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status !== 200) {
-                            reject('Failed to fetch image ' + src.substring(0, 256) + ' with status code ' + xhr.status);
-                        } else {
-                            var reader = new FileReader();
-                            reader.addEventListener('load', function () {
-                                // $FlowFixMe
-                                var result = reader.result;
-                                resolve(result);
-                            }, false);
-                            reader.addEventListener('error', function (e) {
-                                return reject(e);
-                            }, false);
-                            reader.readAsDataURL(xhr.response);
-                        }
-                    }
-                };
-                xhr.responseType = 'blob';
-                if (_this3.options.imageTimeout) {
-                    var timeout = _this3.options.imageTimeout;
-                    xhr.timeout = timeout;
-                    xhr.ontimeout = function () {
-                        return reject( true ? 'Timed out (' + timeout + 'ms) fetching ' + src.substring(0, 256) : undefined);
-                    };
-                }
-                xhr.open('GET', src, true);
-                xhr.send();
-            }).then(function (src) {
-                return _loadImage(src, _this3.options.imageTimeout || 0);
-            });
-
-            return this.cache[src];
-        }
-    }, {
-        key: 'loadCanvas',
-        value: function loadCanvas(node) {
-            var key = String(this._index++);
-            this.cache[key] = Promise.resolve(node);
-            return key;
-        }
-    }, {
-        key: 'hasResourceInCache',
-        value: function hasResourceInCache(key) {
-            return typeof this.cache[key] !== 'undefined';
-        }
-    }, {
-        key: 'addImage',
-        value: function addImage(key, src, useCORS) {
-            var _this4 = this;
-
-            if (true) {
-                this.logger.log('Added image ' + key.substring(0, 256));
-            }
-
-            var imageLoadHandler = function imageLoadHandler(supportsDataImages) {
-                return new Promise(function (resolve, reject) {
-                    var img = new Image();
-                    img.onload = function () {
-                        return resolve(img);
-                    };
-                    //ios safari 10.3 taints canvas with data urls unless crossOrigin is set to anonymous
-                    if (!supportsDataImages || useCORS) {
-                        img.crossOrigin = 'anonymous';
-                    }
-
-                    img.onerror = reject;
-                    img.src = src;
-                    if (img.complete === true) {
-                        // Inline XML images may fail to parse, throwing an Error later on
-                        setTimeout(function () {
-                            resolve(img);
-                        }, 500);
-                    }
-                    if (_this4.options.imageTimeout) {
-                        var timeout = _this4.options.imageTimeout;
-                        setTimeout(function () {
-                            return reject( true ? 'Timed out (' + timeout + 'ms) fetching ' + src.substring(0, 256) : undefined);
-                        }, timeout);
-                    }
-                });
-            };
-
-            this.cache[key] = isInlineBase64Image(src) && !isSVG(src) ? // $FlowFixMe
-            _Feature2.default.SUPPORT_BASE64_DRAWING(src).then(imageLoadHandler) : imageLoadHandler(true);
-            return key;
-        }
-    }, {
-        key: 'isSameOrigin',
-        value: function isSameOrigin(url) {
-            return this.getOrigin(url) === this.origin;
-        }
-    }, {
-        key: 'getOrigin',
-        value: function getOrigin(url) {
-            var link = this._link || (this._link = this._window.document.createElement('a'));
-            link.href = url;
-            link.href = link.href; // IE9, LOL! - http://jsfiddle.net/niklasvh/2e48b/
-            return link.protocol + link.hostname + link.port;
-        }
-    }, {
-        key: 'ready',
-        value: function ready() {
-            var _this5 = this;
-
-            var keys = Object.keys(this.cache);
-            var values = keys.map(function (str) {
-                return _this5.cache[str].catch(function (e) {
-                    if (true) {
-                        _this5.logger.log('Unable to load image', e);
-                    }
-                    return null;
-                });
-            });
-            return Promise.all(values).then(function (images) {
-                if (true) {
-                    _this5.logger.log('Finished loading ' + images.length + ' images', images);
-                }
-                return new ResourceStore(keys, images);
-            });
-        }
-    }]);
-
-    return ResourceLoader;
-}();
-
-exports.default = ResourceLoader;
-
-var ResourceStore = exports.ResourceStore = function () {
-    function ResourceStore(keys, resources) {
-        _classCallCheck(this, ResourceStore);
-
-        this._keys = keys;
-        this._resources = resources;
-    }
-
-    _createClass(ResourceStore, [{
-        key: 'get',
-        value: function get(key) {
-            var index = this._keys.indexOf(key);
-            return index === -1 ? null : this._resources[index];
-        }
-    }]);
-
-    return ResourceStore;
-}();
-
-var INLINE_SVG = /^data:image\/svg\+xml/i;
-var INLINE_BASE64 = /^data:image\/.*;base64,/i;
-var INLINE_IMG = /^data:image\/.*/i;
-
-var isInlineImage = function isInlineImage(src) {
-    return INLINE_IMG.test(src);
-};
-var isInlineBase64Image = function isInlineBase64Image(src) {
-    return INLINE_BASE64.test(src);
-};
-var isBlobImage = function isBlobImage(src) {
-    return src.substr(0, 4) === 'blob';
-};
-
-var isSVG = function isSVG(src) {
-    return src.substr(-3).toLowerCase() === 'svg' || INLINE_SVG.test(src);
-};
-
-var _loadImage = function _loadImage(src, timeout) {
-    return new Promise(function (resolve, reject) {
-        var img = new Image();
-        img.onload = function () {
-            return resolve(img);
-        };
-        img.onerror = reject;
-        img.src = src;
-        if (img.complete === true) {
-            // Inline XML images may fail to parse, throwing an Error later on
-            setTimeout(function () {
-                resolve(img);
-            }, 500);
-        }
-        if (timeout) {
-            setTimeout(function () {
-                return reject( true ? 'Timed out (' + timeout + 'ms) loading image' : undefined);
-            }, timeout);
-        }
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/StackingContext.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/StackingContext.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-var _position = __webpack_require__(/*! ./parsing/position */ "./node_modules/html2canvas/dist/npm/parsing/position.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var StackingContext = function () {
-    function StackingContext(container, parent, treatAsRealStackingContext) {
-        _classCallCheck(this, StackingContext);
-
-        this.container = container;
-        this.parent = parent;
-        this.contexts = [];
-        this.children = [];
-        this.treatAsRealStackingContext = treatAsRealStackingContext;
-    }
-
-    _createClass(StackingContext, [{
-        key: 'getOpacity',
-        value: function getOpacity() {
-            return this.parent ? this.container.style.opacity * this.parent.getOpacity() : this.container.style.opacity;
-        }
-    }, {
-        key: 'getRealParentStackingContext',
-        value: function getRealParentStackingContext() {
-            return !this.parent || this.treatAsRealStackingContext ? this : this.parent.getRealParentStackingContext();
-        }
-    }]);
-
-    return StackingContext;
-}();
-
-exports.default = StackingContext;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/TextBounds.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/TextBounds.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseTextBounds = exports.TextBounds = undefined;
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _textDecoration = __webpack_require__(/*! ./parsing/textDecoration */ "./node_modules/html2canvas/dist/npm/parsing/textDecoration.js");
-
-var _Feature = __webpack_require__(/*! ./Feature */ "./node_modules/html2canvas/dist/npm/Feature.js");
-
-var _Feature2 = _interopRequireDefault(_Feature);
-
-var _Unicode = __webpack_require__(/*! ./Unicode */ "./node_modules/html2canvas/dist/npm/Unicode.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TextBounds = exports.TextBounds = function TextBounds(text, bounds) {
-    _classCallCheck(this, TextBounds);
-
-    this.text = text;
-    this.bounds = bounds;
-};
-
-var parseTextBounds = exports.parseTextBounds = function parseTextBounds(value, parent, node) {
-    var letterRendering = parent.style.letterSpacing !== 0;
-    var textList = letterRendering ? (0, _Unicode.toCodePoints)(value).map(function (i) {
-        return (0, _Unicode.fromCodePoint)(i);
-    }) : (0, _Unicode.breakWords)(value, parent);
-    var length = textList.length;
-    var defaultView = node.parentNode ? node.parentNode.ownerDocument.defaultView : null;
-    var scrollX = defaultView ? defaultView.pageXOffset : 0;
-    var scrollY = defaultView ? defaultView.pageYOffset : 0;
-    var textBounds = [];
-    var offset = 0;
-    for (var i = 0; i < length; i++) {
-        var text = textList[i];
-        if (parent.style.textDecoration !== _textDecoration.TEXT_DECORATION.NONE || text.trim().length > 0) {
-            if (_Feature2.default.SUPPORT_RANGE_BOUNDS) {
-                textBounds.push(new TextBounds(text, getRangeBounds(node, offset, text.length, scrollX, scrollY)));
-            } else {
-                var replacementNode = node.splitText(text.length);
-                textBounds.push(new TextBounds(text, getWrapperBounds(node, scrollX, scrollY)));
-                node = replacementNode;
-            }
-        } else if (!_Feature2.default.SUPPORT_RANGE_BOUNDS) {
-            node = node.splitText(text.length);
-        }
-        offset += text.length;
-    }
-    return textBounds;
-};
-
-var getWrapperBounds = function getWrapperBounds(node, scrollX, scrollY) {
-    var wrapper = node.ownerDocument.createElement('html2canvaswrapper');
-    wrapper.appendChild(node.cloneNode(true));
-    var parentNode = node.parentNode;
-    if (parentNode) {
-        parentNode.replaceChild(wrapper, node);
-        var bounds = (0, _Bounds.parseBounds)(wrapper, scrollX, scrollY);
-        if (wrapper.firstChild) {
-            parentNode.replaceChild(wrapper.firstChild, wrapper);
-        }
-        return bounds;
-    }
-    return new _Bounds.Bounds(0, 0, 0, 0);
-};
-
-var getRangeBounds = function getRangeBounds(node, offset, length, scrollX, scrollY) {
-    var range = node.ownerDocument.createRange();
-    range.setStart(node, offset);
-    range.setEnd(node, offset + length);
-    return _Bounds.Bounds.fromClientRect(range.getBoundingClientRect(), scrollX, scrollY);
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/TextContainer.js":
-/*!************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/TextContainer.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _textTransform = __webpack_require__(/*! ./parsing/textTransform */ "./node_modules/html2canvas/dist/npm/parsing/textTransform.js");
-
-var _TextBounds = __webpack_require__(/*! ./TextBounds */ "./node_modules/html2canvas/dist/npm/TextBounds.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TextContainer = function () {
-    function TextContainer(text, parent, bounds) {
-        _classCallCheck(this, TextContainer);
-
-        this.text = text;
-        this.parent = parent;
-        this.bounds = bounds;
-    }
-
-    _createClass(TextContainer, null, [{
-        key: 'fromTextNode',
-        value: function fromTextNode(node, parent) {
-            var text = transform(node.data, parent.style.textTransform);
-            return new TextContainer(text, parent, (0, _TextBounds.parseTextBounds)(text, parent, node));
-        }
-    }]);
-
-    return TextContainer;
-}();
-
-exports.default = TextContainer;
-
-
-var CAPITALIZE = /(^|\s|:|-|\(|\))([a-z])/g;
-
-var transform = function transform(text, _transform) {
-    switch (_transform) {
-        case _textTransform.TEXT_TRANSFORM.LOWERCASE:
-            return text.toLowerCase();
-        case _textTransform.TEXT_TRANSFORM.CAPITALIZE:
-            return text.replace(CAPITALIZE, capitalize);
-        case _textTransform.TEXT_TRANSFORM.UPPERCASE:
-            return text.toUpperCase();
-        default:
-            return text;
-    }
-};
-
-function capitalize(m, p1, p2) {
-    if (m.length > 0) {
-        return p1 + p2.toUpperCase();
-    }
-
-    return m;
-}
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Unicode.js":
-/*!******************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Unicode.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.breakWords = exports.fromCodePoint = exports.toCodePoints = undefined;
-
-var _cssLineBreak = __webpack_require__(/*! css-line-break */ "./node_modules/css-line-break/dist/index.js");
-
-Object.defineProperty(exports, 'toCodePoints', {
-    enumerable: true,
-    get: function get() {
-        return _cssLineBreak.toCodePoints;
-    }
-});
-Object.defineProperty(exports, 'fromCodePoint', {
-    enumerable: true,
-    get: function get() {
-        return _cssLineBreak.fromCodePoint;
-    }
-});
-
-var _NodeContainer = __webpack_require__(/*! ./NodeContainer */ "./node_modules/html2canvas/dist/npm/NodeContainer.js");
-
-var _NodeContainer2 = _interopRequireDefault(_NodeContainer);
-
-var _overflowWrap = __webpack_require__(/*! ./parsing/overflowWrap */ "./node_modules/html2canvas/dist/npm/parsing/overflowWrap.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var breakWords = exports.breakWords = function breakWords(str, parent) {
-    var breaker = (0, _cssLineBreak.LineBreaker)(str, {
-        lineBreak: parent.style.lineBreak,
-        wordBreak: parent.style.overflowWrap === _overflowWrap.OVERFLOW_WRAP.BREAK_WORD ? 'break-word' : parent.style.wordBreak
-    });
-
-    var words = [];
-    var bk = void 0;
-
-    while (!(bk = breaker.next()).done) {
-        words.push(bk.value.slice());
-    }
-
-    return words;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Util.js":
-/*!***************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Util.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var contains = exports.contains = function contains(bit, value) {
-    return (bit & value) !== 0;
-};
-
-var distance = exports.distance = function distance(a, b) {
-    return Math.sqrt(a * a + b * b);
-};
-
-var copyCSSStyles = exports.copyCSSStyles = function copyCSSStyles(style, target) {
-    // Edge does not provide value for cssText
-    for (var i = style.length - 1; i >= 0; i--) {
-        var property = style.item(i);
-        // Safari shows pseudoelements if content is set
-        if (property !== 'content') {
-            target.style.setProperty(property, style.getPropertyValue(property));
-        }
-    }
-    return target;
-};
-
-var SMALL_IMAGE = exports.SMALL_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/Window.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/Window.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.renderElement = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _Logger = __webpack_require__(/*! ./Logger */ "./node_modules/html2canvas/dist/npm/Logger.js");
-
-var _Logger2 = _interopRequireDefault(_Logger);
-
-var _NodeParser = __webpack_require__(/*! ./NodeParser */ "./node_modules/html2canvas/dist/npm/NodeParser.js");
-
-var _Renderer = __webpack_require__(/*! ./Renderer */ "./node_modules/html2canvas/dist/npm/Renderer.js");
-
-var _Renderer2 = _interopRequireDefault(_Renderer);
-
-var _ForeignObjectRenderer = __webpack_require__(/*! ./renderer/ForeignObjectRenderer */ "./node_modules/html2canvas/dist/npm/renderer/ForeignObjectRenderer.js");
-
-var _ForeignObjectRenderer2 = _interopRequireDefault(_ForeignObjectRenderer);
-
-var _Feature = __webpack_require__(/*! ./Feature */ "./node_modules/html2canvas/dist/npm/Feature.js");
-
-var _Feature2 = _interopRequireDefault(_Feature);
-
-var _Bounds = __webpack_require__(/*! ./Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _Clone = __webpack_require__(/*! ./Clone */ "./node_modules/html2canvas/dist/npm/Clone.js");
-
-var _Font = __webpack_require__(/*! ./Font */ "./node_modules/html2canvas/dist/npm/Font.js");
-
-var _Color = __webpack_require__(/*! ./Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var renderElement = exports.renderElement = function renderElement(element, options, logger) {
-    var ownerDocument = element.ownerDocument;
-
-    var windowBounds = new _Bounds.Bounds(options.scrollX, options.scrollY, options.windowWidth, options.windowHeight);
-
-    // http://www.w3.org/TR/css3-background/#special-backgrounds
-    var documentBackgroundColor = ownerDocument.documentElement ? new _Color2.default(getComputedStyle(ownerDocument.documentElement).backgroundColor) : _Color.TRANSPARENT;
-    var bodyBackgroundColor = ownerDocument.body ? new _Color2.default(getComputedStyle(ownerDocument.body).backgroundColor) : _Color.TRANSPARENT;
-
-    var backgroundColor = element === ownerDocument.documentElement ? documentBackgroundColor.isTransparent() ? bodyBackgroundColor.isTransparent() ? options.backgroundColor ? new _Color2.default(options.backgroundColor) : null : bodyBackgroundColor : documentBackgroundColor : options.backgroundColor ? new _Color2.default(options.backgroundColor) : null;
-
-    return (options.foreignObjectRendering ? // $FlowFixMe
-    _Feature2.default.SUPPORT_FOREIGNOBJECT_DRAWING : Promise.resolve(false)).then(function (supportForeignObject) {
-        return supportForeignObject ? function (cloner) {
-            if (true) {
-                logger.log('Document cloned, using foreignObject rendering');
-            }
-
-            return cloner.inlineFonts(ownerDocument).then(function () {
-                return cloner.resourceLoader.ready();
-            }).then(function () {
-                var renderer = new _ForeignObjectRenderer2.default(cloner.documentElement);
-
-                var defaultView = ownerDocument.defaultView;
-                var scrollX = defaultView.pageXOffset;
-                var scrollY = defaultView.pageYOffset;
-
-                var isDocument = element.tagName === 'HTML' || element.tagName === 'BODY';
-
-                var _ref = isDocument ? (0, _Bounds.parseDocumentSize)(ownerDocument) : (0, _Bounds.parseBounds)(element, scrollX, scrollY),
-                    width = _ref.width,
-                    height = _ref.height,
-                    left = _ref.left,
-                    top = _ref.top;
-
-                return renderer.render({
-                    backgroundColor: backgroundColor,
-                    logger: logger,
-                    scale: options.scale,
-                    x: typeof options.x === 'number' ? options.x : left,
-                    y: typeof options.y === 'number' ? options.y : top,
-                    width: typeof options.width === 'number' ? options.width : Math.ceil(width),
-                    height: typeof options.height === 'number' ? options.height : Math.ceil(height),
-                    windowWidth: options.windowWidth,
-                    windowHeight: options.windowHeight,
-                    scrollX: options.scrollX,
-                    scrollY: options.scrollY
-                });
-            });
-        }(new _Clone.DocumentCloner(element, options, logger, true, renderElement)) : (0, _Clone.cloneWindow)(ownerDocument, windowBounds, element, options, logger, renderElement).then(function (_ref2) {
-            var _ref3 = _slicedToArray(_ref2, 3),
-                container = _ref3[0],
-                clonedElement = _ref3[1],
-                resourceLoader = _ref3[2];
-
-            if (true) {
-                logger.log('Document cloned, using computed rendering');
-            }
-
-            var stack = (0, _NodeParser.NodeParser)(clonedElement, resourceLoader, logger);
-            var clonedDocument = clonedElement.ownerDocument;
-
-            if (backgroundColor === stack.container.style.background.backgroundColor) {
-                stack.container.style.background.backgroundColor = _Color.TRANSPARENT;
-            }
-
-            return resourceLoader.ready().then(function (imageStore) {
-                var fontMetrics = new _Font.FontMetrics(clonedDocument);
-                if (true) {
-                    logger.log('Starting renderer');
-                }
-
-                var defaultView = clonedDocument.defaultView;
-                var scrollX = defaultView.pageXOffset;
-                var scrollY = defaultView.pageYOffset;
-
-                var isDocument = clonedElement.tagName === 'HTML' || clonedElement.tagName === 'BODY';
-
-                var _ref4 = isDocument ? (0, _Bounds.parseDocumentSize)(ownerDocument) : (0, _Bounds.parseBounds)(clonedElement, scrollX, scrollY),
-                    width = _ref4.width,
-                    height = _ref4.height,
-                    left = _ref4.left,
-                    top = _ref4.top;
-
-                var renderOptions = {
-                    backgroundColor: backgroundColor,
-                    fontMetrics: fontMetrics,
-                    imageStore: imageStore,
-                    logger: logger,
-                    scale: options.scale,
-                    x: typeof options.x === 'number' ? options.x : left,
-                    y: typeof options.y === 'number' ? options.y : top,
-                    width: typeof options.width === 'number' ? options.width : Math.ceil(width),
-                    height: typeof options.height === 'number' ? options.height : Math.ceil(height)
-                };
-
-                if (Array.isArray(options.target)) {
-                    return Promise.all(options.target.map(function (target) {
-                        var renderer = new _Renderer2.default(target, renderOptions);
-                        return renderer.render(stack);
-                    }));
-                } else {
-                    var renderer = new _Renderer2.default(options.target, renderOptions);
-                    var canvas = renderer.render(stack);
-                    if (options.removeContainer === true) {
-                        if (container.parentNode) {
-                            container.parentNode.removeChild(container);
-                        } else if (true) {
-                            logger.log('Cannot detach cloned iframe as it is not in the DOM anymore');
-                        }
-                    }
-
-                    return canvas;
-                }
-            });
-        });
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/drawing/BezierCurve.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/drawing/BezierCurve.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Path = __webpack_require__(/*! ./Path */ "./node_modules/html2canvas/dist/npm/drawing/Path.js");
-
-var _Vector = __webpack_require__(/*! ./Vector */ "./node_modules/html2canvas/dist/npm/drawing/Vector.js");
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var lerp = function lerp(a, b, t) {
-    return new _Vector2.default(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
-};
-
-var BezierCurve = function () {
-    function BezierCurve(start, startControl, endControl, end) {
-        _classCallCheck(this, BezierCurve);
-
-        this.type = _Path.PATH.BEZIER_CURVE;
-        this.start = start;
-        this.startControl = startControl;
-        this.endControl = endControl;
-        this.end = end;
-    }
-
-    _createClass(BezierCurve, [{
-        key: 'subdivide',
-        value: function subdivide(t, firstHalf) {
-            var ab = lerp(this.start, this.startControl, t);
-            var bc = lerp(this.startControl, this.endControl, t);
-            var cd = lerp(this.endControl, this.end, t);
-            var abbc = lerp(ab, bc, t);
-            var bccd = lerp(bc, cd, t);
-            var dest = lerp(abbc, bccd, t);
-            return firstHalf ? new BezierCurve(this.start, ab, abbc, dest) : new BezierCurve(dest, bccd, cd, this.end);
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            return new BezierCurve(this.end, this.endControl, this.startControl, this.start);
-        }
-    }]);
-
-    return BezierCurve;
-}();
-
-exports.default = BezierCurve;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/drawing/Circle.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/drawing/Circle.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _Path = __webpack_require__(/*! ./Path */ "./node_modules/html2canvas/dist/npm/drawing/Path.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Circle = function Circle(x, y, radius) {
-    _classCallCheck(this, Circle);
-
-    this.type = _Path.PATH.CIRCLE;
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-    if (true) {
-        if (isNaN(x)) {
-            console.error('Invalid x value given for Circle');
-        }
-        if (isNaN(y)) {
-            console.error('Invalid y value given for Circle');
-        }
-        if (isNaN(radius)) {
-            console.error('Invalid radius value given for Circle');
-        }
-    }
-};
-
-exports.default = Circle;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/drawing/Path.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/drawing/Path.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var PATH = exports.PATH = {
-    VECTOR: 0,
-    BEZIER_CURVE: 1,
-    CIRCLE: 2
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/drawing/Size.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/drawing/Size.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Size = function Size(width, height) {
-    _classCallCheck(this, Size);
-
-    this.width = width;
-    this.height = height;
-};
-
-exports.default = Size;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/drawing/Vector.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/drawing/Vector.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _Path = __webpack_require__(/*! ./Path */ "./node_modules/html2canvas/dist/npm/drawing/Path.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Vector = function Vector(x, y) {
-    _classCallCheck(this, Vector);
-
-    this.type = _Path.PATH.VECTOR;
-    this.x = x;
-    this.y = y;
-    if (true) {
-        if (isNaN(x)) {
-            console.error('Invalid x value given for Vector');
-        }
-        if (isNaN(y)) {
-            console.error('Invalid y value given for Vector');
-        }
-    }
-};
-
-exports.default = Vector;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/index.js":
-/*!****************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/index.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _CanvasRenderer = __webpack_require__(/*! ./renderer/CanvasRenderer */ "./node_modules/html2canvas/dist/npm/renderer/CanvasRenderer.js");
-
-var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
-
-var _Logger = __webpack_require__(/*! ./Logger */ "./node_modules/html2canvas/dist/npm/Logger.js");
-
-var _Logger2 = _interopRequireDefault(_Logger);
-
-var _Window = __webpack_require__(/*! ./Window */ "./node_modules/html2canvas/dist/npm/Window.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var html2canvas = function html2canvas(element, conf) {
-    var config = conf || {};
-    var logger = new _Logger2.default(typeof config.logging === 'boolean' ? config.logging : true);
-    logger.log('html2canvas ' + "$npm_package_version");
-
-    if ( true && typeof config.onrendered === 'function') {
-        logger.error('onrendered option is deprecated, html2canvas returns a Promise with the canvas as the value');
-    }
-
-    var ownerDocument = element.ownerDocument;
-    if (!ownerDocument) {
-        return Promise.reject('Provided element is not within a Document');
-    }
-    var defaultView = ownerDocument.defaultView;
-
-    var defaultOptions = {
-        async: true,
-        allowTaint: false,
-        backgroundColor: '#ffffff',
-        imageTimeout: 15000,
-        logging: true,
-        proxy: null,
-        removeContainer: true,
-        foreignObjectRendering: false,
-        scale: defaultView.devicePixelRatio || 1,
-        target: new _CanvasRenderer2.default(config.canvas),
-        useCORS: false,
-        windowWidth: defaultView.innerWidth,
-        windowHeight: defaultView.innerHeight,
-        scrollX: defaultView.pageXOffset,
-        scrollY: defaultView.pageYOffset
-    };
-
-    var result = (0, _Window.renderElement)(element, _extends({}, defaultOptions, config), logger);
-
-    if (true) {
-        return result.catch(function (e) {
-            logger.error(e);
-            throw e;
-        });
-    }
-    return result;
-};
-
-html2canvas.CanvasRenderer = _CanvasRenderer2.default;
-
-module.exports = html2canvas;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/background.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/background.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseBackgroundImage = exports.parseBackground = exports.calculateBackgroundRepeatPath = exports.calculateBackgroundPosition = exports.calculateBackgroungPositioningArea = exports.calculateBackgroungPaintingArea = exports.calculateGradientBackgroundSize = exports.calculateBackgroundSize = exports.BACKGROUND_ORIGIN = exports.BACKGROUND_CLIP = exports.BACKGROUND_SIZE = exports.BACKGROUND_REPEAT = undefined;
-
-var _Color = __webpack_require__(/*! ../Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-var _Length = __webpack_require__(/*! ../Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-var _Size = __webpack_require__(/*! ../drawing/Size */ "./node_modules/html2canvas/dist/npm/drawing/Size.js");
-
-var _Size2 = _interopRequireDefault(_Size);
-
-var _Vector = __webpack_require__(/*! ../drawing/Vector */ "./node_modules/html2canvas/dist/npm/drawing/Vector.js");
-
-var _Vector2 = _interopRequireDefault(_Vector);
-
-var _Bounds = __webpack_require__(/*! ../Bounds */ "./node_modules/html2canvas/dist/npm/Bounds.js");
-
-var _padding = __webpack_require__(/*! ./padding */ "./node_modules/html2canvas/dist/npm/parsing/padding.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BACKGROUND_REPEAT = exports.BACKGROUND_REPEAT = {
-    REPEAT: 0,
-    NO_REPEAT: 1,
-    REPEAT_X: 2,
-    REPEAT_Y: 3
-};
-
-var BACKGROUND_SIZE = exports.BACKGROUND_SIZE = {
-    AUTO: 0,
-    CONTAIN: 1,
-    COVER: 2,
-    LENGTH: 3
-};
-
-var BACKGROUND_CLIP = exports.BACKGROUND_CLIP = {
-    BORDER_BOX: 0,
-    PADDING_BOX: 1,
-    CONTENT_BOX: 2
-};
-
-var BACKGROUND_ORIGIN = exports.BACKGROUND_ORIGIN = BACKGROUND_CLIP;
-
-var AUTO = 'auto';
-
-var BackgroundSize = function BackgroundSize(size) {
-    _classCallCheck(this, BackgroundSize);
-
-    switch (size) {
-        case 'contain':
-            this.size = BACKGROUND_SIZE.CONTAIN;
-            break;
-        case 'cover':
-            this.size = BACKGROUND_SIZE.COVER;
-            break;
-        case 'auto':
-            this.size = BACKGROUND_SIZE.AUTO;
-            break;
-        default:
-            this.value = new _Length2.default(size);
-    }
-};
-
-var calculateBackgroundSize = exports.calculateBackgroundSize = function calculateBackgroundSize(backgroundImage, image, bounds) {
-    var width = 0;
-    var height = 0;
-    var size = backgroundImage.size;
-    if (size[0].size === BACKGROUND_SIZE.CONTAIN || size[0].size === BACKGROUND_SIZE.COVER) {
-        var targetRatio = bounds.width / bounds.height;
-        var currentRatio = image.width / image.height;
-        return targetRatio < currentRatio !== (size[0].size === BACKGROUND_SIZE.COVER) ? new _Size2.default(bounds.width, bounds.width / currentRatio) : new _Size2.default(bounds.height * currentRatio, bounds.height);
-    }
-
-    if (size[0].value) {
-        width = size[0].value.getAbsoluteValue(bounds.width);
-    }
-
-    if (size[0].size === BACKGROUND_SIZE.AUTO && size[1].size === BACKGROUND_SIZE.AUTO) {
-        height = image.height;
-    } else if (size[1].size === BACKGROUND_SIZE.AUTO) {
-        height = width / image.width * image.height;
-    } else if (size[1].value) {
-        height = size[1].value.getAbsoluteValue(bounds.height);
-    }
-
-    if (size[0].size === BACKGROUND_SIZE.AUTO) {
-        width = height / image.height * image.width;
-    }
-
-    return new _Size2.default(width, height);
-};
-
-var calculateGradientBackgroundSize = exports.calculateGradientBackgroundSize = function calculateGradientBackgroundSize(backgroundImage, bounds) {
-    var size = backgroundImage.size;
-    var width = size[0].value ? size[0].value.getAbsoluteValue(bounds.width) : bounds.width;
-    var height = size[1].value ? size[1].value.getAbsoluteValue(bounds.height) : size[0].value ? width : bounds.height;
-
-    return new _Size2.default(width, height);
-};
-
-var AUTO_SIZE = new BackgroundSize(AUTO);
-
-var calculateBackgroungPaintingArea = exports.calculateBackgroungPaintingArea = function calculateBackgroungPaintingArea(curves, clip) {
-    switch (clip) {
-        case BACKGROUND_CLIP.BORDER_BOX:
-            return (0, _Bounds.calculateBorderBoxPath)(curves);
-        case BACKGROUND_CLIP.PADDING_BOX:
-        default:
-            return (0, _Bounds.calculatePaddingBoxPath)(curves);
-    }
-};
-
-var calculateBackgroungPositioningArea = exports.calculateBackgroungPositioningArea = function calculateBackgroungPositioningArea(backgroundOrigin, bounds, padding, border) {
-    var paddingBox = (0, _Bounds.calculatePaddingBox)(bounds, border);
-
-    switch (backgroundOrigin) {
-        case BACKGROUND_ORIGIN.BORDER_BOX:
-            return bounds;
-        case BACKGROUND_ORIGIN.CONTENT_BOX:
-            var paddingLeft = padding[_padding.PADDING_SIDES.LEFT].getAbsoluteValue(bounds.width);
-            var paddingRight = padding[_padding.PADDING_SIDES.RIGHT].getAbsoluteValue(bounds.width);
-            var paddingTop = padding[_padding.PADDING_SIDES.TOP].getAbsoluteValue(bounds.width);
-            var paddingBottom = padding[_padding.PADDING_SIDES.BOTTOM].getAbsoluteValue(bounds.width);
-            return new _Bounds.Bounds(paddingBox.left + paddingLeft, paddingBox.top + paddingTop, paddingBox.width - paddingLeft - paddingRight, paddingBox.height - paddingTop - paddingBottom);
-        case BACKGROUND_ORIGIN.PADDING_BOX:
-        default:
-            return paddingBox;
-    }
-};
-
-var calculateBackgroundPosition = exports.calculateBackgroundPosition = function calculateBackgroundPosition(position, size, bounds) {
-    return new _Vector2.default(position[0].getAbsoluteValue(bounds.width - size.width), position[1].getAbsoluteValue(bounds.height - size.height));
-};
-
-var calculateBackgroundRepeatPath = exports.calculateBackgroundRepeatPath = function calculateBackgroundRepeatPath(background, position, size, backgroundPositioningArea, bounds) {
-    var repeat = background.repeat;
-    switch (repeat) {
-        case BACKGROUND_REPEAT.REPEAT_X:
-            return [new _Vector2.default(Math.round(bounds.left), Math.round(backgroundPositioningArea.top + position.y)), new _Vector2.default(Math.round(bounds.left + bounds.width), Math.round(backgroundPositioningArea.top + position.y)), new _Vector2.default(Math.round(bounds.left + bounds.width), Math.round(size.height + backgroundPositioningArea.top + position.y)), new _Vector2.default(Math.round(bounds.left), Math.round(size.height + backgroundPositioningArea.top + position.y))];
-        case BACKGROUND_REPEAT.REPEAT_Y:
-            return [new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x), Math.round(bounds.top)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x + size.width), Math.round(bounds.top)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x + size.width), Math.round(bounds.height + bounds.top)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x), Math.round(bounds.height + bounds.top))];
-        case BACKGROUND_REPEAT.NO_REPEAT:
-            return [new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x), Math.round(backgroundPositioningArea.top + position.y)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x + size.width), Math.round(backgroundPositioningArea.top + position.y)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x + size.width), Math.round(backgroundPositioningArea.top + position.y + size.height)), new _Vector2.default(Math.round(backgroundPositioningArea.left + position.x), Math.round(backgroundPositioningArea.top + position.y + size.height))];
-        default:
-            return [new _Vector2.default(Math.round(bounds.left), Math.round(bounds.top)), new _Vector2.default(Math.round(bounds.left + bounds.width), Math.round(bounds.top)), new _Vector2.default(Math.round(bounds.left + bounds.width), Math.round(bounds.height + bounds.top)), new _Vector2.default(Math.round(bounds.left), Math.round(bounds.height + bounds.top))];
-    }
-};
-
-var parseBackground = exports.parseBackground = function parseBackground(style, resourceLoader) {
-    return {
-        backgroundColor: new _Color2.default(style.backgroundColor),
-        backgroundImage: parseBackgroundImages(style, resourceLoader),
-        backgroundClip: parseBackgroundClip(style.backgroundClip),
-        backgroundOrigin: parseBackgroundOrigin(style.backgroundOrigin)
-    };
-};
-
-var parseBackgroundClip = function parseBackgroundClip(backgroundClip) {
-    switch (backgroundClip) {
-        case 'padding-box':
-            return BACKGROUND_CLIP.PADDING_BOX;
-        case 'content-box':
-            return BACKGROUND_CLIP.CONTENT_BOX;
-    }
-    return BACKGROUND_CLIP.BORDER_BOX;
-};
-
-var parseBackgroundOrigin = function parseBackgroundOrigin(backgroundOrigin) {
-    switch (backgroundOrigin) {
-        case 'padding-box':
-            return BACKGROUND_ORIGIN.PADDING_BOX;
-        case 'content-box':
-            return BACKGROUND_ORIGIN.CONTENT_BOX;
-    }
-    return BACKGROUND_ORIGIN.BORDER_BOX;
-};
-
-var parseBackgroundRepeat = function parseBackgroundRepeat(backgroundRepeat) {
-    switch (backgroundRepeat.trim()) {
-        case 'no-repeat':
-            return BACKGROUND_REPEAT.NO_REPEAT;
-        case 'repeat-x':
-        case 'repeat no-repeat':
-            return BACKGROUND_REPEAT.REPEAT_X;
-        case 'repeat-y':
-        case 'no-repeat repeat':
-            return BACKGROUND_REPEAT.REPEAT_Y;
-        case 'repeat':
-            return BACKGROUND_REPEAT.REPEAT;
-    }
-
-    if (true) {
-        console.error('Invalid background-repeat value "' + backgroundRepeat + '"');
-    }
-
-    return BACKGROUND_REPEAT.REPEAT;
-};
-
-var parseBackgroundImages = function parseBackgroundImages(style, resourceLoader) {
-    var sources = parseBackgroundImage(style.backgroundImage).map(function (backgroundImage) {
-        if (backgroundImage.method === 'url') {
-            var key = resourceLoader.loadImage(backgroundImage.args[0]);
-            backgroundImage.args = key ? [key] : [];
-        }
-        return backgroundImage;
-    });
-    var positions = style.backgroundPosition.split(',');
-    var repeats = style.backgroundRepeat.split(',');
-    var sizes = style.backgroundSize.split(',');
-
-    return sources.map(function (source, index) {
-        var size = (sizes[index] || AUTO).trim().split(' ').map(parseBackgroundSize);
-        var position = (positions[index] || AUTO).trim().split(' ').map(parseBackgoundPosition);
-
-        return {
-            source: source,
-            repeat: parseBackgroundRepeat(typeof repeats[index] === 'string' ? repeats[index] : repeats[0]),
-            size: size.length < 2 ? [size[0], AUTO_SIZE] : [size[0], size[1]],
-            position: position.length < 2 ? [position[0], position[0]] : [position[0], position[1]]
-        };
-    });
-};
-
-var parseBackgroundSize = function parseBackgroundSize(size) {
-    return size === 'auto' ? AUTO_SIZE : new BackgroundSize(size);
-};
-
-var parseBackgoundPosition = function parseBackgoundPosition(position) {
-    switch (position) {
-        case 'bottom':
-        case 'right':
-            return new _Length2.default('100%');
-        case 'left':
-        case 'top':
-            return new _Length2.default('0%');
-        case 'auto':
-            return new _Length2.default('0');
-    }
-    return new _Length2.default(position);
-};
-
-var parseBackgroundImage = exports.parseBackgroundImage = function parseBackgroundImage(image) {
-    var whitespace = /^\s$/;
-    var results = [];
-
-    var args = [];
-    var method = '';
-    var quote = null;
-    var definition = '';
-    var mode = 0;
-    var numParen = 0;
-
-    var appendResult = function appendResult() {
-        var prefix = '';
-        if (method) {
-            if (definition.substr(0, 1) === '"') {
-                definition = definition.substr(1, definition.length - 2);
-            }
-
-            if (definition) {
-                args.push(definition.trim());
-            }
-
-            var prefix_i = method.indexOf('-', 1) + 1;
-            if (method.substr(0, 1) === '-' && prefix_i > 0) {
-                prefix = method.substr(0, prefix_i).toLowerCase();
-                method = method.substr(prefix_i);
-            }
-            method = method.toLowerCase();
-            if (method !== 'none') {
-                results.push({
-                    prefix: prefix,
-                    method: method,
-                    args: args
-                });
-            }
-        }
-        args = [];
-        method = definition = '';
-    };
-
-    image.split('').forEach(function (c) {
-        if (mode === 0 && whitespace.test(c)) {
-            return;
-        }
-        switch (c) {
-            case '"':
-                if (!quote) {
-                    quote = c;
-                } else if (quote === c) {
-                    quote = null;
-                }
-                break;
-            case '(':
-                if (quote) {
-                    break;
-                } else if (mode === 0) {
-                    mode = 1;
-                    return;
-                } else {
-                    numParen++;
-                }
-                break;
-            case ')':
-                if (quote) {
-                    break;
-                } else if (mode === 1) {
-                    if (numParen === 0) {
-                        mode = 0;
-                        appendResult();
-                        return;
-                    } else {
-                        numParen--;
-                    }
-                }
-                break;
-
-            case ',':
-                if (quote) {
-                    break;
-                } else if (mode === 0) {
-                    appendResult();
-                    return;
-                } else if (mode === 1) {
-                    if (numParen === 0 && !method.match(/^url$/i)) {
-                        args.push(definition.trim());
-                        definition = '';
-                        return;
-                    }
-                }
-                break;
-        }
-
-        if (mode === 0) {
-            method += c;
-        } else {
-            definition += c;
-        }
-    });
-
-    appendResult();
-    return results;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/border.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/border.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseBorder = exports.BORDER_SIDES = exports.BORDER_STYLE = undefined;
-
-var _Color = __webpack_require__(/*! ../Color */ "./node_modules/html2canvas/dist/npm/Color.js");
-
-var _Color2 = _interopRequireDefault(_Color);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var BORDER_STYLE = exports.BORDER_STYLE = {
-    NONE: 0,
-    SOLID: 1
-};
-
-var BORDER_SIDES = exports.BORDER_SIDES = {
-    TOP: 0,
-    RIGHT: 1,
-    BOTTOM: 2,
-    LEFT: 3
-};
-
-var SIDES = Object.keys(BORDER_SIDES).map(function (s) {
-    return s.toLowerCase();
-});
-
-var parseBorderStyle = function parseBorderStyle(style) {
-    switch (style) {
-        case 'none':
-            return BORDER_STYLE.NONE;
-    }
-    return BORDER_STYLE.SOLID;
-};
-
-var parseBorder = exports.parseBorder = function parseBorder(style) {
-    return SIDES.map(function (side) {
-        var borderColor = new _Color2.default(style.getPropertyValue('border-' + side + '-color'));
-        var borderStyle = parseBorderStyle(style.getPropertyValue('border-' + side + '-style'));
-        var borderWidth = parseFloat(style.getPropertyValue('border-' + side + '-width'));
-        return {
-            borderColor: borderColor,
-            borderStyle: borderStyle,
-            borderWidth: isNaN(borderWidth) ? 0 : borderWidth
-        };
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/borderRadius.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/borderRadius.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseBorderRadius = undefined;
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _Length = __webpack_require__(/*! ../Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var SIDES = ['top-left', 'top-right', 'bottom-right', 'bottom-left'];
-
-var parseBorderRadius = exports.parseBorderRadius = function parseBorderRadius(style) {
-    return SIDES.map(function (side) {
-        var value = style.getPropertyValue('border-' + side + '-radius');
-
-        var _value$split$map = value.split(' ').map(_Length2.default.create),
-            _value$split$map2 = _slicedToArray(_value$split$map, 2),
-            horizontal = _value$split$map2[0],
-            vertical = _value$split$map2[1];
-
-        return typeof vertical === 'undefined' ? [horizontal, horizontal] : [horizontal, vertical];
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/display.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/display.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var DISPLAY = exports.DISPLAY = {
-    NONE: 1 << 0,
-    BLOCK: 1 << 1,
-    INLINE: 1 << 2,
-    RUN_IN: 1 << 3,
-    FLOW: 1 << 4,
-    FLOW_ROOT: 1 << 5,
-    TABLE: 1 << 6,
-    FLEX: 1 << 7,
-    GRID: 1 << 8,
-    RUBY: 1 << 9,
-    SUBGRID: 1 << 10,
-    LIST_ITEM: 1 << 11,
-    TABLE_ROW_GROUP: 1 << 12,
-    TABLE_HEADER_GROUP: 1 << 13,
-    TABLE_FOOTER_GROUP: 1 << 14,
-    TABLE_ROW: 1 << 15,
-    TABLE_CELL: 1 << 16,
-    TABLE_COLUMN_GROUP: 1 << 17,
-    TABLE_COLUMN: 1 << 18,
-    TABLE_CAPTION: 1 << 19,
-    RUBY_BASE: 1 << 20,
-    RUBY_TEXT: 1 << 21,
-    RUBY_BASE_CONTAINER: 1 << 22,
-    RUBY_TEXT_CONTAINER: 1 << 23,
-    CONTENTS: 1 << 24,
-    INLINE_BLOCK: 1 << 25,
-    INLINE_LIST_ITEM: 1 << 26,
-    INLINE_TABLE: 1 << 27,
-    INLINE_FLEX: 1 << 28,
-    INLINE_GRID: 1 << 29
-};
-
-var parseDisplayValue = function parseDisplayValue(display) {
-    switch (display) {
-        case 'block':
-            return DISPLAY.BLOCK;
-        case 'inline':
-            return DISPLAY.INLINE;
-        case 'run-in':
-            return DISPLAY.RUN_IN;
-        case 'flow':
-            return DISPLAY.FLOW;
-        case 'flow-root':
-            return DISPLAY.FLOW_ROOT;
-        case 'table':
-            return DISPLAY.TABLE;
-        case 'flex':
-            return DISPLAY.FLEX;
-        case 'grid':
-            return DISPLAY.GRID;
-        case 'ruby':
-            return DISPLAY.RUBY;
-        case 'subgrid':
-            return DISPLAY.SUBGRID;
-        case 'list-item':
-            return DISPLAY.LIST_ITEM;
-        case 'table-row-group':
-            return DISPLAY.TABLE_ROW_GROUP;
-        case 'table-header-group':
-            return DISPLAY.TABLE_HEADER_GROUP;
-        case 'table-footer-group':
-            return DISPLAY.TABLE_FOOTER_GROUP;
-        case 'table-row':
-            return DISPLAY.TABLE_ROW;
-        case 'table-cell':
-            return DISPLAY.TABLE_CELL;
-        case 'table-column-group':
-            return DISPLAY.TABLE_COLUMN_GROUP;
-        case 'table-column':
-            return DISPLAY.TABLE_COLUMN;
-        case 'table-caption':
-            return DISPLAY.TABLE_CAPTION;
-        case 'ruby-base':
-            return DISPLAY.RUBY_BASE;
-        case 'ruby-text':
-            return DISPLAY.RUBY_TEXT;
-        case 'ruby-base-container':
-            return DISPLAY.RUBY_BASE_CONTAINER;
-        case 'ruby-text-container':
-            return DISPLAY.RUBY_TEXT_CONTAINER;
-        case 'contents':
-            return DISPLAY.CONTENTS;
-        case 'inline-block':
-            return DISPLAY.INLINE_BLOCK;
-        case 'inline-list-item':
-            return DISPLAY.INLINE_LIST_ITEM;
-        case 'inline-table':
-            return DISPLAY.INLINE_TABLE;
-        case 'inline-flex':
-            return DISPLAY.INLINE_FLEX;
-        case 'inline-grid':
-            return DISPLAY.INLINE_GRID;
-    }
-
-    return DISPLAY.NONE;
-};
-
-var setDisplayBit = function setDisplayBit(bit, display) {
-    return bit | parseDisplayValue(display);
-};
-
-var parseDisplay = exports.parseDisplay = function parseDisplay(display) {
-    return display.split(' ').reduce(setDisplayBit, 0);
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/float.js":
-/*!************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/float.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var FLOAT = exports.FLOAT = {
-    NONE: 0,
-    LEFT: 1,
-    RIGHT: 2,
-    INLINE_START: 3,
-    INLINE_END: 4
-};
-
-var parseCSSFloat = exports.parseCSSFloat = function parseCSSFloat(float) {
-    switch (float) {
-        case 'left':
-            return FLOAT.LEFT;
-        case 'right':
-            return FLOAT.RIGHT;
-        case 'inline-start':
-            return FLOAT.INLINE_START;
-        case 'inline-end':
-            return FLOAT.INLINE_END;
-    }
-    return FLOAT.NONE;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/font.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/font.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-
-var parseFontWeight = function parseFontWeight(weight) {
-    switch (weight) {
-        case 'normal':
-            return 400;
-        case 'bold':
-            return 700;
-    }
-
-    var value = parseInt(weight, 10);
-    return isNaN(value) ? 400 : value;
-};
-
-var parseFont = exports.parseFont = function parseFont(style) {
-    var fontFamily = style.fontFamily;
-    var fontSize = style.fontSize;
-    var fontStyle = style.fontStyle;
-    var fontVariant = style.fontVariant;
-    var fontWeight = parseFontWeight(style.fontWeight);
-
-    return {
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        fontStyle: fontStyle,
-        fontVariant: fontVariant,
-        fontWeight: fontWeight
-    };
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/letterSpacing.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/letterSpacing.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var parseLetterSpacing = exports.parseLetterSpacing = function parseLetterSpacing(letterSpacing) {
-    if (letterSpacing === 'normal') {
-        return 0;
-    }
-    var value = parseFloat(letterSpacing);
-    return isNaN(value) ? 0 : value;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/lineBreak.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/lineBreak.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var LINE_BREAK = exports.LINE_BREAK = {
-    NORMAL: 'normal',
-    STRICT: 'strict'
-};
-
-var parseLineBreak = exports.parseLineBreak = function parseLineBreak(wordBreak) {
-    switch (wordBreak) {
-        case 'strict':
-            return LINE_BREAK.STRICT;
-        case 'normal':
-        default:
-            return LINE_BREAK.NORMAL;
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/listStyle.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/listStyle.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseListStyle = exports.parseListStyleType = exports.LIST_STYLE_TYPE = exports.LIST_STYLE_POSITION = undefined;
-
-var _background = __webpack_require__(/*! ./background */ "./node_modules/html2canvas/dist/npm/parsing/background.js");
-
-var LIST_STYLE_POSITION = exports.LIST_STYLE_POSITION = {
-    INSIDE: 0,
-    OUTSIDE: 1
-};
-
-var LIST_STYLE_TYPE = exports.LIST_STYLE_TYPE = {
-    NONE: -1,
-    DISC: 0,
-    CIRCLE: 1,
-    SQUARE: 2,
-    DECIMAL: 3,
-    CJK_DECIMAL: 4,
-    DECIMAL_LEADING_ZERO: 5,
-    LOWER_ROMAN: 6,
-    UPPER_ROMAN: 7,
-    LOWER_GREEK: 8,
-    LOWER_ALPHA: 9,
-    UPPER_ALPHA: 10,
-    ARABIC_INDIC: 11,
-    ARMENIAN: 12,
-    BENGALI: 13,
-    CAMBODIAN: 14,
-    CJK_EARTHLY_BRANCH: 15,
-    CJK_HEAVENLY_STEM: 16,
-    CJK_IDEOGRAPHIC: 17,
-    DEVANAGARI: 18,
-    ETHIOPIC_NUMERIC: 19,
-    GEORGIAN: 20,
-    GUJARATI: 21,
-    GURMUKHI: 22,
-    HEBREW: 22,
-    HIRAGANA: 23,
-    HIRAGANA_IROHA: 24,
-    JAPANESE_FORMAL: 25,
-    JAPANESE_INFORMAL: 26,
-    KANNADA: 27,
-    KATAKANA: 28,
-    KATAKANA_IROHA: 29,
-    KHMER: 30,
-    KOREAN_HANGUL_FORMAL: 31,
-    KOREAN_HANJA_FORMAL: 32,
-    KOREAN_HANJA_INFORMAL: 33,
-    LAO: 34,
-    LOWER_ARMENIAN: 35,
-    MALAYALAM: 36,
-    MONGOLIAN: 37,
-    MYANMAR: 38,
-    ORIYA: 39,
-    PERSIAN: 40,
-    SIMP_CHINESE_FORMAL: 41,
-    SIMP_CHINESE_INFORMAL: 42,
-    TAMIL: 43,
-    TELUGU: 44,
-    THAI: 45,
-    TIBETAN: 46,
-    TRAD_CHINESE_FORMAL: 47,
-    TRAD_CHINESE_INFORMAL: 48,
-    UPPER_ARMENIAN: 49,
-    DISCLOSURE_OPEN: 50,
-    DISCLOSURE_CLOSED: 51
-};
-
-var parseListStyleType = exports.parseListStyleType = function parseListStyleType(type) {
-    switch (type) {
-        case 'disc':
-            return LIST_STYLE_TYPE.DISC;
-        case 'circle':
-            return LIST_STYLE_TYPE.CIRCLE;
-        case 'square':
-            return LIST_STYLE_TYPE.SQUARE;
-        case 'decimal':
-            return LIST_STYLE_TYPE.DECIMAL;
-        case 'cjk-decimal':
-            return LIST_STYLE_TYPE.CJK_DECIMAL;
-        case 'decimal-leading-zero':
-            return LIST_STYLE_TYPE.DECIMAL_LEADING_ZERO;
-        case 'lower-roman':
-            return LIST_STYLE_TYPE.LOWER_ROMAN;
-        case 'upper-roman':
-            return LIST_STYLE_TYPE.UPPER_ROMAN;
-        case 'lower-greek':
-            return LIST_STYLE_TYPE.LOWER_GREEK;
-        case 'lower-alpha':
-            return LIST_STYLE_TYPE.LOWER_ALPHA;
-        case 'upper-alpha':
-            return LIST_STYLE_TYPE.UPPER_ALPHA;
-        case 'arabic-indic':
-            return LIST_STYLE_TYPE.ARABIC_INDIC;
-        case 'armenian':
-            return LIST_STYLE_TYPE.ARMENIAN;
-        case 'bengali':
-            return LIST_STYLE_TYPE.BENGALI;
-        case 'cambodian':
-            return LIST_STYLE_TYPE.CAMBODIAN;
-        case 'cjk-earthly-branch':
-            return LIST_STYLE_TYPE.CJK_EARTHLY_BRANCH;
-        case 'cjk-heavenly-stem':
-            return LIST_STYLE_TYPE.CJK_HEAVENLY_STEM;
-        case 'cjk-ideographic':
-            return LIST_STYLE_TYPE.CJK_IDEOGRAPHIC;
-        case 'devanagari':
-            return LIST_STYLE_TYPE.DEVANAGARI;
-        case 'ethiopic-numeric':
-            return LIST_STYLE_TYPE.ETHIOPIC_NUMERIC;
-        case 'georgian':
-            return LIST_STYLE_TYPE.GEORGIAN;
-        case 'gujarati':
-            return LIST_STYLE_TYPE.GUJARATI;
-        case 'gurmukhi':
-            return LIST_STYLE_TYPE.GURMUKHI;
-        case 'hebrew':
-            return LIST_STYLE_TYPE.HEBREW;
-        case 'hiragana':
-            return LIST_STYLE_TYPE.HIRAGANA;
-        case 'hiragana-iroha':
-            return LIST_STYLE_TYPE.HIRAGANA_IROHA;
-        case 'japanese-formal':
-            return LIST_STYLE_TYPE.JAPANESE_FORMAL;
-        case 'japanese-informal':
-            return LIST_STYLE_TYPE.JAPANESE_INFORMAL;
-        case 'kannada':
-            return LIST_STYLE_TYPE.KANNADA;
-        case 'katakana':
-            return LIST_STYLE_TYPE.KATAKANA;
-        case 'katakana-iroha':
-            return LIST_STYLE_TYPE.KATAKANA_IROHA;
-        case 'khmer':
-            return LIST_STYLE_TYPE.KHMER;
-        case 'korean-hangul-formal':
-            return LIST_STYLE_TYPE.KOREAN_HANGUL_FORMAL;
-        case 'korean-hanja-formal':
-            return LIST_STYLE_TYPE.KOREAN_HANJA_FORMAL;
-        case 'korean-hanja-informal':
-            return LIST_STYLE_TYPE.KOREAN_HANJA_INFORMAL;
-        case 'lao':
-            return LIST_STYLE_TYPE.LAO;
-        case 'lower-armenian':
-            return LIST_STYLE_TYPE.LOWER_ARMENIAN;
-        case 'malayalam':
-            return LIST_STYLE_TYPE.MALAYALAM;
-        case 'mongolian':
-            return LIST_STYLE_TYPE.MONGOLIAN;
-        case 'myanmar':
-            return LIST_STYLE_TYPE.MYANMAR;
-        case 'oriya':
-            return LIST_STYLE_TYPE.ORIYA;
-        case 'persian':
-            return LIST_STYLE_TYPE.PERSIAN;
-        case 'simp-chinese-formal':
-            return LIST_STYLE_TYPE.SIMP_CHINESE_FORMAL;
-        case 'simp-chinese-informal':
-            return LIST_STYLE_TYPE.SIMP_CHINESE_INFORMAL;
-        case 'tamil':
-            return LIST_STYLE_TYPE.TAMIL;
-        case 'telugu':
-            return LIST_STYLE_TYPE.TELUGU;
-        case 'thai':
-            return LIST_STYLE_TYPE.THAI;
-        case 'tibetan':
-            return LIST_STYLE_TYPE.TIBETAN;
-        case 'trad-chinese-formal':
-            return LIST_STYLE_TYPE.TRAD_CHINESE_FORMAL;
-        case 'trad-chinese-informal':
-            return LIST_STYLE_TYPE.TRAD_CHINESE_INFORMAL;
-        case 'upper-armenian':
-            return LIST_STYLE_TYPE.UPPER_ARMENIAN;
-        case 'disclosure-open':
-            return LIST_STYLE_TYPE.DISCLOSURE_OPEN;
-        case 'disclosure-closed':
-            return LIST_STYLE_TYPE.DISCLOSURE_CLOSED;
-        case 'none':
-        default:
-            return LIST_STYLE_TYPE.NONE;
-    }
-};
-
-var parseListStyle = exports.parseListStyle = function parseListStyle(style) {
-    var listStyleImage = (0, _background.parseBackgroundImage)(style.getPropertyValue('list-style-image'));
-    return {
-        listStyleType: parseListStyleType(style.getPropertyValue('list-style-type')),
-        listStyleImage: listStyleImage.length ? listStyleImage[0] : null,
-        listStylePosition: parseListStylePosition(style.getPropertyValue('list-style-position'))
-    };
-};
-
-var parseListStylePosition = function parseListStylePosition(position) {
-    switch (position) {
-        case 'inside':
-            return LIST_STYLE_POSITION.INSIDE;
-        case 'outside':
-        default:
-            return LIST_STYLE_POSITION.OUTSIDE;
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/margin.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/margin.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseMargin = undefined;
-
-var _Length = __webpack_require__(/*! ../Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var SIDES = ['top', 'right', 'bottom', 'left'];
-
-var parseMargin = exports.parseMargin = function parseMargin(style) {
-    return SIDES.map(function (side) {
-        return new _Length2.default(style.getPropertyValue('margin-' + side));
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/overflow.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/overflow.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var OVERFLOW = exports.OVERFLOW = {
-    VISIBLE: 0,
-    HIDDEN: 1,
-    SCROLL: 2,
-    AUTO: 3
-};
-
-var parseOverflow = exports.parseOverflow = function parseOverflow(overflow) {
-    switch (overflow) {
-        case 'hidden':
-            return OVERFLOW.HIDDEN;
-        case 'scroll':
-            return OVERFLOW.SCROLL;
-        case 'auto':
-            return OVERFLOW.AUTO;
-        case 'visible':
-        default:
-            return OVERFLOW.VISIBLE;
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/overflowWrap.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/overflowWrap.js ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var OVERFLOW_WRAP = exports.OVERFLOW_WRAP = {
-    NORMAL: 0,
-    BREAK_WORD: 1
-};
-
-var parseOverflowWrap = exports.parseOverflowWrap = function parseOverflowWrap(overflow) {
-    switch (overflow) {
-        case 'break-word':
-            return OVERFLOW_WRAP.BREAK_WORD;
-        case 'normal':
-        default:
-            return OVERFLOW_WRAP.NORMAL;
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/padding.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/padding.js ***!
-  \**************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parsePadding = exports.PADDING_SIDES = undefined;
-
-var _Length = __webpack_require__(/*! ../Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var PADDING_SIDES = exports.PADDING_SIDES = {
-    TOP: 0,
-    RIGHT: 1,
-    BOTTOM: 2,
-    LEFT: 3
-};
-
-var SIDES = ['top', 'right', 'bottom', 'left'];
-
-var parsePadding = exports.parsePadding = function parsePadding(style) {
-    return SIDES.map(function (side) {
-        return new _Length2.default(style.getPropertyValue('padding-' + side));
-    });
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/position.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/position.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var POSITION = exports.POSITION = {
-    STATIC: 0,
-    RELATIVE: 1,
-    ABSOLUTE: 2,
-    FIXED: 3,
-    STICKY: 4
-};
-
-var parsePosition = exports.parsePosition = function parsePosition(position) {
-    switch (position) {
-        case 'relative':
-            return POSITION.RELATIVE;
-        case 'absolute':
-            return POSITION.ABSOLUTE;
-        case 'fixed':
-            return POSITION.FIXED;
-        case 'sticky':
-            return POSITION.STICKY;
-    }
-
-    return POSITION.STATIC;
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/textDecoration.js":
+/***/ "./node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js":
 /*!*********************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/textDecoration.js ***!
+  !*** ./node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js ***!
   \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables Bootstrap 4 integration
+ * ©2011-2017 SpryMedia Ltd - datatables.net/license
+ */
+
+/**
+ * DataTables integration for Bootstrap 4. This requires Bootstrap 4 and
+ * DataTables 1.10 or newer.
+ *
+ * This file sets the defaults and adds options to DataTables to style its
+ * controls using Bootstrap. See http://datatables.net/manual/styling/bootstrap
+ * for further information.
+ */
+(function( factory ){
+	if ( true ) {
+		// AMD
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! datatables.net */ "./node_modules/datatables.net/js/jquery.dataTables.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
+			return factory( $, window, document );
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else {}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseTextDecoration = exports.TEXT_DECORATION_LINE = exports.TEXT_DECORATION = exports.TEXT_DECORATION_STYLE = undefined;
+/* Set the defaults for DataTables initialisation */
+$.extend( true, DataTable.defaults, {
+	dom:
+		"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+		"<'row'<'col-sm-12'tr>>" +
+		"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+	renderer: 'bootstrap'
+} );
 
-var _Color = __webpack_require__(/*! ../Color */ "./node_modules/html2canvas/dist/npm/Color.js");
 
-var _Color2 = _interopRequireDefault(_Color);
+/* Default class modification */
+$.extend( DataTable.ext.classes, {
+	sWrapper:      "dataTables_wrapper dt-bootstrap4",
+	sFilterInput:  "form-control form-control-sm",
+	sLengthSelect: "custom-select custom-select-sm form-control form-control-sm",
+	sProcessing:   "dataTables_processing card",
+	sPageButton:   "paginate_button page-item"
+} );
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var TEXT_DECORATION_STYLE = exports.TEXT_DECORATION_STYLE = {
-    SOLID: 0,
-    DOUBLE: 1,
-    DOTTED: 2,
-    DASHED: 3,
-    WAVY: 4
+/* Bootstrap paging button renderer */
+DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, buttons, page, pages ) {
+	var api     = new DataTable.Api( settings );
+	var classes = settings.oClasses;
+	var lang    = settings.oLanguage.oPaginate;
+	var aria = settings.oLanguage.oAria.paginate || {};
+	var btnDisplay, btnClass, counter=0;
+
+	var attach = function( container, buttons ) {
+		var i, ien, node, button;
+		var clickHandler = function ( e ) {
+			e.preventDefault();
+			if ( !$(e.currentTarget).hasClass('disabled') && api.page() != e.data.action ) {
+				api.page( e.data.action ).draw( 'page' );
+			}
+		};
+
+		for ( i=0, ien=buttons.length ; i<ien ; i++ ) {
+			button = buttons[i];
+
+			if ( Array.isArray( button ) ) {
+				attach( container, button );
+			}
+			else {
+				btnDisplay = '';
+				btnClass = '';
+
+				switch ( button ) {
+					case 'ellipsis':
+						btnDisplay = '&#x2026;';
+						btnClass = 'disabled';
+						break;
+
+					case 'first':
+						btnDisplay = lang.sFirst;
+						btnClass = button + (page > 0 ?
+							'' : ' disabled');
+						break;
+
+					case 'previous':
+						btnDisplay = lang.sPrevious;
+						btnClass = button + (page > 0 ?
+							'' : ' disabled');
+						break;
+
+					case 'next':
+						btnDisplay = lang.sNext;
+						btnClass = button + (page < pages-1 ?
+							'' : ' disabled');
+						break;
+
+					case 'last':
+						btnDisplay = lang.sLast;
+						btnClass = button + (page < pages-1 ?
+							'' : ' disabled');
+						break;
+
+					default:
+						btnDisplay = button + 1;
+						btnClass = page === button ?
+							'active' : '';
+						break;
+				}
+
+				if ( btnDisplay ) {
+					node = $('<li>', {
+							'class': classes.sPageButton+' '+btnClass,
+							'id': idx === 0 && typeof button === 'string' ?
+								settings.sTableId +'_'+ button :
+								null
+						} )
+						.append( $('<a>', {
+								'href': '#',
+								'aria-controls': settings.sTableId,
+								'aria-label': aria[ button ],
+								'data-dt-idx': counter,
+								'tabindex': settings.iTabIndex,
+								'class': 'page-link'
+							} )
+							.html( btnDisplay )
+						)
+						.appendTo( container );
+
+					settings.oApi._fnBindAction(
+						node, {action: button}, clickHandler
+					);
+
+					counter++;
+				}
+			}
+		}
+	};
+
+	// IE9 throws an 'unknown error' if document.activeElement is used
+	// inside an iframe or frame. 
+	var activeEl;
+
+	try {
+		// Because this approach is destroying and recreating the paging
+		// elements, focus is lost on the select button which is bad for
+		// accessibility. So we want to restore focus once the draw has
+		// completed
+		activeEl = $(host).find(document.activeElement).data('dt-idx');
+	}
+	catch (e) {}
+
+	attach(
+		$(host).empty().html('<ul class="pagination"/>').children('ul'),
+		buttons
+	);
+
+	if ( activeEl !== undefined ) {
+		$(host).find( '[data-dt-idx='+activeEl+']' ).trigger('focus');
+	}
 };
 
-var TEXT_DECORATION = exports.TEXT_DECORATION = {
-    NONE: null
-};
 
-var TEXT_DECORATION_LINE = exports.TEXT_DECORATION_LINE = {
-    UNDERLINE: 1,
-    OVERLINE: 2,
-    LINE_THROUGH: 3,
-    BLINK: 4
-};
+return DataTable;
+}));
 
-var parseLine = function parseLine(line) {
-    switch (line) {
-        case 'underline':
-            return TEXT_DECORATION_LINE.UNDERLINE;
-        case 'overline':
-            return TEXT_DECORATION_LINE.OVERLINE;
-        case 'line-through':
-            return TEXT_DECORATION_LINE.LINE_THROUGH;
-    }
-    return TEXT_DECORATION_LINE.BLINK;
-};
-
-var parseTextDecorationLine = function parseTextDecorationLine(line) {
-    if (line === 'none') {
-        return null;
-    }
-
-    return line.split(' ').map(parseLine);
-};
-
-var parseTextDecorationStyle = function parseTextDecorationStyle(style) {
-    switch (style) {
-        case 'double':
-            return TEXT_DECORATION_STYLE.DOUBLE;
-        case 'dotted':
-            return TEXT_DECORATION_STYLE.DOTTED;
-        case 'dashed':
-            return TEXT_DECORATION_STYLE.DASHED;
-        case 'wavy':
-            return TEXT_DECORATION_STYLE.WAVY;
-    }
-    return TEXT_DECORATION_STYLE.SOLID;
-};
-
-var parseTextDecoration = exports.parseTextDecoration = function parseTextDecoration(style) {
-    var textDecorationLine = parseTextDecorationLine(style.textDecorationLine ? style.textDecorationLine : style.textDecoration);
-    if (textDecorationLine === null) {
-        return TEXT_DECORATION.NONE;
-    }
-
-    var textDecorationColor = style.textDecorationColor ? new _Color2.default(style.textDecorationColor) : null;
-    var textDecorationStyle = parseTextDecorationStyle(style.textDecorationStyle);
-
-    return {
-        textDecorationLine: textDecorationLine,
-        textDecorationColor: textDecorationColor,
-        textDecorationStyle: textDecorationStyle
-    };
-};
 
 /***/ }),
 
-/***/ "./node_modules/html2canvas/dist/npm/parsing/textShadow.js":
+/***/ "./node_modules/datatables.net-buttons/js/buttons.html5.js":
 /*!*****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/textShadow.js ***!
+  !*** ./node_modules/datatables.net-buttons/js/buttons.html5.js ***!
   \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * HTML5 export buttons for Buttons and DataTables.
+ * 2016 SpryMedia Ltd - datatables.net/license
+ *
+ * FileSaver.js (1.3.3) - MIT license
+ * Copyright © 2016 Eli Grey - http://eligrey.com
+ */
+
+(function( factory ){
+	if ( true ) {
+		// AMD
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! datatables.net */ "./node_modules/datatables.net/js/jquery.dataTables.js"), __webpack_require__(/*! datatables.net-buttons */ "./node_modules/datatables.net-buttons/js/dataTables.buttons.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
+			return factory( $, window, document );
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else {}
+}(function( $, window, document, jszip, pdfmake, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+// Allow the constructor to pass in JSZip and PDFMake from external requires.
+// Otherwise, use globally defined variables, if they are available.
+function _jsZip () {
+	return jszip || window.JSZip;
+}
+function _pdfMake () {
+	return pdfmake || window.pdfMake;
+}
+
+DataTable.Buttons.pdfMake = function (_) {
+	if ( ! _ ) {
+		return _pdfMake();
+	}
+	pdfmake = _;
+}
+
+DataTable.Buttons.jszip = function (_) {
+	if ( ! _ ) {
+		return _jsZip();
+	}
+	jszip = _;
+}
 
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseTextShadow = undefined;
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * FileSaver.js dependency
+ */
 
-var _Color = __webpack_require__(/*! ../Color */ "./node_modules/html2canvas/dist/npm/Color.js");
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
 
-var _Color2 = _interopRequireDefault(_Color);
+var _saveAs = (function(view) {
+	"use strict";
+	// IE <10 is explicitly unsupported
+	if (typeof view === "undefined" || typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
+	}
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = "download" in save_link
+		, click = function(node) {
+			var event = new MouseEvent("click");
+			node.dispatchEvent(event);
+		}
+		, is_safari = /constructor/i.test(view.HTMLElement) || view.safari
+		, is_chrome_ios =/CriOS\/[\d]+/.test(navigator.userAgent)
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		// the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
+		, arbitrary_revoke_timeout = 1000 * 40 // in ms
+		, revoke = function(file) {
+			var revoker = function() {
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			};
+			setTimeout(revoker, arbitrary_revoke_timeout);
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, auto_bom = function(blob) {
+			// prepend BOM for UTF-8 XML and text/* types (including HTML)
+			// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				return new Blob([String.fromCharCode(0xFEFF), blob], {type: blob.type});
+			}
+			return blob;
+		}
+		, FileSaver = function(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, force = type === force_saveable_type
+				, object_url
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					if ((is_chrome_ios || (force && is_safari)) && view.FileReader) {
+						// Safari doesn't allow downloading of blob urls
+						var reader = new FileReader();
+						reader.onloadend = function() {
+							var url = is_chrome_ios ? reader.result : reader.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
+							var popup = view.open(url, '_blank');
+							if(!popup) view.location.href = url;
+							url=undefined; // release reference before dispatching
+							filesaver.readyState = filesaver.DONE;
+							dispatch_all();
+						};
+						reader.readAsDataURL(blob);
+						filesaver.readyState = filesaver.INIT;
+						return;
+					}
+					// don't create more object URLs than needed
+					if (!object_url) {
+						object_url = get_URL().createObjectURL(blob);
+					}
+					if (force) {
+						view.location.href = object_url;
+					} else {
+						var opened = view.open(object_url, "_blank");
+						if (!opened) {
+							// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
+							view.location.href = object_url;
+						}
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+					revoke(object_url);
+				}
+			;
+			filesaver.readyState = filesaver.INIT;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				setTimeout(function() {
+					save_link.href = object_url;
+					save_link.download = name;
+					click(save_link);
+					dispatch_all();
+					revoke(object_url);
+					filesaver.readyState = filesaver.DONE;
+				});
+				return;
+			}
 
-var NUMBER = /^([+-]|\d|\.)$/i;
+			fs_error();
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name, no_auto_bom) {
+			return new FileSaver(blob, name || blob.name || "download", no_auto_bom);
+		}
+	;
+	// IE 10+ (native saveAs)
+	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+		return function(blob, name, no_auto_bom) {
+			name = name || blob.name || "download";
 
-var parseTextShadow = exports.parseTextShadow = function parseTextShadow(textShadow) {
-    if (textShadow === 'none' || typeof textShadow !== 'string') {
-        return null;
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			return navigator.msSaveOrOpenBlob(blob, name);
+		};
+	}
+
+	FS_proto.abort = function(){};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
+
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
+
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+
+
+// Expose file saver on the DataTables API. Can't attach to `DataTables.Buttons`
+// since this file can be loaded before Button's core!
+DataTable.fileSave = _saveAs;
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Local (private) functions
+ */
+
+/**
+ * Get the sheet name for Excel exports.
+ *
+ * @param {object}	config Button configuration
+ */
+var _sheetname = function ( config )
+{
+	var sheetName = 'Sheet1';
+
+	if ( config.sheetName ) {
+		sheetName = config.sheetName.replace(/[\[\]\*\/\\\?\:]/g, '');
+	}
+
+	return sheetName;
+};
+
+/**
+ * Get the newline character(s)
+ *
+ * @param {object}	config Button configuration
+ * @return {string}				Newline character
+ */
+var _newLine = function ( config )
+{
+	return config.newline ?
+		config.newline :
+		navigator.userAgent.match(/Windows/) ?
+			'\r\n' :
+			'\n';
+};
+
+/**
+ * Combine the data from the `buttons.exportData` method into a string that
+ * will be used in the export file.
+ *
+ * @param	{DataTable.Api} dt		 DataTables API instance
+ * @param	{object}				config Button configuration
+ * @return {object}							 The data to export
+ */
+var _exportData = function ( dt, config )
+{
+	var newLine = _newLine( config );
+	var data = dt.buttons.exportData( config.exportOptions );
+	var boundary = config.fieldBoundary;
+	var separator = config.fieldSeparator;
+	var reBoundary = new RegExp( boundary, 'g' );
+	var escapeChar = config.escapeChar !== undefined ?
+		config.escapeChar :
+		'\\';
+	var join = function ( a ) {
+		var s = '';
+
+		// If there is a field boundary, then we might need to escape it in
+		// the source data
+		for ( var i=0, ien=a.length ; i<ien ; i++ ) {
+			if ( i > 0 ) {
+				s += separator;
+			}
+
+			s += boundary ?
+				boundary + ('' + a[i]).replace( reBoundary, escapeChar+boundary ) + boundary :
+				a[i];
+		}
+
+		return s;
+	};
+
+	var header = config.header ? join( data.header )+newLine : '';
+	var footer = config.footer && data.footer ? newLine+join( data.footer ) : '';
+	var body = [];
+
+	for ( var i=0, ien=data.body.length ; i<ien ; i++ ) {
+		body.push( join( data.body[i] ) );
+	}
+
+	return {
+		str: header + body.join( newLine ) + footer,
+		rows: body.length
+	};
+};
+
+/**
+ * Older versions of Safari (prior to tech preview 18) don't support the
+ * download option required.
+ *
+ * @return {Boolean} `true` if old Safari
+ */
+var _isDuffSafari = function ()
+{
+	var safari = navigator.userAgent.indexOf('Safari') !== -1 &&
+		navigator.userAgent.indexOf('Chrome') === -1 &&
+		navigator.userAgent.indexOf('Opera') === -1;
+
+	if ( ! safari ) {
+		return false;
+	}
+
+	var version = navigator.userAgent.match( /AppleWebKit\/(\d+\.\d+)/ );
+	if ( version && version.length > 1 && version[1]*1 < 603.1 ) {
+		return true;
+	}
+
+	return false;
+};
+
+/**
+ * Convert from numeric position to letter for column names in Excel
+ * @param  {int} n Column number
+ * @return {string} Column letter(s) name
+ */
+function createCellPos( n ){
+	var ordA = 'A'.charCodeAt(0);
+	var ordZ = 'Z'.charCodeAt(0);
+	var len = ordZ - ordA + 1;
+	var s = "";
+
+	while( n >= 0 ) {
+		s = String.fromCharCode(n % len + ordA) + s;
+		n = Math.floor(n / len) - 1;
+	}
+
+	return s;
+}
+
+try {
+	var _serialiser = new XMLSerializer();
+	var _ieExcel;
+}
+catch (t) {}
+
+/**
+ * Recursively add XML files from an object's structure to a ZIP file. This
+ * allows the XSLX file to be easily defined with an object's structure matching
+ * the files structure.
+ *
+ * @param {JSZip} zip ZIP package
+ * @param {object} obj Object to add (recursive)
+ */
+function _addToZip( zip, obj ) {
+	if ( _ieExcel === undefined ) {
+		// Detect if we are dealing with IE's _awful_ serialiser by seeing if it
+		// drop attributes
+		_ieExcel = _serialiser
+			.serializeToString(
+				( new window.DOMParser() ).parseFromString( excelStrings['xl/worksheets/sheet1.xml'], 'text/xml' )
+			)
+			.indexOf( 'xmlns:r' ) === -1;
+	}
+
+	$.each( obj, function ( name, val ) {
+		if ( $.isPlainObject( val ) ) {
+			var newDir = zip.folder( name );
+			_addToZip( newDir, val );
+		}
+		else {
+			if ( _ieExcel ) {
+				// IE's XML serialiser will drop some name space attributes from
+				// from the root node, so we need to save them. Do this by
+				// replacing the namespace nodes with a regular attribute that
+				// we convert back when serialised. Edge does not have this
+				// issue
+				var worksheet = val.childNodes[0];
+				var i, ien;
+				var attrs = [];
+
+				for ( i=worksheet.attributes.length-1 ; i>=0 ; i-- ) {
+					var attrName = worksheet.attributes[i].nodeName;
+					var attrValue = worksheet.attributes[i].nodeValue;
+
+					if ( attrName.indexOf( ':' ) !== -1 ) {
+						attrs.push( { name: attrName, value: attrValue } );
+
+						worksheet.removeAttribute( attrName );
+					}
+				}
+
+				for ( i=0, ien=attrs.length ; i<ien ; i++ ) {
+					var attr = val.createAttribute( attrs[i].name.replace( ':', '_dt_b_namespace_token_' ) );
+					attr.value = attrs[i].value;
+					worksheet.setAttributeNode( attr );
+				}
+			}
+
+			var str = _serialiser.serializeToString(val);
+
+			// Fix IE's XML
+			if ( _ieExcel ) {
+				// IE doesn't include the XML declaration
+				if ( str.indexOf( '<?xml' ) === -1 ) {
+					str = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+str;
+				}
+
+				// Return namespace attributes to being as such
+				str = str.replace( /_dt_b_namespace_token_/g, ':' );
+
+				// Remove testing name space that IE puts into the space preserve attr
+				str = str.replace( /xmlns:NS[\d]+="" NS[\d]+:/g, '' );
+			}
+
+			// Safari, IE and Edge will put empty name space attributes onto
+			// various elements making them useless. This strips them out
+			str = str.replace( /<([^<>]*?) xmlns=""([^<>]*?)>/g, '<$1 $2>' );
+
+			zip.file( name, str );
+		}
+	} );
+}
+
+/**
+ * Create an XML node and add any children, attributes, etc without needing to
+ * be verbose in the DOM.
+ *
+ * @param  {object} doc      XML document
+ * @param  {string} nodeName Node name
+ * @param  {object} opts     Options - can be `attr` (attributes), `children`
+ *   (child nodes) and `text` (text content)
+ * @return {node}            Created node
+ */
+function _createNode( doc, nodeName, opts ) {
+	var tempNode = doc.createElement( nodeName );
+
+	if ( opts ) {
+		if ( opts.attr ) {
+			$(tempNode).attr( opts.attr );
+		}
+
+		if ( opts.children ) {
+			$.each( opts.children, function ( key, value ) {
+				tempNode.appendChild( value );
+			} );
+		}
+
+		if ( opts.text !== null && opts.text !== undefined ) {
+			tempNode.appendChild( doc.createTextNode( opts.text ) );
+		}
+	}
+
+	return tempNode;
+}
+
+/**
+ * Get the width for an Excel column based on the contents of that column
+ * @param  {object} data Data for export
+ * @param  {int}    col  Column index
+ * @return {int}         Column width
+ */
+function _excelColWidth( data, col ) {
+	var max = data.header[col].length;
+	var len, lineSplit, str;
+
+	if ( data.footer && data.footer[col].length > max ) {
+		max = data.footer[col].length;
+	}
+
+	for ( var i=0, ien=data.body.length ; i<ien ; i++ ) {
+		var point = data.body[i][col];
+		str = point !== null && point !== undefined ?
+			point.toString() :
+			'';
+
+		// If there is a newline character, workout the width of the column
+		// based on the longest line in the string
+		if ( str.indexOf('\n') !== -1 ) {
+			lineSplit = str.split('\n');
+			lineSplit.sort( function (a, b) {
+				return b.length - a.length;
+			} );
+
+			len = lineSplit[0].length;
+		}
+		else {
+			len = str.length;
+		}
+
+		if ( len > max ) {
+			max = len;
+		}
+
+		// Max width rather than having potentially massive column widths
+		if ( max > 40 ) {
+			return 54; // 40 * 1.35
+		}
+	}
+
+	max *= 1.35;
+
+	// And a min width
+	return max > 6 ? max : 6;
+}
+
+// Excel - Pre-defined strings to build a basic XLSX file
+var excelStrings = {
+	"_rels/.rels":
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+		'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+			'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'+
+		'</Relationships>',
+
+	"xl/_rels/workbook.xml.rels":
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+		'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+			'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'+
+			'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'+
+		'</Relationships>',
+
+	"[Content_Types].xml":
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+		'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
+			'<Default Extension="xml" ContentType="application/xml" />'+
+			'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />'+
+			'<Default Extension="jpeg" ContentType="image/jpeg" />'+
+			'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml" />'+
+			'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml" />'+
+			'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml" />'+
+		'</Types>',
+
+	"xl/workbook.xml":
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+		'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'+
+			'<fileVersion appName="xl" lastEdited="5" lowestEdited="5" rupBuild="24816"/>'+
+			'<workbookPr showInkAnnotation="0" autoCompressPictures="0"/>'+
+			'<bookViews>'+
+				'<workbookView xWindow="0" yWindow="0" windowWidth="25600" windowHeight="19020" tabRatio="500"/>'+
+			'</bookViews>'+
+			'<sheets>'+
+				'<sheet name="Sheet1" sheetId="1" r:id="rId1"/>'+
+			'</sheets>'+
+			'<definedNames/>'+
+		'</workbook>',
+
+	"xl/worksheets/sheet1.xml":
+		'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+		'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">'+
+			'<sheetData/>'+
+			'<mergeCells count="0"/>'+
+		'</worksheet>',
+
+	"xl/styles.xml":
+		'<?xml version="1.0" encoding="UTF-8"?>'+
+		'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">'+
+			'<numFmts count="6">'+
+				'<numFmt numFmtId="164" formatCode="#,##0.00_-\ [$$-45C]"/>'+
+				'<numFmt numFmtId="165" formatCode="&quot;£&quot;#,##0.00"/>'+
+				'<numFmt numFmtId="166" formatCode="[$€-2]\ #,##0.00"/>'+
+				'<numFmt numFmtId="167" formatCode="0.0%"/>'+
+				'<numFmt numFmtId="168" formatCode="#,##0;(#,##0)"/>'+
+				'<numFmt numFmtId="169" formatCode="#,##0.00;(#,##0.00)"/>'+
+			'</numFmts>'+
+			'<fonts count="5" x14ac:knownFonts="1">'+
+				'<font>'+
+					'<sz val="11" />'+
+					'<name val="Calibri" />'+
+				'</font>'+
+				'<font>'+
+					'<sz val="11" />'+
+					'<name val="Calibri" />'+
+					'<color rgb="FFFFFFFF" />'+
+				'</font>'+
+				'<font>'+
+					'<sz val="11" />'+
+					'<name val="Calibri" />'+
+					'<b />'+
+				'</font>'+
+				'<font>'+
+					'<sz val="11" />'+
+					'<name val="Calibri" />'+
+					'<i />'+
+				'</font>'+
+				'<font>'+
+					'<sz val="11" />'+
+					'<name val="Calibri" />'+
+					'<u />'+
+				'</font>'+
+			'</fonts>'+
+			'<fills count="6">'+
+				'<fill>'+
+					'<patternFill patternType="none" />'+
+				'</fill>'+
+				'<fill>'+ // Excel appears to use this as a dotted background regardless of values but
+					'<patternFill patternType="none" />'+ // to be valid to the schema, use a patternFill
+				'</fill>'+
+				'<fill>'+
+					'<patternFill patternType="solid">'+
+						'<fgColor rgb="FFD9D9D9" />'+
+						'<bgColor indexed="64" />'+
+					'</patternFill>'+
+				'</fill>'+
+				'<fill>'+
+					'<patternFill patternType="solid">'+
+						'<fgColor rgb="FFD99795" />'+
+						'<bgColor indexed="64" />'+
+					'</patternFill>'+
+				'</fill>'+
+				'<fill>'+
+					'<patternFill patternType="solid">'+
+						'<fgColor rgb="ffc6efce" />'+
+						'<bgColor indexed="64" />'+
+					'</patternFill>'+
+				'</fill>'+
+				'<fill>'+
+					'<patternFill patternType="solid">'+
+						'<fgColor rgb="ffc6cfef" />'+
+						'<bgColor indexed="64" />'+
+					'</patternFill>'+
+				'</fill>'+
+			'</fills>'+
+			'<borders count="2">'+
+				'<border>'+
+					'<left />'+
+					'<right />'+
+					'<top />'+
+					'<bottom />'+
+					'<diagonal />'+
+				'</border>'+
+				'<border diagonalUp="false" diagonalDown="false">'+
+					'<left style="thin">'+
+						'<color auto="1" />'+
+					'</left>'+
+					'<right style="thin">'+
+						'<color auto="1" />'+
+					'</right>'+
+					'<top style="thin">'+
+						'<color auto="1" />'+
+					'</top>'+
+					'<bottom style="thin">'+
+						'<color auto="1" />'+
+					'</bottom>'+
+					'<diagonal />'+
+				'</border>'+
+			'</borders>'+
+			'<cellStyleXfs count="1">'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" />'+
+			'</cellStyleXfs>'+
+			'<cellXfs count="68">'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="2" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="2" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="2" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="2" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="2" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="3" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="3" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="3" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="3" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="3" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="4" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="4" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="4" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="4" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="4" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="5" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="5" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="5" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="5" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="5" borderId="0" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="0" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="0" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="0" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="0" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="4" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="5" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="1" fillId="5" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="2" fillId="5" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="3" fillId="5" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="4" fillId="5" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment horizontal="left"/>'+
+				'</xf>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment horizontal="center"/>'+
+				'</xf>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment horizontal="right"/>'+
+				'</xf>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment horizontal="fill"/>'+
+				'</xf>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment textRotation="90"/>'+
+				'</xf>'+
+				'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyAlignment="1">'+
+					'<alignment wrapText="1"/>'+
+				'</xf>'+
+				'<xf numFmtId="9"   fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="164" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="165" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="166" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="167" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="168" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="169" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="3" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="4" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="1" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="2" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+				'<xf numFmtId="14" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>'+
+			'</cellXfs>'+
+			'<cellStyles count="1">'+
+				'<cellStyle name="Normal" xfId="0" builtinId="0" />'+
+			'</cellStyles>'+
+			'<dxfs count="0" />'+
+			'<tableStyles count="0" defaultTableStyle="TableStyleMedium9" defaultPivotStyle="PivotStyleMedium4" />'+
+		'</styleSheet>'
+};
+// Note we could use 3 `for` loops for the styles, but when gzipped there is
+// virtually no difference in size, since the above can be easily compressed
+
+// Pattern matching for special number formats. Perhaps this should be exposed
+// via an API in future?
+// Ref: section 3.8.30 - built in formatters in open spreadsheet
+//   https://www.ecma-international.org/news/TC45_current_work/Office%20Open%20XML%20Part%204%20-%20Markup%20Language%20Reference.pdf
+var _excelSpecials = [
+	{ match: /^\-?\d+\.\d%$/,               style: 60, fmt: function (d) { return d/100; } }, // Percent with d.p.
+	{ match: /^\-?\d+\.?\d*%$/,             style: 56, fmt: function (d) { return d/100; } }, // Percent
+	{ match: /^\-?\$[\d,]+.?\d*$/,          style: 57 }, // Dollars
+	{ match: /^\-?£[\d,]+.?\d*$/,           style: 58 }, // Pounds
+	{ match: /^\-?€[\d,]+.?\d*$/,           style: 59 }, // Euros
+	{ match: /^\-?\d+$/,                    style: 65 }, // Numbers without thousand separators
+	{ match: /^\-?\d+\.\d{2}$/,             style: 66 }, // Numbers 2 d.p. without thousands separators
+	{ match: /^\([\d,]+\)$/,                style: 61, fmt: function (d) { return -1 * d.replace(/[\(\)]/g, ''); } },  // Negative numbers indicated by brackets
+	{ match: /^\([\d,]+\.\d{2}\)$/,         style: 62, fmt: function (d) { return -1 * d.replace(/[\(\)]/g, ''); } },  // Negative numbers indicated by brackets - 2d.p.
+	{ match: /^\-?[\d,]+$/,                 style: 63 }, // Numbers with thousand separators
+	{ match: /^\-?[\d,]+\.\d{2}$/,          style: 64 },
+	{ match: /^[\d]{4}\-[\d]{2}\-[\d]{2}$/, style: 67, fmt: function (d) {return Math.round(25569 + (Date.parse(d) / (86400 * 1000)));}} //Date yyyy-mm-dd
+];
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Buttons
+ */
+
+//
+// Copy to clipboard
+//
+DataTable.ext.buttons.copyHtml5 = {
+	className: 'buttons-copy buttons-html5',
+
+	text: function ( dt ) {
+		return dt.i18n( 'buttons.copy', 'Copy' );
+	},
+
+	action: function ( e, dt, button, config ) {
+		this.processing( true );
+
+		var that = this;
+		var exportData = _exportData( dt, config );
+		var info = dt.buttons.exportInfo( config );
+		var newline = _newLine(config);
+		var output = exportData.str;
+		var hiddenDiv = $('<div/>')
+			.css( {
+				height: 1,
+				width: 1,
+				overflow: 'hidden',
+				position: 'fixed',
+				top: 0,
+				left: 0
+			} );
+
+		if ( info.title ) {
+			output = info.title + newline + newline + output;
+		}
+
+		if ( info.messageTop ) {
+			output = info.messageTop + newline + newline + output;
+		}
+
+		if ( info.messageBottom ) {
+			output = output + newline + newline + info.messageBottom;
+		}
+
+		if ( config.customize ) {
+			output = config.customize( output, config, dt );
+		}
+
+		var textarea = $('<textarea readonly/>')
+			.val( output )
+			.appendTo( hiddenDiv );
+
+		// For browsers that support the copy execCommand, try to use it
+		if ( document.queryCommandSupported('copy') ) {
+			hiddenDiv.appendTo( dt.table().container() );
+			textarea[0].focus();
+			textarea[0].select();
+
+			try {
+				var successful = document.execCommand( 'copy' );
+				hiddenDiv.remove();
+
+				if (successful) {
+					dt.buttons.info(
+						dt.i18n( 'buttons.copyTitle', 'Copy to clipboard' ),
+						dt.i18n( 'buttons.copySuccess', {
+							1: 'Copied one row to clipboard',
+							_: 'Copied %d rows to clipboard'
+						}, exportData.rows ),
+						2000
+					);
+
+					this.processing( false );
+					return;
+				}
+			}
+			catch (t) {}
+		}
+
+		// Otherwise we show the text box and instruct the user to use it
+		var message = $('<span>'+dt.i18n( 'buttons.copyKeys',
+				'Press <i>ctrl</i> or <i>\u2318</i> + <i>C</i> to copy the table data<br>to your system clipboard.<br><br>'+
+				'To cancel, click this message or press escape.' )+'</span>'
+			)
+			.append( hiddenDiv );
+
+		dt.buttons.info( dt.i18n( 'buttons.copyTitle', 'Copy to clipboard' ), message, 0 );
+
+		// Select the text so when the user activates their system clipboard
+		// it will copy that text
+		textarea[0].focus();
+		textarea[0].select();
+
+		// Event to hide the message when the user is done
+		var container = $(message).closest('.dt-button-info');
+		var close = function () {
+			container.off( 'click.buttons-copy' );
+			$(document).off( '.buttons-copy' );
+			dt.buttons.info( false );
+		};
+
+		container.on( 'click.buttons-copy', close );
+		$(document)
+			.on( 'keydown.buttons-copy', function (e) {
+				if ( e.keyCode === 27 ) { // esc
+					close();
+					that.processing( false );
+				}
+			} )
+			.on( 'copy.buttons-copy cut.buttons-copy', function () {
+				close();
+				that.processing( false );
+			} );
+	},
+
+	exportOptions: {},
+
+	fieldSeparator: '\t',
+
+	fieldBoundary: '',
+
+	header: true,
+
+	footer: false,
+
+	title: '*',
+
+	messageTop: '*',
+
+	messageBottom: '*'
+};
+
+//
+// CSV export
+//
+DataTable.ext.buttons.csvHtml5 = {
+	bom: false,
+
+	className: 'buttons-csv buttons-html5',
+
+	available: function () {
+		return window.FileReader !== undefined && window.Blob;
+	},
+
+	text: function ( dt ) {
+		return dt.i18n( 'buttons.csv', 'CSV' );
+	},
+
+	action: function ( e, dt, button, config ) {
+		this.processing( true );
+
+		// Set the text
+		var output = _exportData( dt, config ).str;
+		var info = dt.buttons.exportInfo(config);
+		var charset = config.charset;
+
+		if ( config.customize ) {
+			output = config.customize( output, config, dt );
+		}
+
+		if ( charset !== false ) {
+			if ( ! charset ) {
+				charset = document.characterSet || document.charset;
+			}
+
+			if ( charset ) {
+				charset = ';charset='+charset;
+			}
+		}
+		else {
+			charset = '';
+		}
+
+		if ( config.bom ) {
+			output = String.fromCharCode(0xFEFF) + output;
+		}
+
+		_saveAs(
+			new Blob( [output], {type: 'text/csv'+charset} ),
+			info.filename,
+			true
+		);
+
+		this.processing( false );
+	},
+
+	filename: '*',
+
+	extension: '.csv',
+
+	exportOptions: {},
+
+	fieldSeparator: ',',
+
+	fieldBoundary: '"',
+
+	escapeChar: '"',
+
+	charset: null,
+
+	header: true,
+
+	footer: false
+};
+
+//
+// Excel (xlsx) export
+//
+DataTable.ext.buttons.excelHtml5 = {
+	className: 'buttons-excel buttons-html5',
+
+	available: function () {
+		return window.FileReader !== undefined && _jsZip() !== undefined && ! _isDuffSafari() && _serialiser;
+	},
+
+	text: function ( dt ) {
+		return dt.i18n( 'buttons.excel', 'Excel' );
+	},
+
+	action: function ( e, dt, button, config ) {
+		this.processing( true );
+
+		var that = this;
+		var rowPos = 0;
+		var dataStartRow, dataEndRow;
+		var getXml = function ( type ) {
+			var str = excelStrings[ type ];
+
+			//str = str.replace( /xmlns:/g, 'xmlns_' ).replace( /mc:/g, 'mc_' );
+
+			return $.parseXML( str );
+		};
+		var rels = getXml('xl/worksheets/sheet1.xml');
+		var relsGet = rels.getElementsByTagName( "sheetData" )[0];
+
+		var xlsx = {
+			_rels: {
+				".rels": getXml('_rels/.rels')
+			},
+			xl: {
+				_rels: {
+					"workbook.xml.rels": getXml('xl/_rels/workbook.xml.rels')
+				},
+				"workbook.xml": getXml('xl/workbook.xml'),
+				"styles.xml": getXml('xl/styles.xml'),
+				"worksheets": {
+					"sheet1.xml": rels
+				}
+
+			},
+			"[Content_Types].xml": getXml('[Content_Types].xml')
+		};
+
+		var data = dt.buttons.exportData( config.exportOptions );
+		var currentRow, rowNode;
+		var addRow = function ( row ) {
+			currentRow = rowPos+1;
+			rowNode = _createNode( rels, "row", { attr: {r:currentRow} } );
+
+			for ( var i=0, ien=row.length ; i<ien ; i++ ) {
+				// Concat both the Cell Columns as a letter and the Row of the cell.
+				var cellId = createCellPos(i) + '' + currentRow;
+				var cell = null;
+
+				// For null, undefined of blank cell, continue so it doesn't create the _createNode
+				if ( row[i] === null || row[i] === undefined || row[i] === '' ) {
+					if ( config.createEmptyCells === true ) {
+						row[i] = '';
+					}
+					else {
+						continue;
+					}
+				}
+
+				var originalContent = row[i];
+				row[i] = typeof row[i].trim === 'function'
+					? row[i].trim()
+					: row[i];
+
+				// Special number formatting options
+				for ( var j=0, jen=_excelSpecials.length ; j<jen ; j++ ) {
+					var special = _excelSpecials[j];
+
+					// TODO Need to provide the ability for the specials to say
+					// if they are returning a string, since at the moment it is
+					// assumed to be a number
+					if ( row[i].match && ! row[i].match(/^0\d+/) && row[i].match( special.match ) ) {
+						var val = row[i].replace(/[^\d\.\-]/g, '');
+
+						if ( special.fmt ) {
+							val = special.fmt( val );
+						}
+
+						cell = _createNode( rels, 'c', {
+							attr: {
+								r: cellId,
+								s: special.style
+							},
+							children: [
+								_createNode( rels, 'v', { text: val } )
+							]
+						} );
+
+						break;
+					}
+				}
+
+				if ( ! cell ) {
+					if ( typeof row[i] === 'number' || (
+						row[i].match &&
+						row[i].match(/^-?\d+(\.\d+)?$/) &&
+						! row[i].match(/^0\d+/) )
+					) {
+						// Detect numbers - don't match numbers with leading zeros
+						// or a negative anywhere but the start
+						cell = _createNode( rels, 'c', {
+							attr: {
+								t: 'n',
+								r: cellId
+							},
+							children: [
+								_createNode( rels, 'v', { text: row[i] } )
+							]
+						} );
+					}
+					else {
+						// String output - replace non standard characters for text output
+						var text = ! originalContent.replace ?
+							originalContent :
+							originalContent.replace(/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F-\x9F]/g, '');
+
+						cell = _createNode( rels, 'c', {
+							attr: {
+								t: 'inlineStr',
+								r: cellId
+							},
+							children:{
+								row: _createNode( rels, 'is', {
+									children: {
+										row: _createNode( rels, 't', {
+											text: text,
+											attr: {
+												'xml:space': 'preserve'
+											}
+										} )
+									}
+								} )
+							}
+						} );
+					}
+				}
+
+				rowNode.appendChild( cell );
+			}
+
+			relsGet.appendChild(rowNode);
+			rowPos++;
+		};
+
+		if ( config.customizeData ) {
+			config.customizeData( data );
+		}
+
+		var mergeCells = function ( row, colspan ) {
+			var mergeCells = $('mergeCells', rels);
+
+			mergeCells[0].appendChild( _createNode( rels, 'mergeCell', {
+				attr: {
+					ref: 'A'+row+':'+createCellPos(colspan)+row
+				}
+			} ) );
+			mergeCells.attr( 'count', parseFloat(mergeCells.attr( 'count' ))+1 );
+			$('row:eq('+(row-1)+') c', rels).attr( 's', '51' ); // centre
+		};
+
+		// Title and top messages
+		var exportInfo = dt.buttons.exportInfo( config );
+		if ( exportInfo.title ) {
+			addRow( [exportInfo.title], rowPos );
+			mergeCells( rowPos, data.header.length-1 );
+		}
+
+		if ( exportInfo.messageTop ) {
+			addRow( [exportInfo.messageTop], rowPos );
+			mergeCells( rowPos, data.header.length-1 );
+		}
+
+
+		// Table itself
+		if ( config.header ) {
+			addRow( data.header, rowPos );
+			$('row:last c', rels).attr( 's', '2' ); // bold
+		}
+	
+		dataStartRow = rowPos;
+
+		for ( var n=0, ie=data.body.length ; n<ie ; n++ ) {
+			addRow( data.body[n], rowPos );
+		}
+	
+		dataEndRow = rowPos;
+
+		if ( config.footer && data.footer ) {
+			addRow( data.footer, rowPos);
+			$('row:last c', rels).attr( 's', '2' ); // bold
+		}
+
+		// Below the table
+		if ( exportInfo.messageBottom ) {
+			addRow( [exportInfo.messageBottom], rowPos );
+			mergeCells( rowPos, data.header.length-1 );
+		}
+
+		// Set column widths
+		var cols = _createNode( rels, 'cols' );
+		$('worksheet', rels).prepend( cols );
+
+		for ( var i=0, ien=data.header.length ; i<ien ; i++ ) {
+			cols.appendChild( _createNode( rels, 'col', {
+				attr: {
+					min: i+1,
+					max: i+1,
+					width: _excelColWidth( data, i ),
+					customWidth: 1
+				}
+			} ) );
+		}
+
+		// Workbook modifications
+		var workbook = xlsx.xl['workbook.xml'];
+
+		$( 'sheets sheet', workbook ).attr( 'name', _sheetname( config ) );
+
+		// Auto filter for columns
+		if ( config.autoFilter ) {
+			$('mergeCells', rels).before( _createNode( rels, 'autoFilter', {
+				attr: {
+					ref: 'A'+dataStartRow+':'+createCellPos(data.header.length-1)+dataEndRow
+				}
+			} ) );
+
+			$('definedNames', workbook).append( _createNode( workbook, 'definedName', {
+				attr: {
+					name: '_xlnm._FilterDatabase',
+					localSheetId: '0',
+					hidden: 1
+				},
+				text: _sheetname(config)+'!$A$'+dataStartRow+':'+createCellPos(data.header.length-1)+dataEndRow
+			} ) );
+		}
+
+		// Let the developer customise the document if they want to
+		if ( config.customize ) {
+			config.customize( xlsx, config, dt );
+		}
+
+		// Excel doesn't like an empty mergeCells tag
+		if ( $('mergeCells', rels).children().length === 0 ) {
+			$('mergeCells', rels).remove();
+		}
+
+		var jszip = _jsZip();
+		var zip = new jszip();
+		var zipConfig = {
+			type: 'blob',
+			mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+		};
+
+		_addToZip( zip, xlsx );
+
+		if ( zip.generateAsync ) {
+			// JSZip 3+
+			zip
+				.generateAsync( zipConfig )
+				.then( function ( blob ) {
+					_saveAs( blob, exportInfo.filename );
+					that.processing( false );
+				} );
+		}
+		else {
+			// JSZip 2.5
+			_saveAs(
+				zip.generate( zipConfig ),
+				exportInfo.filename
+			);
+			this.processing( false );
+		}
+	},
+
+	filename: '*',
+
+	extension: '.xlsx',
+
+	exportOptions: {},
+
+	header: true,
+
+	footer: false,
+
+	title: '*',
+
+	messageTop: '*',
+
+	messageBottom: '*',
+
+	createEmptyCells: false,
+
+	autoFilter: false,
+
+	sheetName: ''
+};
+
+//
+// PDF export - using pdfMake - http://pdfmake.org
+//
+DataTable.ext.buttons.pdfHtml5 = {
+	className: 'buttons-pdf buttons-html5',
+
+	available: function () {
+		return window.FileReader !== undefined && _pdfMake();
+	},
+
+	text: function ( dt ) {
+		return dt.i18n( 'buttons.pdf', 'PDF' );
+	},
+
+	action: function ( e, dt, button, config ) {
+		this.processing( true );
+
+		var that = this;
+		var data = dt.buttons.exportData( config.exportOptions );
+		var info = dt.buttons.exportInfo( config );
+		var rows = [];
+
+		if ( config.header ) {
+			rows.push( $.map( data.header, function ( d ) {
+				return {
+					text: typeof d === 'string' ? d : d+'',
+					style: 'tableHeader'
+				};
+			} ) );
+		}
+
+		for ( var i=0, ien=data.body.length ; i<ien ; i++ ) {
+			rows.push( $.map( data.body[i], function ( d ) {
+				if ( d === null || d === undefined ) {
+					d = '';
+				}
+				return {
+					text: typeof d === 'string' ? d : d+'',
+					style: i % 2 ? 'tableBodyEven' : 'tableBodyOdd'
+				};
+			} ) );
+		}
+
+		if ( config.footer && data.footer) {
+			rows.push( $.map( data.footer, function ( d ) {
+				return {
+					text: typeof d === 'string' ? d : d+'',
+					style: 'tableFooter'
+				};
+			} ) );
+		}
+
+		var doc = {
+			pageSize: config.pageSize,
+			pageOrientation: config.orientation,
+			content: [
+				{
+					table: {
+						headerRows: 1,
+						body: rows
+					},
+					layout: 'noBorders'
+				}
+			],
+			styles: {
+				tableHeader: {
+					bold: true,
+					fontSize: 11,
+					color: 'white',
+					fillColor: '#2d4154',
+					alignment: 'center'
+				},
+				tableBodyEven: {},
+				tableBodyOdd: {
+					fillColor: '#f3f3f3'
+				},
+				tableFooter: {
+					bold: true,
+					fontSize: 11,
+					color: 'white',
+					fillColor: '#2d4154'
+				},
+				title: {
+					alignment: 'center',
+					fontSize: 15
+				},
+				message: {}
+			},
+			defaultStyle: {
+				fontSize: 10
+			}
+		};
+
+		if ( info.messageTop ) {
+			doc.content.unshift( {
+				text: info.messageTop,
+				style: 'message',
+				margin: [ 0, 0, 0, 12 ]
+			} );
+		}
+
+		if ( info.messageBottom ) {
+			doc.content.push( {
+				text: info.messageBottom,
+				style: 'message',
+				margin: [ 0, 0, 0, 12 ]
+			} );
+		}
+
+		if ( info.title ) {
+			doc.content.unshift( {
+				text: info.title,
+				style: 'title',
+				margin: [ 0, 0, 0, 12 ]
+			} );
+		}
+
+		if ( config.customize ) {
+			config.customize( doc, config, dt );
+		}
+
+		var pdf = _pdfMake().createPdf( doc );
+
+		if ( config.download === 'open' && ! _isDuffSafari() ) {
+			pdf.open();
+		}
+		else {
+			pdf.download( info.filename );
+		}
+
+		this.processing( false );
+	},
+
+	title: '*',
+
+	filename: '*',
+
+	extension: '.pdf',
+
+	exportOptions: {},
+
+	orientation: 'portrait',
+
+	pageSize: 'A4',
+
+	header: true,
+
+	footer: false,
+
+	messageTop: '*',
+
+	messageBottom: '*',
+
+	customize: null,
+
+	download: 'download'
+};
+
+
+return DataTable.Buttons;
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/datatables.net-buttons/js/buttons.print.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/datatables.net-buttons/js/buttons.print.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * Print button for Buttons and DataTables.
+ * 2016 SpryMedia Ltd - datatables.net/license
+ */
+
+(function( factory ){
+	if ( true ) {
+		// AMD
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! datatables.net */ "./node_modules/datatables.net/js/jquery.dataTables.js"), __webpack_require__(/*! datatables.net-buttons */ "./node_modules/datatables.net-buttons/js/dataTables.buttons.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
+			return factory( $, window, document );
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else {}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
+var _link = document.createElement( 'a' );
+
+/**
+ * Clone link and style tags, taking into account the need to change the source
+ * path.
+ *
+ * @param  {node}     el Element to convert
+ */
+var _styleToAbs = function( el ) {
+	var url;
+	var clone = $(el).clone()[0];
+	var linkHost;
+
+	if ( clone.nodeName.toLowerCase() === 'link' ) {
+		clone.href = _relToAbs( clone.href );
+	}
+
+	return clone.outerHTML;
+};
+
+/**
+ * Convert a URL from a relative to an absolute address so it will work
+ * correctly in the popup window which has no base URL.
+ *
+ * @param  {string} href URL
+ */
+var _relToAbs = function( href ) {
+	// Assign to a link on the original page so the browser will do all the
+	// hard work of figuring out where the file actually is
+	_link.href = href;
+	var linkHost = _link.host;
+
+	// IE doesn't have a trailing slash on the host
+	// Chrome has it on the pathname
+	if ( linkHost.indexOf('/') === -1 && _link.pathname.indexOf('/') !== 0) {
+		linkHost += '/';
+	}
+
+	return _link.protocol+"//"+linkHost+_link.pathname+_link.search;
+};
+
+
+DataTable.ext.buttons.print = {
+	className: 'buttons-print',
+
+	text: function ( dt ) {
+		return dt.i18n( 'buttons.print', 'Print' );
+	},
+
+	action: function ( e, dt, button, config ) {
+		var data = dt.buttons.exportData(
+			$.extend( {decodeEntities: false}, config.exportOptions ) // XSS protection
+		);
+		var exportInfo = dt.buttons.exportInfo( config );
+		var columnClasses = dt
+			.columns( config.exportOptions.columns )
+			.flatten()
+			.map( function (idx) {
+				return dt.settings()[0].aoColumns[dt.column(idx).index()].sClass;
+			} )
+			.toArray();
+
+		var addRow = function ( d, tag ) {
+			var str = '<tr>';
+
+			for ( var i=0, ien=d.length ; i<ien ; i++ ) {
+				// null and undefined aren't useful in the print output
+				var dataOut = d[i] === null || d[i] === undefined ?
+					'' :
+					d[i];
+				var classAttr = columnClasses[i] ?
+					'class="'+columnClasses[i]+'"' :
+					'';
+
+				str += '<'+tag+' '+classAttr+'>'+dataOut+'</'+tag+'>';
+			}
+
+			return str + '</tr>';
+		};
+
+		// Construct a table for printing
+		var html = '<table class="'+dt.table().node().className+'">';
+
+		if ( config.header ) {
+			html += '<thead>'+ addRow( data.header, 'th' ) +'</thead>';
+		}
+
+		html += '<tbody>';
+		for ( var i=0, ien=data.body.length ; i<ien ; i++ ) {
+			html += addRow( data.body[i], 'td' );
+		}
+		html += '</tbody>';
+
+		if ( config.footer && data.footer ) {
+			html += '<tfoot>'+ addRow( data.footer, 'th' ) +'</tfoot>';
+		}
+		html += '</table>';
+
+		// Open a new window for the printable table
+		var win = window.open( '', '' );
+
+		if (! win) {
+			dt.buttons.info(
+				dt.i18n( 'buttons.printErrorTitle', 'Unable to open print view' ),
+				dt.i18n( 'buttons.printErrorMsg', 'Please allow popups in your browser for this site to be able to view the print view.' ),
+				5000
+			);
+
+			return;
+		}
+
+		win.document.close();
+
+		// Inject the title and also a copy of the style and link tags from this
+		// document so the table can retain its base styling. Note that we have
+		// to use string manipulation as IE won't allow elements to be created
+		// in the host document and then appended to the new window.
+		var head = '<title>'+exportInfo.title+'</title>';
+		$('style, link').each( function () {
+			head += _styleToAbs( this );
+		} );
+
+		try {
+			win.document.head.innerHTML = head; // Work around for Edge
+		}
+		catch (e) {
+			$(win.document.head).html( head ); // Old IE
+		}
+
+		// Inject the table and other surrounding information
+		win.document.body.innerHTML =
+			'<h1>'+exportInfo.title+'</h1>'+
+			'<div>'+(exportInfo.messageTop || '')+'</div>'+
+			html+
+			'<div>'+(exportInfo.messageBottom || '')+'</div>';
+
+		$(win.document.body).addClass('dt-print-view');
+
+		$('img', win.document.body).each( function ( i, img ) {
+			img.setAttribute( 'src', _relToAbs( img.getAttribute('src') ) );
+		} );
+
+		if ( config.customize ) {
+			config.customize( win, config, dt );
+		}
+
+		// Allow stylesheets time to load
+		var autoPrint = function () {
+			if ( config.autoPrint ) {
+				win.print(); // blocking - so close will not
+				win.close(); // execute until this is done
+			}
+		};
+
+		if ( navigator.userAgent.match(/Trident\/\d.\d/) ) { // IE needs to call this without a setTimeout
+			autoPrint();
+		}
+		else {
+			win.setTimeout( autoPrint, 1000 );
+		}
+	},
+
+	title: '*',
+
+	messageTop: '*',
+
+	messageBottom: '*',
+
+	exportOptions: {},
+
+	header: true,
+
+	footer: false,
+
+	autoPrint: true,
+
+	customize: null
+};
+
+
+return DataTable.Buttons;
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/datatables.net-buttons/js/dataTables.buttons.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/datatables.net-buttons/js/dataTables.buttons.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! Buttons for DataTables 2.0.1
+ * ©2016-2021 SpryMedia Ltd - datatables.net/license
+ */
+
+(function( factory ){
+	if ( true ) {
+		// AMD
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! datatables.net */ "./node_modules/datatables.net/js/jquery.dataTables.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
+			return factory( $, window, document );
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else {}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
+// Used for namespacing events added to the document by each instance, so they
+// can be removed on destroy
+var _instCounter = 0;
+
+// Button namespacing counter for namespacing events on individual buttons
+var _buttonCounter = 0;
+
+var _dtButtons = DataTable.ext.buttons;
+
+// Allow for jQuery slim
+function _fadeIn(el, duration, fn) {
+	if ($.fn.animate) {
+		el
+			.stop()
+			.fadeIn( duration, fn );
+
+	}
+	else {
+		el.css('display', 'block');
+
+		if (fn) {
+			fn.call(el);
+		}
+	}
+}
+
+function _fadeOut(el, duration, fn) {
+	if ($.fn.animate) {
+		el
+			.stop()
+			.fadeOut( duration, fn );
+	}
+	else {
+		el.css('display', 'none');
+		
+		if (fn) {
+			fn.call(el);
+		}
+	}
+}
+
+/**
+ * [Buttons description]
+ * @param {[type]}
+ * @param {[type]}
+ */
+var Buttons = function( dt, config )
+{
+	// If not created with a `new` keyword then we return a wrapper function that
+	// will take the settings object for a DT. This allows easy use of new instances
+	// with the `layout` option - e.g. `topLeft: $.fn.dataTable.Buttons( ... )`.
+	if ( !(this instanceof Buttons) ) {
+		return function (settings) {
+			return new Buttons( settings, dt ).container();
+		};
+	}
+
+	// If there is no config set it to an empty object
+	if ( typeof( config ) === 'undefined' ) {
+		config = {};	
+	}
+	
+	// Allow a boolean true for defaults
+	if ( config === true ) {
+		config = {};
+	}
+
+	// For easy configuration of buttons an array can be given
+	if ( Array.isArray( config ) ) {
+		config = { buttons: config };
+	}
+
+	this.c = $.extend( true, {}, Buttons.defaults, config );
+
+	// Don't want a deep copy for the buttons
+	if ( config.buttons ) {
+		this.c.buttons = config.buttons;
+	}
+
+	this.s = {
+		dt: new DataTable.Api( dt ),
+		buttons: [],
+		listenKeys: '',
+		namespace: 'dtb'+(_instCounter++)
+	};
+
+	this.dom = {
+		container: $('<'+this.c.dom.container.tag+'/>')
+			.addClass( this.c.dom.container.className )
+	};
+
+	this._constructor();
+};
+
+
+$.extend( Buttons.prototype, {
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Public methods
+	 */
+
+	/**
+	 * Get the action of a button
+	 * @param  {int|string} Button index
+	 * @return {function}
+	 *//**
+	 * Set the action of a button
+	 * @param  {node} node Button element
+	 * @param  {function} action Function to set
+	 * @return {Buttons} Self for chaining
+	 */
+	action: function ( node, action )
+	{
+		var button = this._nodeToButton( node );
+
+		if ( action === undefined ) {
+			return button.conf.action;
+		}
+
+		button.conf.action = action;
+
+		return this;
+	},
+
+	/**
+	 * Add an active class to the button to make to look active or get current
+	 * active state.
+	 * @param  {node} node Button element
+	 * @param  {boolean} [flag] Enable / disable flag
+	 * @return {Buttons} Self for chaining or boolean for getter
+	 */
+	active: function ( node, flag ) {
+		var button = this._nodeToButton( node );
+		var klass = this.c.dom.button.active;
+		var jqNode = $(button.node);
+
+		if ( flag === undefined ) {
+			return jqNode.hasClass( klass );
+		}
+
+		jqNode.toggleClass( klass, flag === undefined ? true : flag );
+
+		return this;
+	},
+
+	/**
+	 * Add a new button
+	 * @param {object} config Button configuration object, base string name or function
+	 * @param {int|string} [idx] Button index for where to insert the button
+	 * @return {Buttons} Self for chaining
+	 */
+	add: function ( config, idx )
+	{
+		var buttons = this.s.buttons;
+
+		if ( typeof idx === 'string' ) {
+			var split = idx.split('-');
+			var base = this.s;
+
+			for ( var i=0, ien=split.length-1 ; i<ien ; i++ ) {
+				base = base.buttons[ split[i]*1 ];
+			}
+
+			buttons = base.buttons;
+			idx = split[ split.length-1 ]*1;
+		}
+
+		this._expandButton(
+			buttons,
+			config,
+			config !== undefined ? config.split : undefined,
+			(config === undefined || config.split === undefined || config.split.length === 0) && base !== undefined,
+			false,
+			idx );
+		this._draw();
+
+		return this;
+	},
+
+	/**
+	 * Clear buttons from a collection and then insert new buttons
+	 */
+	collectionRebuild: function ( node, newButtons )
+	{
+		var button = this._nodeToButton( node );
+		
+		if(newButtons !== undefined) {
+			var i;
+			// Need to reverse the array
+			for (i=button.buttons.length-1; i>=0; i--) {
+				this.remove(button.buttons[i].node);
+			}
+	
+			for (i=0; i<newButtons.length; i++) {
+				this._expandButton(
+					button.buttons,
+					newButtons[i],
+					newButtons[i] !== undefined && newButtons[i].config !== undefined && newButtons[i].config.split !== undefined,
+					true,
+					newButtons[i].parentConf !== undefined && newButtons[i].parentConf.split !== undefined,
+					i,
+					newButtons[i].parentConf
+				);
+			}
+		}
+
+		this._draw(button.collection, button.buttons);
+	},
+
+	/**
+	 * Get the container node for the buttons
+	 * @return {jQuery} Buttons node
+	 */
+	container: function ()
+	{
+		return this.dom.container;
+	},
+
+	/**
+	 * Disable a button
+	 * @param  {node} node Button node
+	 * @return {Buttons} Self for chaining
+	 */
+	disable: function ( node ) {
+		var button = this._nodeToButton( node );
+
+		$(button.node)
+			.addClass( this.c.dom.button.disabled )
+			.attr('disabled', true);
+
+		return this;
+	},
+
+	/**
+	 * Destroy the instance, cleaning up event handlers and removing DOM
+	 * elements
+	 * @return {Buttons} Self for chaining
+	 */
+	destroy: function ()
+	{
+		// Key event listener
+		$('body').off( 'keyup.'+this.s.namespace );
+
+		// Individual button destroy (so they can remove their own events if
+		// needed). Take a copy as the array is modified by `remove`
+		var buttons = this.s.buttons.slice();
+		var i, ien;
+		
+		for ( i=0, ien=buttons.length ; i<ien ; i++ ) {
+			this.remove( buttons[i].node );
+		}
+
+		// Container
+		this.dom.container.remove();
+
+		// Remove from the settings object collection
+		var buttonInsts = this.s.dt.settings()[0];
+
+		for ( i=0, ien=buttonInsts.length ; i<ien ; i++ ) {
+			if ( buttonInsts.inst === this ) {
+				buttonInsts.splice( i, 1 );
+				break;
+			}
+		}
+
+		return this;
+	},
+
+	/**
+	 * Enable / disable a button
+	 * @param  {node} node Button node
+	 * @param  {boolean} [flag=true] Enable / disable flag
+	 * @return {Buttons} Self for chaining
+	 */
+	enable: function ( node, flag )
+	{
+		if ( flag === false ) {
+			return this.disable( node );
+		}
+
+		var button = this._nodeToButton( node );
+		$(button.node)
+			.removeClass( this.c.dom.button.disabled )
+			.removeAttr('disabled');
+
+		return this;
+	},
+
+	/**
+	 * Get the instance name for the button set selector
+	 * @return {string} Instance name
+	 */
+	name: function ()
+	{
+		return this.c.name;
+	},
+
+	/**
+	 * Get a button's node of the buttons container if no button is given
+	 * @param  {node} [node] Button node
+	 * @return {jQuery} Button element, or container
+	 */
+	node: function ( node )
+	{
+		if ( ! node ) {
+			return this.dom.container;
+		}
+
+		var button = this._nodeToButton( node );
+		return $(button.node);
+	},
+
+	/**
+	 * Set / get a processing class on the selected button
+	 * @param {element} node Triggering button node
+	 * @param  {boolean} flag true to add, false to remove, undefined to get
+	 * @return {boolean|Buttons} Getter value or this if a setter.
+	 */
+	processing: function ( node, flag )
+	{
+		var dt = this.s.dt;
+		var button = this._nodeToButton( node );
+
+		if ( flag === undefined ) {
+			return $(button.node).hasClass( 'processing' );
+		}
+
+		$(button.node).toggleClass( 'processing', flag );
+
+		$(dt.table().node()).triggerHandler( 'buttons-processing.dt', [
+			flag, dt.button( node ), dt, $(node), button.conf
+		] );
+
+		return this;
+	},
+
+	/**
+	 * Remove a button.
+	 * @param  {node} node Button node
+	 * @return {Buttons} Self for chaining
+	 */
+	remove: function ( node )
+	{
+		var button = this._nodeToButton( node );
+		var host = this._nodeToHost( node );
+		var dt = this.s.dt;
+
+		// Remove any child buttons first
+		if ( button.buttons.length ) {
+			for ( var i=button.buttons.length-1 ; i>=0 ; i-- ) {
+				this.remove( button.buttons[i].node );
+			}
+		}
+
+		button.conf.destroying = true;
+
+		// Allow the button to remove event handlers, etc
+		if ( button.conf.destroy ) {
+			button.conf.destroy.call( dt.button(node), dt, $(node), button.conf );
+		}
+
+		this._removeKey( button.conf );
+
+		$(button.node).remove();
+
+		var idx = $.inArray( button, host );
+		host.splice( idx, 1 );
+
+		return this;
+	},
+
+	/**
+	 * Get the text for a button
+	 * @param  {int|string} node Button index
+	 * @return {string} Button text
+	 *//**
+	 * Set the text for a button
+	 * @param  {int|string|function} node Button index
+	 * @param  {string} label Text
+	 * @return {Buttons} Self for chaining
+	 */
+	text: function ( node, label )
+	{
+		var button = this._nodeToButton( node );
+		var buttonLiner = this.c.dom.collection.buttonLiner;
+		var linerTag = button.inCollection && buttonLiner && buttonLiner.tag ?
+			buttonLiner.tag :
+			this.c.dom.buttonLiner.tag;
+		var dt = this.s.dt;
+		var jqNode = $(button.node);
+		var text = function ( opt ) {
+			return typeof opt === 'function' ?
+				opt( dt, jqNode, button.conf ) :
+				opt;
+		};
+
+		if ( label === undefined ) {
+			return text( button.conf.text );
+		}
+
+		button.conf.text = label;
+
+		if ( linerTag ) {
+			jqNode
+				.children( linerTag )
+				.filter(':not(.dt-down-arrow)')
+				.html( text(label) );
+		}
+		else {
+			jqNode.html( text(label) );
+		}
+
+		return this;
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Constructor
+	 */
+
+	/**
+	 * Buttons constructor
+	 * @private
+	 */
+	_constructor: function ()
+	{
+		var that = this;
+		var dt = this.s.dt;
+		var dtSettings = dt.settings()[0];
+		var buttons =  this.c.buttons;
+
+		if ( ! dtSettings._buttons ) {
+			dtSettings._buttons = [];
+		}
+
+		dtSettings._buttons.push( {
+			inst: this,
+			name: this.c.name
+		} );
+
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			this.add( buttons[i] );
+		}
+
+		dt.on( 'destroy', function ( e, settings ) {
+			if ( settings === dtSettings ) {
+				that.destroy();
+			}
+		} );
+
+		// Global key event binding to listen for button keys
+		$('body').on( 'keyup.'+this.s.namespace, function ( e ) {
+			if ( ! document.activeElement || document.activeElement === document.body ) {
+				// SUse a string of characters for fast lookup of if we need to
+				// handle this
+				var character = String.fromCharCode(e.keyCode).toLowerCase();
+
+				if ( that.s.listenKeys.toLowerCase().indexOf( character ) !== -1 ) {
+					that._keypress( character, e );
+				}
+			}
+		} );
+	},
+
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * Private methods
+	 */
+
+	/**
+	 * Add a new button to the key press listener
+	 * @param {object} conf Resolved button configuration object
+	 * @private
+	 */
+	_addKey: function ( conf )
+	{
+		if ( conf.key ) {
+			this.s.listenKeys += $.isPlainObject( conf.key ) ?
+				conf.key.key :
+				conf.key;
+		}
+	},
+
+	/**
+	 * Insert the buttons into the container. Call without parameters!
+	 * @param  {node} [container] Recursive only - Insert point
+	 * @param  {array} [buttons] Recursive only - Buttons array
+	 * @private
+	 */
+	_draw: function ( container, buttons )
+	{
+		if ( ! container ) {
+			container = this.dom.container;
+			buttons = this.s.buttons;
+		}
+
+		container.children().detach();
+
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			container.append( buttons[i].inserter );
+			container.append( ' ' );
+
+			if ( buttons[i].buttons && buttons[i].buttons.length ) {
+				this._draw( buttons[i].collection, buttons[i].buttons );
+			}
+		}
+	},
+
+	/**
+	 * Create buttons from an array of buttons
+	 * @param  {array} attachTo Buttons array to attach to
+	 * @param  {object} button Button definition
+	 * @param  {boolean} inCollection true if the button is in a collection
+	 * @private
+	 */
+	_expandButton: function ( attachTo, button, split, inCollection, inSplit, attachPoint, parentConf )
+	{
+		var dt = this.s.dt;
+		var buttonCounter = 0;
+		var isSplit = false;
+		var buttons = ! Array.isArray( button ) ?
+			[ button ] :
+			button;
+		
+		if(button === undefined ) {
+			buttons = !Array.isArray(split) ?
+				[ split ] :
+				split;
+		}
+
+		if (button !== undefined && button.split !== undefined) {
+			isSplit = true;
+		}
+			
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			var conf = this._resolveExtends( buttons[i] );
+
+			if ( ! conf ) {
+				continue;
+			}
+
+			if( conf.config !== undefined && conf.config.split) {
+				isSplit = true;
+			}
+			else {
+				isSplit = false;
+			}
+			
+			// If the configuration is an array, then expand the buttons at this
+			// point
+			if ( Array.isArray( conf ) ) {
+				this._expandButton( attachTo, conf, built !== undefined && built.conf !== undefined ? built.conf.split : undefined, inCollection, parentConf !== undefined && parentConf.split !== undefined, attachPoint, parentConf );
+				continue;
+			}
+
+			var built = this._buildButton( conf, inCollection, conf.split !== undefined || (conf.config !== undefined && conf.config.split !== undefined), inSplit );
+			if ( ! built ) {
+				continue;
+			}
+
+			if ( attachPoint !== undefined && attachPoint !== null ) {
+				attachTo.splice( attachPoint, 0, built );
+				attachPoint++;
+			}
+			else {
+				attachTo.push( built );
+			}
+
+			
+			if ( built.conf.buttons || built.conf.split ) {
+				built.collection = $('<'+(isSplit ? this.c.dom.splitCollection.tag : this.c.dom.collection.tag)+'/>');
+
+				built.conf._collection = built.collection;
+
+				if(built.conf.split) {
+					for(var j = 0; j < built.conf.split.length; j++) {
+						if(typeof built.conf.split[j] === "object") {
+							built.conf.split[i].parent = parentConf;
+							if(built.conf.split[j].collectionLayout === undefined) {
+								built.conf.split[j].collectionLayout = built.conf.collectionLayout;
+							}
+							if(built.conf.split[j].dropup === undefined) {
+								built.conf.split[j].dropup = built.conf.dropup;
+							}
+							if(built.conf.split[j].fade === undefined) {
+								built.conf.split[j].fade = built.conf.fade;
+							}
+						}
+					}
+				}
+				else {
+					$(built.node).append($('<span class="dt-down-arrow">'+this.c.dom.splitDropdown.text+'</span>'))
+				}
+
+				this._expandButton( built.buttons, built.conf.buttons, built.conf.split, !isSplit, isSplit, attachPoint, built.conf );
+			}
+			built.conf.parent = parentConf;
+
+			// init call is made here, rather than buildButton as it needs to
+			// be selectable, and for that it needs to be in the buttons array
+			if ( conf.init ) {
+				conf.init.call( dt.button( built.node ), dt, $(built.node), conf );
+			}
+
+			buttonCounter++;
+		}
+	},
+
+	/**
+	 * Create an individual button
+	 * @param  {object} config            Resolved button configuration
+	 * @param  {boolean} inCollection `true` if a collection button
+	 * @return {jQuery} Created button node (jQuery)
+	 * @private
+	 */
+	_buildButton: function ( config, inCollection, isSplit, inSplit )
+	{
+		var buttonDom = this.c.dom.button;
+		var linerDom = this.c.dom.buttonLiner;
+		var collectionDom = this.c.dom.collection;
+		var splitDom = this.c.dom.split;
+		var splitCollectionDom = this.c.dom.splitCollection;
+		var splitDropdownButton = this.c.dom.splitDropdownButton;
+		var dt = this.s.dt;
+		var text = function ( opt ) {
+			return typeof opt === 'function' ?
+				opt( dt, button, config ) :
+				opt;
+		};
+
+		if ( !isSplit && inSplit && splitCollectionDom ) {
+			buttonDom = splitDropdownButton;
+		}
+		else if ( !isSplit && inCollection && collectionDom.button ) {
+			buttonDom = collectionDom.button;
+		} 
+
+		if ( !isSplit && inSplit && splitCollectionDom.buttonLiner ) {
+			linerDom = splitCollectionDom.buttonLiner
+		}
+		else if ( !isSplit && inCollection && collectionDom.buttonLiner ) {
+			linerDom = collectionDom.buttonLiner;
+		}
+
+		// Make sure that the button is available based on whatever requirements
+		// it has. For example, PDF button require pdfmake
+		if ( config.available && ! config.available( dt, config ) && !config.hasOwnProperty('html') ) {
+			return false;
+		}
+
+		var button;
+		if(!config.hasOwnProperty('html')) {
+			var action = function ( e, dt, button, config ) {
+				config.action.call( dt.button( button ), e, dt, button, config );
+	
+				$(dt.table().node()).triggerHandler( 'buttons-action.dt', [
+					dt.button( button ), dt, button, config 
+				] );
+			};
+
+			var tag = config.tag || buttonDom.tag;
+			var clickBlurs = config.clickBlurs === undefined ? false : config.clickBlurs
+			button = $('<'+tag+'/>')
+				.addClass( buttonDom.className )
+				.addClass( inSplit ? this.c.dom.splitDropdownButton.className : '')
+				.attr( 'tabindex', this.s.dt.settings()[0].iTabIndex )
+				.attr( 'aria-controls', this.s.dt.table().node().id )
+				.on( 'click.dtb', function (e) {
+					e.preventDefault();
+	
+					if ( ! button.hasClass( buttonDom.disabled ) && config.action ) {
+						action( e, dt, button, config );
+					}
+					if( clickBlurs ) {
+						button.trigger('blur');
+					}
+				} )
+				.on( 'keyup.dtb', function (e) {
+					if ( e.keyCode === 13 ) {
+						if ( ! button.hasClass( buttonDom.disabled ) && config.action ) {
+							action( e, dt, button, config );
+						}
+					}
+				} );
+	
+			// Make `a` tags act like a link
+			if ( tag.toLowerCase() === 'a' ) {
+				button.attr( 'href', '#' );
+			}
+	
+			// Button tags should have `type=button` so they don't have any default behaviour
+			if ( tag.toLowerCase() === 'button' ) {
+				button.attr( 'type', 'button' );
+			}
+	
+			if ( linerDom.tag ) {
+				var liner = $('<'+linerDom.tag+'/>')
+					.html( text( config.text ) )
+					.addClass( linerDom.className );
+	
+				if ( linerDom.tag.toLowerCase() === 'a' ) {
+					liner.attr( 'href', '#' );
+				}
+	
+				button.append( liner );
+			}
+			else {
+				button.html( text( config.text ) );
+			}
+	
+			if ( config.enabled === false ) {
+				button.addClass( buttonDom.disabled );
+			}
+	
+			if ( config.className ) {
+				button.addClass( config.className );
+			}
+	
+			if ( config.titleAttr ) {
+				button.attr( 'title', text( config.titleAttr ) );
+			}
+	
+			if ( config.attr ) {
+				button.attr( config.attr );
+			}
+	
+			if ( ! config.namespace ) {
+				config.namespace = '.dt-button-'+(_buttonCounter++);
+			}
+
+			if  ( config.config !== undefined && config.config.split ) {
+				config.split = config.config.split;
+			}
+		}
+		else {
+			button = $(config.html)
+		}
+	
+		var buttonContainer = this.c.dom.buttonContainer;
+		var inserter;
+		if ( buttonContainer && buttonContainer.tag ) {
+			inserter = $('<'+buttonContainer.tag+'/>')
+				.addClass( buttonContainer.className )
+				.append( button );
+		}
+		else {
+			inserter = button;
+		}
+
+		this._addKey( config );
+
+		// Style integration callback for DOM manipulation
+		// Note that this is _not_ documented. It is currently
+		// for style integration only
+		if( this.c.buttonCreated ) {
+			inserter = this.c.buttonCreated( config, inserter );
+		}
+
+		var splitDiv;
+		if(isSplit) {
+			splitDiv = $('<div/>').addClass(this.c.dom.splitWrapper.className)
+			splitDiv.append(button);
+			var dropButtonConfig = $.extend(config, {
+				text: this.c.dom.splitDropdown.text,
+				className: this.c.dom.splitDropdown.className,
+				attr: {
+					'aria-haspopup': true,
+					'aria-expanded': false
+				},
+				align: this.c.dom.splitDropdown.align,
+				splitAlignClass: this.c.dom.splitDropdown.splitAlignClass
+				
+			})
+
+			this._addKey(dropButtonConfig);
+
+			var splitAction = function ( e, dt, button, config ) {
+				_dtButtons.split.action.call( dt.button($('div.dt-btn-split-wrapper')[0] ), e, dt, button, config );
+	
+				$(dt.table().node()).triggerHandler( 'buttons-action.dt', [
+					dt.button( button ), dt, button, config 
+				] );
+				button.attr('aria-expanded', true)
+			};
+			
+			var dropButton = $('<button class="' + this.c.dom.splitDropdown.className + ' dt-button"><span class="dt-btn-split-drop-arrow">'+this.c.dom.splitDropdown.text+'</span></button>')
+				.on( 'click.dtb', function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					if ( ! dropButton.hasClass( buttonDom.disabled ) && dropButtonConfig.action ) {
+						splitAction( e, dt, dropButton, dropButtonConfig );
+					}
+					if ( clickBlurs ) {
+						dropButton.trigger('blur');
+					}
+				} )
+				.on( 'keyup.dtb', function (e) {
+					if ( e.keyCode === 13 ) {
+						if ( ! dropButton.hasClass( buttonDom.disabled ) && dropButtonConfig.action ) {
+							splitAction( e, dt, dropButton, dropButtonConfig );
+						}
+					}
+				} );
+
+			if(config.split.length === 0) {
+				dropButton.addClass('dtb-hide-drop');
+			}
+
+			splitDiv.append(dropButton).attr(dropButtonConfig.attr);
+		}
+
+		return {
+			conf:         config,
+			node:         isSplit ? splitDiv.get(0) : button.get(0),
+			inserter:     isSplit ? splitDiv : inserter,
+			buttons:      [],
+			inCollection: inCollection,
+			isSplit:	  isSplit,
+			inSplit:	  inSplit,
+			collection:   null
+		};
+	},
+
+	/**
+	 * Get the button object from a node (recursive)
+	 * @param  {node} node Button node
+	 * @param  {array} [buttons] Button array, uses base if not defined
+	 * @return {object} Button object
+	 * @private
+	 */
+	_nodeToButton: function ( node, buttons )
+	{
+		if ( ! buttons ) {
+			buttons = this.s.buttons;
+		}
+
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			if ( buttons[i].node === node ) {
+				return buttons[i];
+			}
+
+			if ( buttons[i].buttons.length ) {
+				var ret = this._nodeToButton( node, buttons[i].buttons );
+
+				if ( ret ) {
+					return ret;
+				}
+			}
+		}
+	},
+
+	/**
+	 * Get container array for a button from a button node (recursive)
+	 * @param  {node} node Button node
+	 * @param  {array} [buttons] Button array, uses base if not defined
+	 * @return {array} Button's host array
+	 * @private
+	 */
+	_nodeToHost: function ( node, buttons )
+	{
+		if ( ! buttons ) {
+			buttons = this.s.buttons;
+		}
+
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			if ( buttons[i].node === node ) {
+				return buttons;
+			}
+
+			if ( buttons[i].buttons.length ) {
+				var ret = this._nodeToHost( node, buttons[i].buttons );
+
+				if ( ret ) {
+					return ret;
+				}
+			}
+		}
+	},
+
+	/**
+	 * Handle a key press - determine if any button's key configured matches
+	 * what was typed and trigger the action if so.
+	 * @param  {string} character The character pressed
+	 * @param  {object} e Key event that triggered this call
+	 * @private
+	 */
+	_keypress: function ( character, e )
+	{
+		// Check if this button press already activated on another instance of Buttons
+		if ( e._buttonsHandled ) {
+			return;
+		}
+
+		var run = function ( conf, node ) {
+			if ( ! conf.key ) {
+				return;
+			}
+
+			if ( conf.key === character ) {
+				e._buttonsHandled = true;
+				$(node).click();
+			}
+			else if ( $.isPlainObject( conf.key ) ) {
+				if ( conf.key.key !== character ) {
+					return;
+				}
+
+				if ( conf.key.shiftKey && ! e.shiftKey ) {
+					return;
+				}
+
+				if ( conf.key.altKey && ! e.altKey ) {
+					return;
+				}
+
+				if ( conf.key.ctrlKey && ! e.ctrlKey ) {
+					return;
+				}
+
+				if ( conf.key.metaKey && ! e.metaKey ) {
+					return;
+				}
+
+				// Made it this far - it is good
+				e._buttonsHandled = true;
+				$(node).click();
+			}
+		};
+
+		var recurse = function ( a ) {
+			for ( var i=0, ien=a.length ; i<ien ; i++ ) {
+				run( a[i].conf, a[i].node );
+
+				if ( a[i].buttons.length ) {
+					recurse( a[i].buttons );
+				}
+			}
+		};
+
+		recurse( this.s.buttons );
+	},
+
+	/**
+	 * Remove a key from the key listener for this instance (to be used when a
+	 * button is removed)
+	 * @param  {object} conf Button configuration
+	 * @private
+	 */
+	_removeKey: function ( conf )
+	{
+		if ( conf.key ) {
+			var character = $.isPlainObject( conf.key ) ?
+				conf.key.key :
+				conf.key;
+
+			// Remove only one character, as multiple buttons could have the
+			// same listening key
+			var a = this.s.listenKeys.split('');
+			var idx = $.inArray( character, a );
+			a.splice( idx, 1 );
+			this.s.listenKeys = a.join('');
+		}
+	},
+
+	/**
+	 * Resolve a button configuration
+	 * @param  {string|function|object} conf Button config to resolve
+	 * @return {object} Button configuration
+	 * @private
+	 */
+	_resolveExtends: function ( conf )
+	{
+		var dt = this.s.dt;
+		var i, ien;
+		var toConfObject = function ( base ) {
+			var loop = 0;
+
+			// Loop until we have resolved to a button configuration, or an
+			// array of button configurations (which will be iterated
+			// separately)
+			while ( ! $.isPlainObject(base) && ! Array.isArray(base) ) {
+				if ( base === undefined ) {
+					return;
+				}
+
+				if ( typeof base === 'function' ) {
+					base = base( dt, conf );
+
+					if ( ! base ) {
+						return false;
+					}
+				}
+				else if ( typeof base === 'string' ) {
+					if ( ! _dtButtons[ base ] ) {
+						return {html: base}
+					}
+
+					base = _dtButtons[ base ];
+				}
+
+				loop++;
+				if ( loop > 30 ) {
+					// Protect against misconfiguration killing the browser
+					throw 'Buttons: Too many iterations';
+				}
+			}
+
+			return Array.isArray( base ) ?
+				base :
+				$.extend( {}, base );
+		};
+
+		conf = toConfObject( conf );
+
+		while ( conf && conf.extend ) {
+			// Use `toConfObject` in case the button definition being extended
+			// is itself a string or a function
+			if ( ! _dtButtons[ conf.extend ] ) {
+				throw 'Cannot extend unknown button type: '+conf.extend;
+			}
+
+			var objArray = toConfObject( _dtButtons[ conf.extend ] );
+			if ( Array.isArray( objArray ) ) {
+				return objArray;
+			}
+			else if ( ! objArray ) {
+				// This is a little brutal as it might be possible to have a
+				// valid button without the extend, but if there is no extend
+				// then the host button would be acting in an undefined state
+				return false;
+			}
+
+			// Stash the current class name
+			var originalClassName = objArray.className;
+
+			if (conf.config !== undefined && objArray.config !== undefined) {
+				conf.config = $.extend({}, objArray.config, conf.config)
+			}
+
+			conf = $.extend( {}, objArray, conf );
+
+			// The extend will have overwritten the original class name if the
+			// `conf` object also assigned a class, but we want to concatenate
+			// them so they are list that is combined from all extended buttons
+			if ( originalClassName && conf.className !== originalClassName ) {
+				conf.className = originalClassName+' '+conf.className;
+			}
+
+			// Buttons to be added to a collection  -gives the ability to define
+			// if buttons should be added to the start or end of a collection
+			var postfixButtons = conf.postfixButtons;
+			if ( postfixButtons ) {
+				if ( ! conf.buttons ) {
+					conf.buttons = [];
+				}
+
+				for ( i=0, ien=postfixButtons.length ; i<ien ; i++ ) {
+					conf.buttons.push( postfixButtons[i] );
+				}
+
+				conf.postfixButtons = null;
+			}
+
+			var prefixButtons = conf.prefixButtons;
+			if ( prefixButtons ) {
+				if ( ! conf.buttons ) {
+					conf.buttons = [];
+				}
+
+				for ( i=0, ien=prefixButtons.length ; i<ien ; i++ ) {
+					conf.buttons.splice( i, 0, prefixButtons[i] );
+				}
+
+				conf.prefixButtons = null;
+			}
+
+			// Although we want the `conf` object to overwrite almost all of
+			// the properties of the object being extended, the `extend`
+			// property should come from the object being extended
+			conf.extend = objArray.extend;
+		}
+
+		return conf;
+	},
+
+	/**
+	 * Display (and replace if there is an existing one) a popover attached to a button
+	 * @param {string|node} content Content to show
+	 * @param {DataTable.Api} hostButton DT API instance of the button
+	 * @param {object} inOpts Options (see object below for all options)
+	 */
+	_popover: function ( content, hostButton, inOpts, e ) {
+		var dt = hostButton;
+		var buttonsSettings = this.c;
+		var closed = false;
+		var options = $.extend( {
+			align: 'button-left', // button-right, dt-container, split-left, split-right
+			autoClose: false,
+			background: true,
+			backgroundClassName: 'dt-button-background',
+			contentClassName: buttonsSettings.dom.collection.className,
+			collectionLayout: '',
+			collectionTitle: '',
+			dropup: false,
+			fade: 400,
+			popoverTitle: '',
+			rightAlignClassName: 'dt-button-right',
+			splitRightAlignClassName: 'dt-button-split-right',
+			splitLeftAlignClassName: 'dt-button-split-left',
+			tag: buttonsSettings.dom.collection.tag
+		}, inOpts );
+
+		var hostNode = hostButton.node();
+
+		var close = function () {
+			closed = true;
+
+			_fadeOut(
+				$('.dt-button-collection'),
+				options.fade,
+				function () {
+					$(this).detach();
+				}
+			);
+
+			$(dt.buttons( '[aria-haspopup="true"][aria-expanded="true"]' ).nodes())
+				.attr('aria-expanded', 'false');
+
+			$('div.dt-button-background').off( 'click.dtb-collection' );
+			Buttons.background( false, options.backgroundClassName, options.fade, hostNode );
+
+			$('body').off( '.dtb-collection' );
+			dt.off( 'buttons-action.b-internal' );
+			dt.off( 'destroy' );
+		};
+
+		if (content === false) {
+			close();
+		}
+
+		var existingExpanded = $(dt.buttons( '[aria-haspopup="true"][aria-expanded="true"]' ).nodes());
+		if ( existingExpanded.length ) {
+			hostNode = existingExpanded.eq(0);
+
+			close();
+		}
+
+		var display = $('<div/>')
+			.addClass('dt-button-collection')
+			.addClass(options.collectionLayout)
+			.addClass(options.splitAlignClass)
+			.css('display', 'none');
+
+		content = $(content)
+			.addClass(options.contentClassName)
+			.attr('role', 'menu')
+			.appendTo(display);
+
+		hostNode.attr( 'aria-expanded', 'true' );
+
+		if ( hostNode.parents('body')[0] !== document.body ) {
+			hostNode = document.body.lastChild;
+		}
+
+		if ( options.popoverTitle ) {
+			display.prepend('<div class="dt-button-collection-title">'+options.popoverTitle+'</div>');
+		}
+		else if ( options.collectionTitle ) {
+			display.prepend('<div class="dt-button-collection-title">'+options.collectionTitle+'</div>');
+		}
+
+		_fadeIn( display.insertAfter( hostNode ), options.fade );
+
+		var tableContainer = $( hostButton.table().container() );
+		var position = display.css( 'position' );
+
+		if ( options.align === 'dt-container' ) {
+			hostNode = hostNode.parent();
+			display.css('width', tableContainer.width());
+		}
+
+		// Align the popover relative to the DataTables container
+		// Useful for wide popovers such as SearchPanes
+		if (position === 'absolute') {
+			// Align relative to the host button
+			var hostPosition = hostNode.position();
+			var buttonPosition = $(hostButton.node()).position();
+
+			display.css( {
+				top: $($(hostButton[0].node).parent()[0]).hasClass('dt-buttons')
+					? buttonPosition.top + hostNode.outerHeight()
+					: hostPosition.top + hostNode.outerHeight(),
+				left: hostPosition.left
+			} );
+
+			// calculate overflow when positioned beneath
+			var collectionHeight = display.outerHeight();
+			var tableBottom = tableContainer.offset().top + tableContainer.height();
+			var listBottom = buttonPosition.top + hostNode.outerHeight() + collectionHeight;
+			var bottomOverflow = listBottom - tableBottom;
+
+			// calculate overflow when positioned above
+			var listTop = buttonPosition.top - collectionHeight;
+			var tableTop = tableContainer.offset().top;
+			var topOverflow = tableTop - listTop;
+
+			// if bottom overflow is larger, move to the top because it fits better, or if dropup is requested
+			var moveTop = buttonPosition.top - collectionHeight - 5;
+			if ( (bottomOverflow > topOverflow || options.dropup) && -moveTop < tableTop ) {
+				display.css( 'top', moveTop);
+			}
+
+			// Get the size of the container (left and width - and thus also right)
+			var tableLeft = tableContainer.offset().left;
+			var tableWidth = tableContainer.width();
+			var tableRight = tableLeft + tableWidth;
+
+			// Get the size of the popover (left and width - and ...)
+			var popoverLeft = display.offset().left;
+			var popoverWidth = display.outerWidth();
+
+			// Foundations display dom element has a width of 0 - the true width is within the child
+			if (popoverWidth === 0) {
+				if (display.children().length > 0) {
+					popoverWidth = $(display.children()[0]).outerWidth();
+				}
+			}
+			
+			var popoverRight = popoverLeft + popoverWidth;
+
+			// Get the size of the host buttons (left and width - and ...)
+			var buttonsLeft = hostNode.offset().left;
+			var buttonsWidth = hostNode.outerWidth()
+			var buttonsRight = buttonsLeft + buttonsWidth;
+
+			if (
+				display.hasClass( options.rightAlignClassName ) ||
+				display.hasClass( options.leftAlignClassName ) ||
+				display.hasClass( options.splitAlignClass ) ||
+				options.align === 'dt-container'
+			){
+				// default to the other buttons values
+				var splitButtonLeft = buttonsLeft;
+				var splitButtonWidth = buttonsWidth;
+				var splitButtonRight = buttonsRight;
+
+				// If the button is a split button then need to calculate some more values
+				if (hostNode.hasClass('dt-btn-split-wrapper') && hostNode.children('button.dt-btn-split-drop').length > 0) {
+					splitButtonLeft = hostNode.children('button.dt-btn-split-drop').offset().left;
+					splitButtonWidth = hostNode.children('button.dt-btn-split-drop').outerWidth();
+					splitButtonRight = splitButtonLeft + splitButtonWidth;
+				}
+				// You've then got all the numbers you need to do some calculations and if statements,
+				//  so we can do some quick JS maths and apply it only once
+				// If it has the right align class OR the buttons are right aligned OR the button container is floated right,
+				//  then calculate left position for the popover to align the popover to the right hand
+				//  side of the button - check to see if the left of the popover is inside the table container.
+				// If not, move the popover so it is, but not more than it means that the popover is to the right of the table container
+				var popoverShuffle = 0;
+				if ( display.hasClass( options.rightAlignClassName )) {
+					popoverShuffle = buttonsRight - popoverRight;
+					if(tableLeft > (popoverLeft + popoverShuffle)){
+						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
+						var rightGap = tableRight - (popoverRight + popoverShuffle);
+		
+						if(leftGap > rightGap){
+							popoverShuffle += rightGap; 
+						}
+						else {
+							popoverShuffle += leftGap;
+						}
+					}
+				}
+				else if ( display.hasClass( options.splitRightAlignClassName )) {
+					popoverShuffle = splitButtonRight - popoverRight;
+					if(tableLeft > (popoverLeft + popoverShuffle)){
+						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
+						var rightGap = tableRight - (popoverRight + popoverShuffle);
+		
+						if(leftGap > rightGap){
+							popoverShuffle += rightGap; 
+						}
+						else {
+							popoverShuffle += leftGap;
+						}
+					}
+				}
+				else if ( display.hasClass( options.splitLeftAlignClassName )) {
+					popoverShuffle = splitButtonLeft - popoverLeft;
+
+					if(tableRight < (popoverRight + popoverShuffle) || tableLeft > (popoverLeft + popoverShuffle)){
+						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
+						var rightGap = tableRight - (popoverRight + popoverShuffle);
+	
+						if(leftGap > rightGap ){
+							popoverShuffle += rightGap;
+						}
+						else {
+							popoverShuffle += leftGap;
+						}
+	
+					}
+				}
+				// else attempt to left align the popover to the button. Similar to above, if the popover's right goes past the table container's right,
+				//  then move it back, but not so much that it goes past the left of the table container
+				else {
+					popoverShuffle = tableLeft - popoverLeft;
+	
+					if(tableRight < (popoverRight + popoverShuffle)){
+						var leftGap = tableLeft - (popoverLeft + popoverShuffle);
+						var rightGap = tableRight - (popoverRight + popoverShuffle);
+	
+						if(leftGap > rightGap ){
+							popoverShuffle += rightGap;
+						}
+						else {
+							popoverShuffle += leftGap;
+						}
+	
+					}
+				}
+	
+				display.css('left', display.position().left + popoverShuffle);
+			}
+			else {
+				var top = hostNode.offset().top
+				var popoverShuffle = 0;
+
+				popoverShuffle = options.align === 'button-right'
+					? buttonsRight - popoverRight
+					: buttonsLeft - popoverLeft;
+
+				display.css('left', display.position().left + popoverShuffle);
+			}
+			
+			
+		}
+		else {
+			// Fix position - centre on screen
+			var top = display.height() / 2;
+			if ( top > $(window).height() / 2 ) {
+				top = $(window).height() / 2;
+			}
+
+			display.css( 'marginTop', top*-1 );
+		}
+
+		if ( options.background ) {
+			Buttons.background( true, options.backgroundClassName, options.fade, hostNode );
+		}
+
+		// This is bonkers, but if we don't have a click listener on the
+		// background element, iOS Safari will ignore the body click
+		// listener below. An empty function here is all that is
+		// required to make it work...
+		$('div.dt-button-background').on( 'click.dtb-collection', function () {} );
+
+		if ( options.autoClose ) {
+			setTimeout( function () {
+				dt.on( 'buttons-action.b-internal', function (e, btn, dt, node) {
+					if ( node[0] === hostNode[0] ) {
+						return;
+					}
+					close();
+				} );
+			}, 0);
+		}
+		
+		$(display).trigger('buttons-popover.dt');
+
+
+		dt.on('destroy', close);
+
+		setTimeout(function() {
+			closed = false;
+			$('body')
+				.on( 'click.dtb-collection', function (e) {
+					if (closed) {
+						return;
+					}
+
+					// andSelf is deprecated in jQ1.8, but we want 1.7 compat
+					var back = $.fn.addBack ? 'addBack' : 'andSelf';
+					var parent = $(e.target).parent()[0];
+	
+					if (( ! $(e.target).parents()[back]().filter( content ).length  && !$(parent).hasClass('dt-buttons')) || $(e.target).hasClass('dt-button-background')) {
+						close();
+					}
+				} )
+				.on( 'keyup.dtb-collection', function (e) {
+					if ( e.keyCode === 27 ) {
+						close();
+					}
+				} );
+		}, 0);
+	}
+} );
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Statics
+ */
+
+/**
+ * Show / hide a background layer behind a collection
+ * @param  {boolean} Flag to indicate if the background should be shown or
+ *   hidden 
+ * @param  {string} Class to assign to the background
+ * @static
+ */
+Buttons.background = function ( show, className, fade, insertPoint ) {
+	if ( fade === undefined ) {
+		fade = 400;
+	}
+	if ( ! insertPoint ) {
+		insertPoint = document.body;
+	}
+
+	if ( show ) {
+		_fadeIn(
+			$('<div/>')
+				.addClass( className )
+				.css( 'display', 'none' )
+				.insertAfter( insertPoint ),
+			fade
+		);
+	}
+	else {
+		_fadeOut(
+			$('div.'+className),
+			fade,
+			function () {
+				$(this)
+					.removeClass( className )
+					.remove();
+			}
+		);
+	}
+};
+
+/**
+ * Instance selector - select Buttons instances based on an instance selector
+ * value from the buttons assigned to a DataTable. This is only useful if
+ * multiple instances are attached to a DataTable.
+ * @param  {string|int|array} Instance selector - see `instance-selector`
+ *   documentation on the DataTables site
+ * @param  {array} Button instance array that was attached to the DataTables
+ *   settings object
+ * @return {array} Buttons instances
+ * @static
+ */
+Buttons.instanceSelector = function ( group, buttons )
+{
+	if ( group === undefined || group === null ) {
+		return $.map( buttons, function ( v ) {
+			return v.inst;
+		} );
+	}
+
+	var ret = [];
+	var names = $.map( buttons, function ( v ) {
+		return v.name;
+	} );
+
+	// Flatten the group selector into an array of single options
+	var process = function ( input ) {
+		if ( Array.isArray( input ) ) {
+			for ( var i=0, ien=input.length ; i<ien ; i++ ) {
+				process( input[i] );
+			}
+			return;
+		}
+
+		if ( typeof input === 'string' ) {
+			if ( input.indexOf( ',' ) !== -1 ) {
+				// String selector, list of names
+				process( input.split(',') );
+			}
+			else {
+				// String selector individual name
+				var idx = $.inArray( input.trim(), names );
+
+				if ( idx !== -1 ) {
+					ret.push( buttons[ idx ].inst );
+				}
+			}
+		}
+		else if ( typeof input === 'number' ) {
+			// Index selector
+			ret.push( buttons[ input ].inst );
+		}
+	};
+	
+	process( group );
+
+	return ret;
+};
+
+/**
+ * Button selector - select one or more buttons from a selector input so some
+ * operation can be performed on them.
+ * @param  {array} Button instances array that the selector should operate on
+ * @param  {string|int|node|jQuery|array} Button selector - see
+ *   `button-selector` documentation on the DataTables site
+ * @return {array} Array of objects containing `inst` and `idx` properties of
+ *   the selected buttons so you know which instance each button belongs to.
+ * @static
+ */
+Buttons.buttonSelector = function ( insts, selector )
+{
+	var ret = [];
+	var nodeBuilder = function ( a, buttons, baseIdx ) {
+		var button;
+		var idx;
+
+		for ( var i=0, ien=buttons.length ; i<ien ; i++ ) {
+			button = buttons[i];
+
+			if ( button ) {
+				idx = baseIdx !== undefined ?
+					baseIdx+i :
+					i+'';
+
+				a.push( {
+					node: button.node,
+					name: button.conf.name,
+					idx:  idx
+				} );
+
+				if ( button.buttons ) {
+					nodeBuilder( a, button.buttons, idx+'-' );
+				}
+			}
+		}
+	};
+
+	var run = function ( selector, inst ) {
+		var i, ien;
+		var buttons = [];
+		nodeBuilder( buttons, inst.s.buttons );
+
+		var nodes = $.map( buttons, function (v) {
+			return v.node;
+		} );
+
+		if ( Array.isArray( selector ) || selector instanceof $ ) {
+			for ( i=0, ien=selector.length ; i<ien ; i++ ) {
+				run( selector[i], inst );
+			}
+			return;
+		}
+
+		if ( selector === null || selector === undefined || selector === '*' ) {
+			// Select all
+			for ( i=0, ien=buttons.length ; i<ien ; i++ ) {
+				ret.push( {
+					inst: inst,
+					node: buttons[i].node
+				} );
+			}
+		}
+		else if ( typeof selector === 'number' ) {
+			// Main button index selector
+			ret.push( {
+				inst: inst,
+				node: inst.s.buttons[ selector ].node
+			} );
+		}
+		else if ( typeof selector === 'string' ) {
+			if ( selector.indexOf( ',' ) !== -1 ) {
+				// Split
+				var a = selector.split(',');
+
+				for ( i=0, ien=a.length ; i<ien ; i++ ) {
+					run( a[i].trim(), inst );
+				}
+			}
+			else if ( selector.match( /^\d+(\-\d+)*$/ ) ) {
+				// Sub-button index selector
+				var indexes = $.map( buttons, function (v) {
+					return v.idx;
+				} );
+
+				ret.push( {
+					inst: inst,
+					node: buttons[ $.inArray( selector, indexes ) ].node
+				} );
+			}
+			else if ( selector.indexOf( ':name' ) !== -1 ) {
+				// Button name selector
+				var name = selector.replace( ':name', '' );
+
+				for ( i=0, ien=buttons.length ; i<ien ; i++ ) {
+					if ( buttons[i].name === name ) {
+						ret.push( {
+							inst: inst,
+							node: buttons[i].node
+						} );
+					}
+				}
+			}
+			else {
+				// jQuery selector on the nodes
+				$( nodes ).filter( selector ).each( function () {
+					ret.push( {
+						inst: inst,
+						node: this
+					} );
+				} );
+			}
+		}
+		else if ( typeof selector === 'object' && selector.nodeName ) {
+			// Node selector
+			var idx = $.inArray( selector, nodes );
+
+			if ( idx !== -1 ) {
+				ret.push( {
+					inst: inst,
+					node: nodes[ idx ]
+				} );
+			}
+		}
+	};
+
+
+	for ( var i=0, ien=insts.length ; i<ien ; i++ ) {
+		var inst = insts[i];
+
+		run( selector, inst );
+	}
+
+	return ret;
+};
+
+/**
+ * Default function used for formatting output data.
+ * @param {*} str Data to strip
+ */
+Buttons.stripData = function ( str, config ) {
+	if ( typeof str !== 'string' ) {
+		return str;
+	}
+
+	// Always remove script tags
+	str = str.replace( /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '' );
+
+	// Always remove comments
+	str = str.replace( /<!\-\-.*?\-\->/g, '' );
+
+	if ( ! config || config.stripHtml ) {
+		str = str.replace( /<[^>]*>/g, '' );
+	}
+
+	if ( ! config || config.trim ) {
+		str = str.replace( /^\s+|\s+$/g, '' );
+	}
+
+	if ( ! config || config.stripNewlines ) {
+		str = str.replace( /\n/g, ' ' );
+	}
+
+	if ( ! config || config.decodeEntities ) {
+		_exportTextarea.innerHTML = str;
+		str = _exportTextarea.value;
+	}
+
+	return str;
+};
+
+
+/**
+ * Buttons defaults. For full documentation, please refer to the docs/option
+ * directory or the DataTables site.
+ * @type {Object}
+ * @static
+ */
+Buttons.defaults = {
+	buttons: [ 'copy', 'excel', 'csv', 'pdf', 'print' ],
+	name: 'main',
+	tabIndex: 0,
+	dom: {
+		container: {
+			tag: 'div',
+			className: 'dt-buttons'
+		},
+		collection: {
+			tag: 'div',
+			className: ''
+		},
+		button: {
+			tag: 'button',
+			className: 'dt-button',
+			active: 'active',
+			disabled: 'disabled'
+		},
+		buttonLiner: {
+			tag: 'span',
+			className: ''
+		},
+		split: {
+			tag: 'div',
+			className: 'dt-button-split',
+		},
+		splitWrapper: {
+			tag: 'div',
+			className: 'dt-btn-split-wrapper',
+		},
+		splitDropdown: {
+			tag: 'button',
+			text: '&#x25BC;',
+			className: 'dt-btn-split-drop',
+			align: 'split-right',
+			splitAlignClass: 'dt-button-split-left'
+		},
+		splitDropdownButton: {
+			tag: 'button',
+			className: 'dt-btn-split-drop-button dt-button',
+		},
+		splitCollection: {
+			tag: 'div',
+			className: 'dt-button-split-collection',
+		}
+	}
+};
+
+/**
+ * Version information
+ * @type {string}
+ * @static
+ */
+Buttons.version = '2.0.1';
+
+
+$.extend( _dtButtons, {
+	collection: {
+		text: function ( dt ) {
+			return dt.i18n( 'buttons.collection', 'Collection' );
+		},
+		className: 'buttons-collection',
+		init: function ( dt, button, config ) {
+			button.attr( 'aria-expanded', false );
+		},
+		action: function ( e, dt, button, config ) {
+			if ( config._collection.parents('body').length ) {
+				this.popover(false, config);
+			}
+			else {
+				this.popover(config._collection, config);
+			}
+		},
+		attr: {
+			'aria-haspopup': true
+		}
+		// Also the popover options, defined in Buttons.popover
+	},
+	split: {
+		text: function ( dt ) {
+			return dt.i18n( 'buttons.split', 'Split' );
+		},
+		className: 'buttons-split',
+		init: function ( dt, button, config ) {
+			return button.attr( 'aria-expanded', false );
+		},
+		action: function ( e, dt, button, config ) {
+			this.popover(config._collection, config);
+		},
+		attr: {
+			'aria-haspopup': true
+		}
+		// Also the popover options, defined in Buttons.popover
+	},
+	copy: function ( dt, conf ) {
+		if ( _dtButtons.copyHtml5 ) {
+			return 'copyHtml5';
+		}
+	},
+	csv: function ( dt, conf ) {
+		if ( _dtButtons.csvHtml5 && _dtButtons.csvHtml5.available( dt, conf ) ) {
+			return 'csvHtml5';
+		}
+	},
+	excel: function ( dt, conf ) {
+		if ( _dtButtons.excelHtml5 && _dtButtons.excelHtml5.available( dt, conf ) ) {
+			return 'excelHtml5';
+		}
+	},
+	pdf: function ( dt, conf ) {
+		if ( _dtButtons.pdfHtml5 && _dtButtons.pdfHtml5.available( dt, conf ) ) {
+			return 'pdfHtml5';
+		}
+	},
+	pageLength: function ( dt ) {
+		var lengthMenu = dt.settings()[0].aLengthMenu;
+		var vals = [];
+		var lang = [];
+		var text = function ( dt ) {
+			return dt.i18n( 'buttons.pageLength', {
+				"-1": 'Show all rows',
+				_:    'Show %d rows'
+			}, dt.page.len() );
+		};
+
+		// Support for DataTables 1.x 2D array
+		if (Array.isArray( lengthMenu[0] )) {
+			vals = lengthMenu[0];
+			lang = lengthMenu[1];
+		}
+		else {
+			for (var i=0 ; i<lengthMenu.length ; i++) {
+				var option = lengthMenu[i];
+
+				// Support for DataTables 2 object in the array
+				if ($.isPlainObject(option)) {
+					vals.push(option.value);
+					lang.push(option.label);
+				}
+				else {
+					vals.push(option);
+					lang.push(option);
+				}
+			}
+		}
+
+		return {
+			extend: 'collection',
+			text: text,
+			className: 'buttons-page-length',
+			autoClose: true,
+			buttons: $.map( vals, function ( val, i ) {
+				return {
+					text: lang[i],
+					className: 'button-page-length',
+					action: function ( e, dt ) {
+						dt.page.len( val ).draw();
+					},
+					init: function ( dt, node, conf ) {
+						var that = this;
+						var fn = function () {
+							that.active( dt.page.len() === val );
+						};
+
+						dt.on( 'length.dt'+conf.namespace, fn );
+						fn();
+					},
+					destroy: function ( dt, node, conf ) {
+						dt.off( 'length.dt'+conf.namespace );
+					}
+				};
+			} ),
+			init: function ( dt, node, conf ) {
+				var that = this;
+				dt.on( 'length.dt'+conf.namespace, function () {
+					that.text( conf.text );
+				} );
+			},
+			destroy: function ( dt, node, conf ) {
+				dt.off( 'length.dt'+conf.namespace );
+			}
+		};
+	}
+} );
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables API
+ *
+ * For complete documentation, please refer to the docs/api directory or the
+ * DataTables site
+ */
+
+// Buttons group and individual button selector
+DataTable.Api.register( 'buttons()', function ( group, selector ) {
+	// Argument shifting
+	if ( selector === undefined ) {
+		selector = group;
+		group = undefined;
+	}
+
+	this.selector.buttonGroup = group;
+
+	var res = this.iterator( true, 'table', function ( ctx ) {
+		if ( ctx._buttons ) {
+			return Buttons.buttonSelector(
+				Buttons.instanceSelector( group, ctx._buttons ),
+				selector
+			);
+		}
+	}, true );
+
+	res._groupSelector = group;
+	return res;
+} );
+
+// Individual button selector
+DataTable.Api.register( 'button()', function ( group, selector ) {
+	// just run buttons() and truncate
+	var buttons = this.buttons( group, selector );
+
+	if ( buttons.length > 1 ) {
+		buttons.splice( 1, buttons.length );
+	}
+
+	return buttons;
+} );
+
+// Active buttons
+DataTable.Api.registerPlural( 'buttons().active()', 'button().active()', function ( flag ) {
+	if ( flag === undefined ) {
+		return this.map( function ( set ) {
+			return set.inst.active( set.node );
+		} );
+	}
+
+	return this.each( function ( set ) {
+		set.inst.active( set.node, flag );
+	} );
+} );
+
+// Get / set button action
+DataTable.Api.registerPlural( 'buttons().action()', 'button().action()', function ( action ) {
+	if ( action === undefined ) {
+		return this.map( function ( set ) {
+			return set.inst.action( set.node );
+		} );
+	}
+
+	return this.each( function ( set ) {
+		set.inst.action( set.node, action );
+	} );
+} );
+
+// Collection control
+DataTable.Api.registerPlural( 'buttons().collectionRebuild()', 'button().collectionRebuild()', function ( buttons ) {
+	return this.each( function ( set ) {
+		for(var i = 0; i < buttons.length; i++) {
+			if(typeof buttons[i] === 'object') {
+				buttons[i].parentConf = set;
+			}
+		}
+		set.inst.collectionRebuild( set.node, buttons );
+	} );
+} );
+
+// Enable / disable buttons
+DataTable.Api.register( ['buttons().enable()', 'button().enable()'], function ( flag ) {
+	return this.each( function ( set ) {
+		set.inst.enable( set.node, flag );
+	} );
+} );
+
+// Disable buttons
+DataTable.Api.register( ['buttons().disable()', 'button().disable()'], function () {
+	return this.each( function ( set ) {
+		set.inst.disable( set.node );
+	} );
+} );
+
+// Get button nodes
+DataTable.Api.registerPlural( 'buttons().nodes()', 'button().node()', function () {
+	var jq = $();
+
+	// jQuery will automatically reduce duplicates to a single entry
+	$( this.each( function ( set ) {
+		jq = jq.add( set.inst.node( set.node ) );
+	} ) );
+
+	return jq;
+} );
+
+// Get / set button processing state
+DataTable.Api.registerPlural( 'buttons().processing()', 'button().processing()', function ( flag ) {
+	if ( flag === undefined ) {
+		return this.map( function ( set ) {
+			return set.inst.processing( set.node );
+		} );
+	}
+
+	return this.each( function ( set ) {
+		set.inst.processing( set.node, flag );
+	} );
+} );
+
+// Get / set button text (i.e. the button labels)
+DataTable.Api.registerPlural( 'buttons().text()', 'button().text()', function ( label ) {
+	if ( label === undefined ) {
+		return this.map( function ( set ) {
+			return set.inst.text( set.node );
+		} );
+	}
+
+	return this.each( function ( set ) {
+		set.inst.text( set.node, label );
+	} );
+} );
+
+// Trigger a button's action
+DataTable.Api.registerPlural( 'buttons().trigger()', 'button().trigger()', function () {
+	return this.each( function ( set ) {
+		set.inst.node( set.node ).trigger( 'click' );
+	} );
+} );
+
+// Button resolver to the popover
+DataTable.Api.register( 'button().popover()', function (content, options) {
+	return this.map( function ( set ) {
+		return set.inst._popover( content, this.button(this[0].node), options );
+	} );
+} );
+
+// Get the container elements
+DataTable.Api.register( 'buttons().containers()', function () {
+	var jq = $();
+	var groupSelector = this._groupSelector;
+
+	// We need to use the group selector directly, since if there are no buttons
+	// the result set will be empty
+	this.iterator( true, 'table', function ( ctx ) {
+		if ( ctx._buttons ) {
+			var insts = Buttons.instanceSelector( groupSelector, ctx._buttons );
+
+			for ( var i=0, ien=insts.length ; i<ien ; i++ ) {
+				jq = jq.add( insts[i].container() );
+			}
+		}
+	} );
+
+	return jq;
+} );
+
+DataTable.Api.register( 'buttons().container()', function () {
+	// API level of nesting is `buttons()` so we can zip into the containers method
+	return this.containers().eq(0);
+} );
+
+// Add a new button
+DataTable.Api.register( 'button().add()', function ( idx, conf ) {
+	var ctx = this.context;
+
+	// Don't use `this` as it could be empty - select the instances directly
+	if ( ctx.length ) {
+		var inst = Buttons.instanceSelector( this._groupSelector, ctx[0]._buttons );
+
+		if ( inst.length ) {
+			inst[0].add( conf, idx );
+		}
+	}
+
+	return this.button( this._groupSelector, idx );
+} );
+
+// Destroy the button sets selected
+DataTable.Api.register( 'buttons().destroy()', function () {
+	this.pluck( 'inst' ).unique().each( function ( inst ) {
+		inst.destroy();
+	} );
+
+	return this;
+} );
+
+// Remove a button
+DataTable.Api.registerPlural( 'buttons().remove()', 'buttons().remove()', function () {
+	this.each( function ( set ) {
+		set.inst.remove( set.node );
+	} );
+
+	return this;
+} );
+
+// Information box that can be used by buttons
+var _infoTimer;
+DataTable.Api.register( 'buttons.info()', function ( title, message, time ) {
+	var that = this;
+
+	if ( title === false ) {
+		this.off('destroy.btn-info');
+		_fadeOut(
+			$('#datatables_buttons_info'),
+			400,
+			function () {
+				$(this).remove();
+			}
+		);
+		clearTimeout( _infoTimer );
+		_infoTimer = null;
+
+		return this;
+	}
+
+	if ( _infoTimer ) {
+		clearTimeout( _infoTimer );
+	}
+
+	if ( $('#datatables_buttons_info').length ) {
+		$('#datatables_buttons_info').remove();
+	}
+
+	title = title ? '<h2>'+title+'</h2>' : '';
+
+	_fadeIn(
+		$('<div id="datatables_buttons_info" class="dt-button-info"/>')
+			.html( title )
+			.append( $('<div/>')[ typeof message === 'string' ? 'html' : 'append' ]( message ) )
+			.css( 'display', 'none' )
+			.appendTo( 'body' )
+	);
+
+	if ( time !== undefined && time !== 0 ) {
+		_infoTimer = setTimeout( function () {
+			that.buttons.info( false );
+		}, time );
+	}
+
+	this.on('destroy.btn-info', function () {
+		that.buttons.info(false);
+	});
+
+	return this;
+} );
+
+// Get data from the table for export - this is common to a number of plug-in
+// buttons so it is included in the Buttons core library
+DataTable.Api.register( 'buttons.exportData()', function ( options ) {
+	if ( this.context.length ) {
+		return _exportData( new DataTable.Api( this.context[0] ), options );
+	}
+} );
+
+// Get information about the export that is common to many of the export data
+// types (DRY)
+DataTable.Api.register( 'buttons.exportInfo()', function ( conf ) {
+	if ( ! conf ) {
+		conf = {};
+	}
+
+	return {
+		filename: _filename( conf ),
+		title: _title( conf ),
+		messageTop: _message(this, conf.message || conf.messageTop, 'top'),
+		messageBottom: _message(this, conf.messageBottom, 'bottom')
+	};
+} );
+
+
+
+/**
+ * Get the file name for an exported file.
+ *
+ * @param {object}	config Button configuration
+ * @param {boolean} incExtension Include the file name extension
+ */
+var _filename = function ( config )
+{
+	// Backwards compatibility
+	var filename = config.filename === '*' && config.title !== '*' && config.title !== undefined && config.title !== null && config.title !== '' ?
+		config.title :
+		config.filename;
+
+	if ( typeof filename === 'function' ) {
+		filename = filename();
+	}
+
+	if ( filename === undefined || filename === null ) {
+		return null;
+	}
+
+	if ( filename.indexOf( '*' ) !== -1 ) {
+		filename = filename.replace( '*', $('head > title').text() ).trim();
+	}
+
+	// Strip characters which the OS will object to
+	filename = filename.replace(/[^a-zA-Z0-9_\u00A1-\uFFFF\.,\-_ !\(\)]/g, "");
+
+	var extension = _stringOrFunction( config.extension );
+	if ( ! extension ) {
+		extension = '';
+	}
+
+	return filename + extension;
+};
+
+/**
+ * Simply utility method to allow parameters to be given as a function
+ *
+ * @param {undefined|string|function} option Option
+ * @return {null|string} Resolved value
+ */
+var _stringOrFunction = function ( option )
+{
+	if ( option === null || option === undefined ) {
+		return null;
+	}
+	else if ( typeof option === 'function' ) {
+		return option();
+	}
+	return option;
+};
+
+/**
+ * Get the title for an exported file.
+ *
+ * @param {object} config	Button configuration
+ */
+var _title = function ( config )
+{
+	var title = _stringOrFunction( config.title );
+
+	return title === null ?
+		null : title.indexOf( '*' ) !== -1 ?
+			title.replace( '*', $('head > title').text() || 'Exported data' ) :
+			title;
+};
+
+var _message = function ( dt, option, position )
+{
+	var message = _stringOrFunction( option );
+	if ( message === null ) {
+		return null;
+	}
+
+	var caption = $('caption', dt.table().container()).eq(0);
+	if ( message === '*' ) {
+		var side = caption.css( 'caption-side' );
+		if ( side !== position ) {
+			return null;
+		}
+
+		return caption.length ?
+			caption.text() :
+			'';
+	}
+
+	return message;
+};
+
+
+
+
+var _exportTextarea = $('<textarea/>')[0];
+var _exportData = function ( dt, inOpts )
+{
+	var config = $.extend( true, {}, {
+		rows:           null,
+		columns:        '',
+		modifier:       {
+			search: 'applied',
+			order:  'applied'
+		},
+		orthogonal:     'display',
+		stripHtml:      true,
+		stripNewlines:  true,
+		decodeEntities: true,
+		trim:           true,
+		format:         {
+			header: function ( d ) {
+				return Buttons.stripData( d, config );
+			},
+			footer: function ( d ) {
+				return Buttons.stripData( d, config );
+			},
+			body: function ( d ) {
+				return Buttons.stripData( d, config );
+			}
+		},
+		customizeData: null
+	}, inOpts );
+
+	var header = dt.columns( config.columns ).indexes().map( function (idx) {
+		var el = dt.column( idx ).header();
+		return config.format.header( el.innerHTML, idx, el );
+	} ).toArray();
+
+	var footer = dt.table().footer() ?
+		dt.columns( config.columns ).indexes().map( function (idx) {
+			var el = dt.column( idx ).footer();
+			return config.format.footer( el ? el.innerHTML : '', idx, el );
+		} ).toArray() :
+		null;
+	
+	// If Select is available on this table, and any rows are selected, limit the export
+	// to the selected rows. If no rows are selected, all rows will be exported. Specify
+	// a `selected` modifier to control directly.
+	var modifier = $.extend( {}, config.modifier );
+	if ( dt.select && typeof dt.select.info === 'function' && modifier.selected === undefined ) {
+		if ( dt.rows( config.rows, $.extend( { selected: true }, modifier ) ).any() ) {
+			$.extend( modifier, { selected: true } )
+		}
+	}
+
+	var rowIndexes = dt.rows( config.rows, modifier ).indexes().toArray();
+	var selectedCells = dt.cells( rowIndexes, config.columns );
+	var cells = selectedCells
+		.render( config.orthogonal )
+		.toArray();
+	var cellNodes = selectedCells
+		.nodes()
+		.toArray();
+
+	var columns = header.length;
+	var rows = columns > 0 ? cells.length / columns : 0;
+	var body = [];
+	var cellCounter = 0;
+
+	for ( var i=0, ien=rows ; i<ien ; i++ ) {
+		var row = [ columns ];
+
+		for ( var j=0 ; j<columns ; j++ ) {
+			row[j] = config.format.body( cells[ cellCounter ], i, j, cellNodes[ cellCounter ] );
+			cellCounter++;
+		}
+
+		body[i] = row;
+	}
+
+	var data = {
+		header: header,
+		footer: footer,
+		body:   body
+	};
+
+	if ( config.customizeData ) {
+		config.customizeData( data );
+	}
+
+	return data;
+};
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables interface
+ */
+
+// Attach to DataTables objects for global access
+$.fn.dataTable.Buttons = Buttons;
+$.fn.DataTable.Buttons = Buttons;
+
+
+
+// DataTables creation - check if the buttons have been defined for this table,
+// they will have been if the `B` option was used in `dom`, otherwise we should
+// create the buttons instance here so they can be inserted into the document
+// using the API. Listen for `init` for compatibility with pre 1.10.10, but to
+// be removed in future.
+$(document).on( 'init.dt plugin-init.dt', function (e, settings) {
+	if ( e.namespace !== 'dt' ) {
+		return;
+	}
+
+	var opts = settings.oInit.buttons || DataTable.defaults.buttons;
+
+	if ( opts && ! settings._buttons ) {
+		new Buttons( settings, opts ).container();
+	}
+} );
+
+function _init ( settings, options ) {
+	var api = new DataTable.Api( settings );
+	var opts = options
+		? options
+		: api.init().buttons || DataTable.defaults.buttons;
+
+	return new Buttons( api, opts ).container();
+}
+
+// DataTables `dom` feature option
+DataTable.ext.feature.push( {
+	fnInit: _init,
+	cFeature: "B"
+} );
+
+// DataTables 2 layout feature
+if ( DataTable.ext.features ) {
+	DataTable.ext.features.register( 'buttons', _init );
+}
+
+
+return Buttons;
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/jszip/dist/jszip.js":
+/*!******************************************!*\
+  !*** ./node_modules/jszip/dist/jszip.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer, global, setImmediate) {var require;var require;/*!
+
+JSZip v3.7.1 - A JavaScript class for generating and reading zip files
+<http://stuartk.com/jszip>
+
+(c) 2009-2016 Stuart Knightley <stuart [at] stuartk.com>
+Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/jszip/master/LICENSE.markdown.
+
+JSZip uses the library pako released under the MIT license :
+https://github.com/nodeca/pako/blob/master/LICENSE
+*/
+
+(function(f){if(true){module.exports=f()}else { var g; }})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+var utils = require('./utils');
+var support = require('./support');
+// private property
+var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+
+// public method for encoding
+exports.encode = function(input) {
+    var output = [];
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0, len = input.length, remainingBytes = len;
+
+    var isArray = utils.getTypeOf(input) !== "string";
+    while (i < input.length) {
+        remainingBytes = len - i;
+
+        if (!isArray) {
+            chr1 = input.charCodeAt(i++);
+            chr2 = i < len ? input.charCodeAt(i++) : 0;
+            chr3 = i < len ? input.charCodeAt(i++) : 0;
+        } else {
+            chr1 = input[i++];
+            chr2 = i < len ? input[i++] : 0;
+            chr3 = i < len ? input[i++] : 0;
+        }
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = remainingBytes > 1 ? (((chr2 & 15) << 2) | (chr3 >> 6)) : 64;
+        enc4 = remainingBytes > 2 ? (chr3 & 63) : 64;
+
+        output.push(_keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4));
+
     }
 
-    var currentValue = '';
-    var isLength = false;
-    var values = [];
-    var shadows = [];
-    var numParens = 0;
-    var color = null;
+    return output.join("");
+};
 
-    var appendValue = function appendValue() {
-        if (currentValue.length) {
-            if (isLength) {
-                values.push(parseFloat(currentValue));
-            } else {
-                color = new _Color2.default(currentValue);
+// public method for decoding
+exports.decode = function(input) {
+    var chr1, chr2, chr3;
+    var enc1, enc2, enc3, enc4;
+    var i = 0, resultIndex = 0;
+
+    var dataUrlPrefix = "data:";
+
+    if (input.substr(0, dataUrlPrefix.length) === dataUrlPrefix) {
+        // This is a common error: people give a data url
+        // (data:image/png;base64,iVBOR...) with a {base64: true} and
+        // wonders why things don't work.
+        // We can detect that the string input looks like a data url but we
+        // *can't* be sure it is one: removing everything up to the comma would
+        // be too dangerous.
+        throw new Error("Invalid base64 input, it looks like a data url.");
+    }
+
+    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+    var totalLength = input.length * 3 / 4;
+    if(input.charAt(input.length - 1) === _keyStr.charAt(64)) {
+        totalLength--;
+    }
+    if(input.charAt(input.length - 2) === _keyStr.charAt(64)) {
+        totalLength--;
+    }
+    if (totalLength % 1 !== 0) {
+        // totalLength is not an integer, the length does not match a valid
+        // base64 content. That can happen if:
+        // - the input is not a base64 content
+        // - the input is *almost* a base64 content, with a extra chars at the
+        //   beginning or at the end
+        // - the input uses a base64 variant (base64url for example)
+        throw new Error("Invalid base64 input, bad content length.");
+    }
+    var output;
+    if (support.uint8array) {
+        output = new Uint8Array(totalLength|0);
+    } else {
+        output = new Array(totalLength|0);
+    }
+
+    while (i < input.length) {
+
+        enc1 = _keyStr.indexOf(input.charAt(i++));
+        enc2 = _keyStr.indexOf(input.charAt(i++));
+        enc3 = _keyStr.indexOf(input.charAt(i++));
+        enc4 = _keyStr.indexOf(input.charAt(i++));
+
+        chr1 = (enc1 << 2) | (enc2 >> 4);
+        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+        chr3 = ((enc3 & 3) << 6) | enc4;
+
+        output[resultIndex++] = chr1;
+
+        if (enc3 !== 64) {
+            output[resultIndex++] = chr2;
+        }
+        if (enc4 !== 64) {
+            output[resultIndex++] = chr3;
+        }
+
+    }
+
+    return output;
+};
+
+},{"./support":30,"./utils":32}],2:[function(require,module,exports){
+'use strict';
+
+var external = require("./external");
+var DataWorker = require('./stream/DataWorker');
+var Crc32Probe = require('./stream/Crc32Probe');
+var DataLengthProbe = require('./stream/DataLengthProbe');
+
+/**
+ * Represent a compressed object, with everything needed to decompress it.
+ * @constructor
+ * @param {number} compressedSize the size of the data compressed.
+ * @param {number} uncompressedSize the size of the data after decompression.
+ * @param {number} crc32 the crc32 of the decompressed file.
+ * @param {object} compression the type of compression, see lib/compressions.js.
+ * @param {String|ArrayBuffer|Uint8Array|Buffer} data the compressed data.
+ */
+function CompressedObject(compressedSize, uncompressedSize, crc32, compression, data) {
+    this.compressedSize = compressedSize;
+    this.uncompressedSize = uncompressedSize;
+    this.crc32 = crc32;
+    this.compression = compression;
+    this.compressedContent = data;
+}
+
+CompressedObject.prototype = {
+    /**
+     * Create a worker to get the uncompressed content.
+     * @return {GenericWorker} the worker.
+     */
+    getContentWorker: function () {
+        var worker = new DataWorker(external.Promise.resolve(this.compressedContent))
+            .pipe(this.compression.uncompressWorker())
+            .pipe(new DataLengthProbe("data_length"));
+
+        var that = this;
+        worker.on("end", function () {
+            if (this.streamInfo['data_length'] !== that.uncompressedSize) {
+                throw new Error("Bug : uncompressed data size mismatch");
             }
+        });
+        return worker;
+    },
+    /**
+     * Create a worker to get the compressed content.
+     * @return {GenericWorker} the worker.
+     */
+    getCompressedWorker: function () {
+        return new DataWorker(external.Promise.resolve(this.compressedContent))
+            .withStreamInfo("compressedSize", this.compressedSize)
+            .withStreamInfo("uncompressedSize", this.uncompressedSize)
+            .withStreamInfo("crc32", this.crc32)
+            .withStreamInfo("compression", this.compression)
+            ;
+    }
+};
+
+/**
+ * Chain the given worker with other workers to compress the content with the
+ * given compression.
+ * @param {GenericWorker} uncompressedWorker the worker to pipe.
+ * @param {Object} compression the compression object.
+ * @param {Object} compressionOptions the options to use when compressing.
+ * @return {GenericWorker} the new worker compressing the content.
+ */
+CompressedObject.createWorkerFrom = function (uncompressedWorker, compression, compressionOptions) {
+    return uncompressedWorker
+        .pipe(new Crc32Probe())
+        .pipe(new DataLengthProbe("uncompressedSize"))
+        .pipe(compression.compressWorker(compressionOptions))
+        .pipe(new DataLengthProbe("compressedSize"))
+        .withStreamInfo("compression", compression);
+};
+
+module.exports = CompressedObject;
+
+},{"./external":6,"./stream/Crc32Probe":25,"./stream/DataLengthProbe":26,"./stream/DataWorker":27}],3:[function(require,module,exports){
+'use strict';
+
+var GenericWorker = require("./stream/GenericWorker");
+
+exports.STORE = {
+    magic: "\x00\x00",
+    compressWorker : function (compressionOptions) {
+        return new GenericWorker("STORE compression");
+    },
+    uncompressWorker : function () {
+        return new GenericWorker("STORE decompression");
+    }
+};
+exports.DEFLATE = require('./flate');
+
+},{"./flate":7,"./stream/GenericWorker":28}],4:[function(require,module,exports){
+'use strict';
+
+var utils = require('./utils');
+
+/**
+ * The following functions come from pako, from pako/lib/zlib/crc32.js
+ * released under the MIT license, see pako https://github.com/nodeca/pako/
+ */
+
+// Use ordinary array, since untyped makes no boost here
+function makeTable() {
+    var c, table = [];
+
+    for(var n =0; n < 256; n++){
+        c = n;
+        for(var k =0; k < 8; k++){
+            c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
         }
-        isLength = false;
-        currentValue = '';
+        table[n] = c;
+    }
+
+    return table;
+}
+
+// Create table on load. Just 255 signed longs. Not a problem.
+var crcTable = makeTable();
+
+
+function crc32(crc, buf, len, pos) {
+    var t = crcTable, end = pos + len;
+
+    crc = crc ^ (-1);
+
+    for (var i = pos; i < end; i++ ) {
+        crc = (crc >>> 8) ^ t[(crc ^ buf[i]) & 0xFF];
+    }
+
+    return (crc ^ (-1)); // >>> 0;
+}
+
+// That's all for the pako functions.
+
+/**
+ * Compute the crc32 of a string.
+ * This is almost the same as the function crc32, but for strings. Using the
+ * same function for the two use cases leads to horrible performances.
+ * @param {Number} crc the starting value of the crc.
+ * @param {String} str the string to use.
+ * @param {Number} len the length of the string.
+ * @param {Number} pos the starting position for the crc32 computation.
+ * @return {Number} the computed crc32.
+ */
+function crc32str(crc, str, len, pos) {
+    var t = crcTable, end = pos + len;
+
+    crc = crc ^ (-1);
+
+    for (var i = pos; i < end; i++ ) {
+        crc = (crc >>> 8) ^ t[(crc ^ str.charCodeAt(i)) & 0xFF];
+    }
+
+    return (crc ^ (-1)); // >>> 0;
+}
+
+module.exports = function crc32wrapper(input, crc) {
+    if (typeof input === "undefined" || !input.length) {
+        return 0;
+    }
+
+    var isArray = utils.getTypeOf(input) !== "string";
+
+    if(isArray) {
+        return crc32(crc|0, input, input.length, 0);
+    } else {
+        return crc32str(crc|0, input, input.length, 0);
+    }
+};
+
+},{"./utils":32}],5:[function(require,module,exports){
+'use strict';
+exports.base64 = false;
+exports.binary = false;
+exports.dir = false;
+exports.createFolders = true;
+exports.date = null;
+exports.compression = null;
+exports.compressionOptions = null;
+exports.comment = null;
+exports.unixPermissions = null;
+exports.dosPermissions = null;
+
+},{}],6:[function(require,module,exports){
+/* global Promise */
+'use strict';
+
+// load the global object first:
+// - it should be better integrated in the system (unhandledRejection in node)
+// - the environment may have a custom Promise implementation (see zone.js)
+var ES6Promise = null;
+if (typeof Promise !== "undefined") {
+    ES6Promise = Promise;
+} else {
+    ES6Promise = require("lie");
+}
+
+/**
+ * Let the user use/change some implementations.
+ */
+module.exports = {
+    Promise: ES6Promise
+};
+
+},{"lie":37}],7:[function(require,module,exports){
+'use strict';
+var USE_TYPEDARRAY = (typeof Uint8Array !== 'undefined') && (typeof Uint16Array !== 'undefined') && (typeof Uint32Array !== 'undefined');
+
+var pako = require("pako");
+var utils = require("./utils");
+var GenericWorker = require("./stream/GenericWorker");
+
+var ARRAY_TYPE = USE_TYPEDARRAY ? "uint8array" : "array";
+
+exports.magic = "\x08\x00";
+
+/**
+ * Create a worker that uses pako to inflate/deflate.
+ * @constructor
+ * @param {String} action the name of the pako function to call : either "Deflate" or "Inflate".
+ * @param {Object} options the options to use when (de)compressing.
+ */
+function FlateWorker(action, options) {
+    GenericWorker.call(this, "FlateWorker/" + action);
+
+    this._pako = null;
+    this._pakoAction = action;
+    this._pakoOptions = options;
+    // the `meta` object from the last chunk received
+    // this allow this worker to pass around metadata
+    this.meta = {};
+}
+
+utils.inherits(FlateWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+FlateWorker.prototype.processChunk = function (chunk) {
+    this.meta = chunk.meta;
+    if (this._pako === null) {
+        this._createPako();
+    }
+    this._pako.push(utils.transformTo(ARRAY_TYPE, chunk.data), false);
+};
+
+/**
+ * @see GenericWorker.flush
+ */
+FlateWorker.prototype.flush = function () {
+    GenericWorker.prototype.flush.call(this);
+    if (this._pako === null) {
+        this._createPako();
+    }
+    this._pako.push([], true);
+};
+/**
+ * @see GenericWorker.cleanUp
+ */
+FlateWorker.prototype.cleanUp = function () {
+    GenericWorker.prototype.cleanUp.call(this);
+    this._pako = null;
+};
+
+/**
+ * Create the _pako object.
+ * TODO: lazy-loading this object isn't the best solution but it's the
+ * quickest. The best solution is to lazy-load the worker list. See also the
+ * issue #446.
+ */
+FlateWorker.prototype._createPako = function () {
+    this._pako = new pako[this._pakoAction]({
+        raw: true,
+        level: this._pakoOptions.level || -1 // default compression
+    });
+    var self = this;
+    this._pako.onData = function(data) {
+        self.push({
+            data : data,
+            meta : self.meta
+        });
+    };
+};
+
+exports.compressWorker = function (compressionOptions) {
+    return new FlateWorker("Deflate", compressionOptions);
+};
+exports.uncompressWorker = function () {
+    return new FlateWorker("Inflate", {});
+};
+
+},{"./stream/GenericWorker":28,"./utils":32,"pako":38}],8:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var GenericWorker = require('../stream/GenericWorker');
+var utf8 = require('../utf8');
+var crc32 = require('../crc32');
+var signature = require('../signature');
+
+/**
+ * Transform an integer into a string in hexadecimal.
+ * @private
+ * @param {number} dec the number to convert.
+ * @param {number} bytes the number of bytes to generate.
+ * @returns {string} the result.
+ */
+var decToHex = function(dec, bytes) {
+    var hex = "", i;
+    for (i = 0; i < bytes; i++) {
+        hex += String.fromCharCode(dec & 0xff);
+        dec = dec >>> 8;
+    }
+    return hex;
+};
+
+/**
+ * Generate the UNIX part of the external file attributes.
+ * @param {Object} unixPermissions the unix permissions or null.
+ * @param {Boolean} isDir true if the entry is a directory, false otherwise.
+ * @return {Number} a 32 bit integer.
+ *
+ * adapted from http://unix.stackexchange.com/questions/14705/the-zip-formats-external-file-attribute :
+ *
+ * TTTTsstrwxrwxrwx0000000000ADVSHR
+ * ^^^^____________________________ file type, see zipinfo.c (UNX_*)
+ *     ^^^_________________________ setuid, setgid, sticky
+ *        ^^^^^^^^^________________ permissions
+ *                 ^^^^^^^^^^______ not used ?
+ *                           ^^^^^^ DOS attribute bits : Archive, Directory, Volume label, System file, Hidden, Read only
+ */
+var generateUnixExternalFileAttr = function (unixPermissions, isDir) {
+
+    var result = unixPermissions;
+    if (!unixPermissions) {
+        // I can't use octal values in strict mode, hence the hexa.
+        //  040775 => 0x41fd
+        // 0100664 => 0x81b4
+        result = isDir ? 0x41fd : 0x81b4;
+    }
+    return (result & 0xFFFF) << 16;
+};
+
+/**
+ * Generate the DOS part of the external file attributes.
+ * @param {Object} dosPermissions the dos permissions or null.
+ * @param {Boolean} isDir true if the entry is a directory, false otherwise.
+ * @return {Number} a 32 bit integer.
+ *
+ * Bit 0     Read-Only
+ * Bit 1     Hidden
+ * Bit 2     System
+ * Bit 3     Volume Label
+ * Bit 4     Directory
+ * Bit 5     Archive
+ */
+var generateDosExternalFileAttr = function (dosPermissions, isDir) {
+
+    // the dir flag is already set for compatibility
+    return (dosPermissions || 0)  & 0x3F;
+};
+
+/**
+ * Generate the various parts used in the construction of the final zip file.
+ * @param {Object} streamInfo the hash with information about the compressed file.
+ * @param {Boolean} streamedContent is the content streamed ?
+ * @param {Boolean} streamingEnded is the stream finished ?
+ * @param {number} offset the current offset from the start of the zip file.
+ * @param {String} platform let's pretend we are this platform (change platform dependents fields)
+ * @param {Function} encodeFileName the function to encode the file name / comment.
+ * @return {Object} the zip parts.
+ */
+var generateZipParts = function(streamInfo, streamedContent, streamingEnded, offset, platform, encodeFileName) {
+    var file = streamInfo['file'],
+    compression = streamInfo['compression'],
+    useCustomEncoding = encodeFileName !== utf8.utf8encode,
+    encodedFileName = utils.transformTo("string", encodeFileName(file.name)),
+    utfEncodedFileName = utils.transformTo("string", utf8.utf8encode(file.name)),
+    comment = file.comment,
+    encodedComment = utils.transformTo("string", encodeFileName(comment)),
+    utfEncodedComment = utils.transformTo("string", utf8.utf8encode(comment)),
+    useUTF8ForFileName = utfEncodedFileName.length !== file.name.length,
+    useUTF8ForComment = utfEncodedComment.length !== comment.length,
+    dosTime,
+    dosDate,
+    extraFields = "",
+    unicodePathExtraField = "",
+    unicodeCommentExtraField = "",
+    dir = file.dir,
+    date = file.date;
+
+
+    var dataInfo = {
+        crc32 : 0,
+        compressedSize : 0,
+        uncompressedSize : 0
     };
 
-    var appendShadow = function appendShadow() {
-        if (values.length && color !== null) {
-            shadows.push({
-                color: color,
-                offsetX: values[0] || 0,
-                offsetY: values[1] || 0,
-                blur: values[2] || 0
-            });
-        }
-        values.splice(0, values.length);
-        color = null;
-    };
-
-    for (var i = 0; i < textShadow.length; i++) {
-        var c = textShadow[i];
-        switch (c) {
-            case '(':
-                currentValue += c;
-                numParens++;
-                break;
-            case ')':
-                currentValue += c;
-                numParens--;
-                break;
-            case ',':
-                if (numParens === 0) {
-                    appendValue();
-                    appendShadow();
-                } else {
-                    currentValue += c;
-                }
-                break;
-            case ' ':
-                if (numParens === 0) {
-                    appendValue();
-                } else {
-                    currentValue += c;
-                }
-                break;
-            default:
-                if (currentValue.length === 0 && NUMBER.test(c)) {
-                    isLength = true;
-                }
-                currentValue += c;
-        }
+    // if the content is streamed, the sizes/crc32 are only available AFTER
+    // the end of the stream.
+    if (!streamedContent || streamingEnded) {
+        dataInfo.crc32 = streamInfo['crc32'];
+        dataInfo.compressedSize = streamInfo['compressedSize'];
+        dataInfo.uncompressedSize = streamInfo['uncompressedSize'];
     }
 
-    appendValue();
-    appendShadow();
-
-    if (shadows.length === 0) {
-        return null;
+    var bitflag = 0;
+    if (streamedContent) {
+        // Bit 3: the sizes/crc32 are set to zero in the local header.
+        // The correct values are put in the data descriptor immediately
+        // following the compressed data.
+        bitflag |= 0x0008;
+    }
+    if (!useCustomEncoding && (useUTF8ForFileName || useUTF8ForComment)) {
+        // Bit 11: Language encoding flag (EFS).
+        bitflag |= 0x0800;
     }
 
-    return shadows;
-};
 
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/textTransform.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/textTransform.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var TEXT_TRANSFORM = exports.TEXT_TRANSFORM = {
-    NONE: 0,
-    LOWERCASE: 1,
-    UPPERCASE: 2,
-    CAPITALIZE: 3
-};
-
-var parseTextTransform = exports.parseTextTransform = function parseTextTransform(textTransform) {
-    switch (textTransform) {
-        case 'uppercase':
-            return TEXT_TRANSFORM.UPPERCASE;
-        case 'lowercase':
-            return TEXT_TRANSFORM.LOWERCASE;
-        case 'capitalize':
-            return TEXT_TRANSFORM.CAPITALIZE;
+    var extFileAttr = 0;
+    var versionMadeBy = 0;
+    if (dir) {
+        // dos or unix, we set the dos dir flag
+        extFileAttr |= 0x00010;
+    }
+    if(platform === "UNIX") {
+        versionMadeBy = 0x031E; // UNIX, version 3.0
+        extFileAttr |= generateUnixExternalFileAttr(file.unixPermissions, dir);
+    } else { // DOS or other, fallback to DOS
+        versionMadeBy = 0x0014; // DOS, version 2.0
+        extFileAttr |= generateDosExternalFileAttr(file.dosPermissions, dir);
     }
 
-    return TEXT_TRANSFORM.NONE;
-};
+    // date
+    // @see http://www.delorie.com/djgpp/doc/rbinter/it/52/13.html
+    // @see http://www.delorie.com/djgpp/doc/rbinter/it/65/16.html
+    // @see http://www.delorie.com/djgpp/doc/rbinter/it/66/16.html
 
-/***/ }),
+    dosTime = date.getUTCHours();
+    dosTime = dosTime << 6;
+    dosTime = dosTime | date.getUTCMinutes();
+    dosTime = dosTime << 5;
+    dosTime = dosTime | date.getUTCSeconds() / 2;
 
-/***/ "./node_modules/html2canvas/dist/npm/parsing/transform.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/transform.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+    dosDate = date.getUTCFullYear() - 1980;
+    dosDate = dosDate << 4;
+    dosDate = dosDate | (date.getUTCMonth() + 1);
+    dosDate = dosDate << 5;
+    dosDate = dosDate | date.getUTCDate();
 
-"use strict";
+    if (useUTF8ForFileName) {
+        // set the unicode path extra field. unzip needs at least one extra
+        // field to correctly handle unicode path, so using the path is as good
+        // as any other information. This could improve the situation with
+        // other archive managers too.
+        // This field is usually used without the utf8 flag, with a non
+        // unicode path in the header (winrar, winzip). This helps (a bit)
+        // with the messy Windows' default compressed folders feature but
+        // breaks on p7zip which doesn't seek the unicode path extra field.
+        // So for now, UTF-8 everywhere !
+        unicodePathExtraField =
+            // Version
+            decToHex(1, 1) +
+            // NameCRC32
+            decToHex(crc32(encodedFileName), 4) +
+            // UnicodeName
+            utfEncodedFileName;
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.parseTransform = undefined;
-
-var _Length = __webpack_require__(/*! ../Length */ "./node_modules/html2canvas/dist/npm/Length.js");
-
-var _Length2 = _interopRequireDefault(_Length);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var toFloat = function toFloat(s) {
-    return parseFloat(s.trim());
-};
-
-var MATRIX = /(matrix|matrix3d)\((.+)\)/;
-
-var parseTransform = exports.parseTransform = function parseTransform(style) {
-    var transform = parseTransformMatrix(style.transform || style.webkitTransform || style.mozTransform ||
-    // $FlowFixMe
-    style.msTransform ||
-    // $FlowFixMe
-    style.oTransform);
-    if (transform === null) {
-        return null;
+        extraFields +=
+            // Info-ZIP Unicode Path Extra Field
+            "\x75\x70" +
+            // size
+            decToHex(unicodePathExtraField.length, 2) +
+            // content
+            unicodePathExtraField;
     }
+
+    if(useUTF8ForComment) {
+
+        unicodeCommentExtraField =
+            // Version
+            decToHex(1, 1) +
+            // CommentCRC32
+            decToHex(crc32(encodedComment), 4) +
+            // UnicodeName
+            utfEncodedComment;
+
+        extraFields +=
+            // Info-ZIP Unicode Path Extra Field
+            "\x75\x63" +
+            // size
+            decToHex(unicodeCommentExtraField.length, 2) +
+            // content
+            unicodeCommentExtraField;
+    }
+
+    var header = "";
+
+    // version needed to extract
+    header += "\x0A\x00";
+    // general purpose bit flag
+    header += decToHex(bitflag, 2);
+    // compression method
+    header += compression.magic;
+    // last mod file time
+    header += decToHex(dosTime, 2);
+    // last mod file date
+    header += decToHex(dosDate, 2);
+    // crc-32
+    header += decToHex(dataInfo.crc32, 4);
+    // compressed size
+    header += decToHex(dataInfo.compressedSize, 4);
+    // uncompressed size
+    header += decToHex(dataInfo.uncompressedSize, 4);
+    // file name length
+    header += decToHex(encodedFileName.length, 2);
+    // extra field length
+    header += decToHex(extraFields.length, 2);
+
+
+    var fileRecord = signature.LOCAL_FILE_HEADER + header + encodedFileName + extraFields;
+
+    var dirRecord = signature.CENTRAL_FILE_HEADER +
+        // version made by (00: DOS)
+        decToHex(versionMadeBy, 2) +
+        // file header (common to file and central directory)
+        header +
+        // file comment length
+        decToHex(encodedComment.length, 2) +
+        // disk number start
+        "\x00\x00" +
+        // internal file attributes TODO
+        "\x00\x00" +
+        // external file attributes
+        decToHex(extFileAttr, 4) +
+        // relative offset of local header
+        decToHex(offset, 4) +
+        // file name
+        encodedFileName +
+        // extra field
+        extraFields +
+        // file comment
+        encodedComment;
 
     return {
-        transform: transform,
-        transformOrigin: parseTransformOrigin(style.transformOrigin || style.webkitTransformOrigin || style.mozTransformOrigin ||
-        // $FlowFixMe
-        style.msTransformOrigin ||
-        // $FlowFixMe
-        style.oTransformOrigin)
+        fileRecord: fileRecord,
+        dirRecord: dirRecord
     };
 };
 
-// $FlowFixMe
-var parseTransformOrigin = function parseTransformOrigin(origin) {
-    if (typeof origin !== 'string') {
-        var v = new _Length2.default('0');
-        return [v, v];
-    }
-    var values = origin.split(' ').map(_Length2.default.create);
-    return [values[0], values[1]];
+/**
+ * Generate the EOCD record.
+ * @param {Number} entriesCount the number of entries in the zip file.
+ * @param {Number} centralDirLength the length (in bytes) of the central dir.
+ * @param {Number} localDirLength the length (in bytes) of the local dir.
+ * @param {String} comment the zip file comment as a binary string.
+ * @param {Function} encodeFileName the function to encode the comment.
+ * @return {String} the EOCD record.
+ */
+var generateCentralDirectoryEnd = function (entriesCount, centralDirLength, localDirLength, comment, encodeFileName) {
+    var dirEnd = "";
+    var encodedComment = utils.transformTo("string", encodeFileName(comment));
+
+    // end of central dir signature
+    dirEnd = signature.CENTRAL_DIRECTORY_END +
+        // number of this disk
+        "\x00\x00" +
+        // number of the disk with the start of the central directory
+        "\x00\x00" +
+        // total number of entries in the central directory on this disk
+        decToHex(entriesCount, 2) +
+        // total number of entries in the central directory
+        decToHex(entriesCount, 2) +
+        // size of the central directory   4 bytes
+        decToHex(centralDirLength, 4) +
+        // offset of start of central directory with respect to the starting disk number
+        decToHex(localDirLength, 4) +
+        // .ZIP file comment length
+        decToHex(encodedComment.length, 2) +
+        // .ZIP file comment
+        encodedComment;
+
+    return dirEnd;
 };
 
-// $FlowFixMe
-var parseTransformMatrix = function parseTransformMatrix(transform) {
-    if (transform === 'none' || typeof transform !== 'string') {
-        return null;
+/**
+ * Generate data descriptors for a file entry.
+ * @param {Object} streamInfo the hash generated by a worker, containing information
+ * on the file entry.
+ * @return {String} the data descriptors.
+ */
+var generateDataDescriptors = function (streamInfo) {
+    var descriptor = "";
+    descriptor = signature.DATA_DESCRIPTOR +
+        // crc-32                          4 bytes
+        decToHex(streamInfo['crc32'], 4) +
+        // compressed size                 4 bytes
+        decToHex(streamInfo['compressedSize'], 4) +
+        // uncompressed size               4 bytes
+        decToHex(streamInfo['uncompressedSize'], 4);
+
+    return descriptor;
+};
+
+
+/**
+ * A worker to concatenate other workers to create a zip file.
+ * @param {Boolean} streamFiles `true` to stream the content of the files,
+ * `false` to accumulate it.
+ * @param {String} comment the comment to use.
+ * @param {String} platform the platform to use, "UNIX" or "DOS".
+ * @param {Function} encodeFileName the function to encode file names and comments.
+ */
+function ZipFileWorker(streamFiles, comment, platform, encodeFileName) {
+    GenericWorker.call(this, "ZipFileWorker");
+    // The number of bytes written so far. This doesn't count accumulated chunks.
+    this.bytesWritten = 0;
+    // The comment of the zip file
+    this.zipComment = comment;
+    // The platform "generating" the zip file.
+    this.zipPlatform = platform;
+    // the function to encode file names and comments.
+    this.encodeFileName = encodeFileName;
+    // Should we stream the content of the files ?
+    this.streamFiles = streamFiles;
+    // If `streamFiles` is false, we will need to accumulate the content of the
+    // files to calculate sizes / crc32 (and write them *before* the content).
+    // This boolean indicates if we are accumulating chunks (it will change a lot
+    // during the lifetime of this worker).
+    this.accumulate = false;
+    // The buffer receiving chunks when accumulating content.
+    this.contentBuffer = [];
+    // The list of generated directory records.
+    this.dirRecords = [];
+    // The offset (in bytes) from the beginning of the zip file for the current source.
+    this.currentSourceOffset = 0;
+    // The total number of entries in this zip file.
+    this.entriesCount = 0;
+    // the name of the file currently being added, null when handling the end of the zip file.
+    // Used for the emitted metadata.
+    this.currentFile = null;
+
+
+
+    this._sources = [];
+}
+utils.inherits(ZipFileWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.push
+ */
+ZipFileWorker.prototype.push = function (chunk) {
+
+    var currentFilePercent = chunk.meta.percent || 0;
+    var entriesCount = this.entriesCount;
+    var remainingFiles = this._sources.length;
+
+    if(this.accumulate) {
+        this.contentBuffer.push(chunk);
+    } else {
+        this.bytesWritten += chunk.data.length;
+
+        GenericWorker.prototype.push.call(this, {
+            data : chunk.data,
+            meta : {
+                currentFile : this.currentFile,
+                percent : entriesCount ? (currentFilePercent + 100 * (entriesCount - remainingFiles - 1)) / entriesCount : 100
+            }
+        });
+    }
+};
+
+/**
+ * The worker started a new source (an other worker).
+ * @param {Object} streamInfo the streamInfo object from the new source.
+ */
+ZipFileWorker.prototype.openedSource = function (streamInfo) {
+    this.currentSourceOffset = this.bytesWritten;
+    this.currentFile = streamInfo['file'].name;
+
+    var streamedContent = this.streamFiles && !streamInfo['file'].dir;
+
+    // don't stream folders (because they don't have any content)
+    if(streamedContent) {
+        var record = generateZipParts(streamInfo, streamedContent, false, this.currentSourceOffset, this.zipPlatform, this.encodeFileName);
+        this.push({
+            data : record.fileRecord,
+            meta : {percent:0}
+        });
+    } else {
+        // we need to wait for the whole file before pushing anything
+        this.accumulate = true;
+    }
+};
+
+/**
+ * The worker finished a source (an other worker).
+ * @param {Object} streamInfo the streamInfo object from the finished source.
+ */
+ZipFileWorker.prototype.closedSource = function (streamInfo) {
+    this.accumulate = false;
+    var streamedContent = this.streamFiles && !streamInfo['file'].dir;
+    var record = generateZipParts(streamInfo, streamedContent, true, this.currentSourceOffset, this.zipPlatform, this.encodeFileName);
+
+    this.dirRecords.push(record.dirRecord);
+    if(streamedContent) {
+        // after the streamed file, we put data descriptors
+        this.push({
+            data : generateDataDescriptors(streamInfo),
+            meta : {percent:100}
+        });
+    } else {
+        // the content wasn't streamed, we need to push everything now
+        // first the file record, then the content
+        this.push({
+            data : record.fileRecord,
+            meta : {percent:0}
+        });
+        while(this.contentBuffer.length) {
+            this.push(this.contentBuffer.shift());
+        }
+    }
+    this.currentFile = null;
+};
+
+/**
+ * @see GenericWorker.flush
+ */
+ZipFileWorker.prototype.flush = function () {
+
+    var localDirLength = this.bytesWritten;
+    for(var i = 0; i < this.dirRecords.length; i++) {
+        this.push({
+            data : this.dirRecords[i],
+            meta : {percent:100}
+        });
+    }
+    var centralDirLength = this.bytesWritten - localDirLength;
+
+    var dirEnd = generateCentralDirectoryEnd(this.dirRecords.length, centralDirLength, localDirLength, this.zipComment, this.encodeFileName);
+
+    this.push({
+        data : dirEnd,
+        meta : {percent:100}
+    });
+};
+
+/**
+ * Prepare the next source to be read.
+ */
+ZipFileWorker.prototype.prepareNextSource = function () {
+    this.previous = this._sources.shift();
+    this.openedSource(this.previous.streamInfo);
+    if (this.isPaused) {
+        this.previous.pause();
+    } else {
+        this.previous.resume();
+    }
+};
+
+/**
+ * @see GenericWorker.registerPrevious
+ */
+ZipFileWorker.prototype.registerPrevious = function (previous) {
+    this._sources.push(previous);
+    var self = this;
+
+    previous.on('data', function (chunk) {
+        self.processChunk(chunk);
+    });
+    previous.on('end', function () {
+        self.closedSource(self.previous.streamInfo);
+        if(self._sources.length) {
+            self.prepareNextSource();
+        } else {
+            self.end();
+        }
+    });
+    previous.on('error', function (e) {
+        self.error(e);
+    });
+    return this;
+};
+
+/**
+ * @see GenericWorker.resume
+ */
+ZipFileWorker.prototype.resume = function () {
+    if(!GenericWorker.prototype.resume.call(this)) {
+        return false;
     }
 
-    var match = transform.match(MATRIX);
-    if (match) {
-        if (match[1] === 'matrix') {
-            var matrix = match[2].split(',').map(toFloat);
-            return [matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]];
+    if (!this.previous && this._sources.length) {
+        this.prepareNextSource();
+        return true;
+    }
+    if (!this.previous && !this._sources.length && !this.generatedError) {
+        this.end();
+        return true;
+    }
+};
+
+/**
+ * @see GenericWorker.error
+ */
+ZipFileWorker.prototype.error = function (e) {
+    var sources = this._sources;
+    if(!GenericWorker.prototype.error.call(this, e)) {
+        return false;
+    }
+    for(var i = 0; i < sources.length; i++) {
+        try {
+            sources[i].error(e);
+        } catch(e) {
+            // the `error` exploded, nothing to do
+        }
+    }
+    return true;
+};
+
+/**
+ * @see GenericWorker.lock
+ */
+ZipFileWorker.prototype.lock = function () {
+    GenericWorker.prototype.lock.call(this);
+    var sources = this._sources;
+    for(var i = 0; i < sources.length; i++) {
+        sources[i].lock();
+    }
+};
+
+module.exports = ZipFileWorker;
+
+},{"../crc32":4,"../signature":23,"../stream/GenericWorker":28,"../utf8":31,"../utils":32}],9:[function(require,module,exports){
+'use strict';
+
+var compressions = require('../compressions');
+var ZipFileWorker = require('./ZipFileWorker');
+
+/**
+ * Find the compression to use.
+ * @param {String} fileCompression the compression defined at the file level, if any.
+ * @param {String} zipCompression the compression defined at the load() level.
+ * @return {Object} the compression object to use.
+ */
+var getCompression = function (fileCompression, zipCompression) {
+
+    var compressionName = fileCompression || zipCompression;
+    var compression = compressions[compressionName];
+    if (!compression) {
+        throw new Error(compressionName + " is not a valid compression method !");
+    }
+    return compression;
+};
+
+/**
+ * Create a worker to generate a zip file.
+ * @param {JSZip} zip the JSZip instance at the right root level.
+ * @param {Object} options to generate the zip file.
+ * @param {String} comment the comment to use.
+ */
+exports.generateWorker = function (zip, options, comment) {
+
+    var zipFileWorker = new ZipFileWorker(options.streamFiles, comment, options.platform, options.encodeFileName);
+    var entriesCount = 0;
+    try {
+
+        zip.forEach(function (relativePath, file) {
+            entriesCount++;
+            var compression = getCompression(file.options.compression, options.compression);
+            var compressionOptions = file.options.compressionOptions || options.compressionOptions || {};
+            var dir = file.dir, date = file.date;
+
+            file._compressWorker(compression, compressionOptions)
+            .withStreamInfo("file", {
+                name : relativePath,
+                dir : dir,
+                date : date,
+                comment : file.comment || "",
+                unixPermissions : file.unixPermissions,
+                dosPermissions : file.dosPermissions
+            })
+            .pipe(zipFileWorker);
+        });
+        zipFileWorker.entriesCount = entriesCount;
+    } catch (e) {
+        zipFileWorker.error(e);
+    }
+
+    return zipFileWorker;
+};
+
+},{"../compressions":3,"./ZipFileWorker":8}],10:[function(require,module,exports){
+'use strict';
+
+/**
+ * Representation a of zip file in js
+ * @constructor
+ */
+function JSZip() {
+    // if this constructor is used without `new`, it adds `new` before itself:
+    if(!(this instanceof JSZip)) {
+        return new JSZip();
+    }
+
+    if(arguments.length) {
+        throw new Error("The constructor with parameters has been removed in JSZip 3.0, please check the upgrade guide.");
+    }
+
+    // object containing the files :
+    // {
+    //   "folder/" : {...},
+    //   "folder/data.txt" : {...}
+    // }
+    // NOTE: we use a null prototype because we do not
+    // want filenames like "toString" coming from a zip file
+    // to overwrite methods and attributes in a normal Object.
+    this.files = Object.create(null);
+
+    this.comment = null;
+
+    // Where we are in the hierarchy
+    this.root = "";
+    this.clone = function() {
+        var newObj = new JSZip();
+        for (var i in this) {
+            if (typeof this[i] !== "function") {
+                newObj[i] = this[i];
+            }
+        }
+        return newObj;
+    };
+}
+JSZip.prototype = require('./object');
+JSZip.prototype.loadAsync = require('./load');
+JSZip.support = require('./support');
+JSZip.defaults = require('./defaults');
+
+// TODO find a better way to handle this version,
+// a require('package.json').version doesn't work with webpack, see #327
+JSZip.version = "3.7.1";
+
+JSZip.loadAsync = function (content, options) {
+    return new JSZip().loadAsync(content, options);
+};
+
+JSZip.external = require("./external");
+module.exports = JSZip;
+
+},{"./defaults":5,"./external":6,"./load":11,"./object":15,"./support":30}],11:[function(require,module,exports){
+'use strict';
+var utils = require('./utils');
+var external = require("./external");
+var utf8 = require('./utf8');
+var ZipEntries = require('./zipEntries');
+var Crc32Probe = require('./stream/Crc32Probe');
+var nodejsUtils = require("./nodejsUtils");
+
+/**
+ * Check the CRC32 of an entry.
+ * @param {ZipEntry} zipEntry the zip entry to check.
+ * @return {Promise} the result.
+ */
+function checkEntryCRC32(zipEntry) {
+    return new external.Promise(function (resolve, reject) {
+        var worker = zipEntry.decompressed.getContentWorker().pipe(new Crc32Probe());
+        worker.on("error", function (e) {
+            reject(e);
+        })
+            .on("end", function () {
+                if (worker.streamInfo.crc32 !== zipEntry.decompressed.crc32) {
+                    reject(new Error("Corrupted zip : CRC32 mismatch"));
+                } else {
+                    resolve();
+                }
+            })
+            .resume();
+    });
+}
+
+module.exports = function (data, options) {
+    var zip = this;
+    options = utils.extend(options || {}, {
+        base64: false,
+        checkCRC32: false,
+        optimizedBinaryString: false,
+        createFolders: false,
+        decodeFileName: utf8.utf8decode
+    });
+
+    if (nodejsUtils.isNode && nodejsUtils.isStream(data)) {
+        return external.Promise.reject(new Error("JSZip can't accept a stream when loading a zip file."));
+    }
+
+    return utils.prepareContent("the loaded zip file", data, true, options.optimizedBinaryString, options.base64)
+        .then(function (data) {
+            var zipEntries = new ZipEntries(options);
+            zipEntries.load(data);
+            return zipEntries;
+        }).then(function checkCRC32(zipEntries) {
+            var promises = [external.Promise.resolve(zipEntries)];
+            var files = zipEntries.files;
+            if (options.checkCRC32) {
+                for (var i = 0; i < files.length; i++) {
+                    promises.push(checkEntryCRC32(files[i]));
+                }
+            }
+            return external.Promise.all(promises);
+        }).then(function addFiles(results) {
+            var zipEntries = results.shift();
+            var files = zipEntries.files;
+            for (var i = 0; i < files.length; i++) {
+                var input = files[i];
+                zip.file(input.fileNameStr, input.decompressed, {
+                    binary: true,
+                    optimizedBinaryString: true,
+                    date: input.date,
+                    dir: input.dir,
+                    comment: input.fileCommentStr.length ? input.fileCommentStr : null,
+                    unixPermissions: input.unixPermissions,
+                    dosPermissions: input.dosPermissions,
+                    createFolders: options.createFolders
+                });
+            }
+            if (zipEntries.zipComment.length) {
+                zip.comment = zipEntries.zipComment;
+            }
+
+            return zip;
+        });
+};
+
+},{"./external":6,"./nodejsUtils":14,"./stream/Crc32Probe":25,"./utf8":31,"./utils":32,"./zipEntries":33}],12:[function(require,module,exports){
+"use strict";
+
+var utils = require('../utils');
+var GenericWorker = require('../stream/GenericWorker');
+
+/**
+ * A worker that use a nodejs stream as source.
+ * @constructor
+ * @param {String} filename the name of the file entry for this stream.
+ * @param {Readable} stream the nodejs stream.
+ */
+function NodejsStreamInputAdapter(filename, stream) {
+    GenericWorker.call(this, "Nodejs stream input adapter for " + filename);
+    this._upstreamEnded = false;
+    this._bindStream(stream);
+}
+
+utils.inherits(NodejsStreamInputAdapter, GenericWorker);
+
+/**
+ * Prepare the stream and bind the callbacks on it.
+ * Do this ASAP on node 0.10 ! A lazy binding doesn't always work.
+ * @param {Stream} stream the nodejs stream to use.
+ */
+NodejsStreamInputAdapter.prototype._bindStream = function (stream) {
+    var self = this;
+    this._stream = stream;
+    stream.pause();
+    stream
+    .on("data", function (chunk) {
+        self.push({
+            data: chunk,
+            meta : {
+                percent : 0
+            }
+        });
+    })
+    .on("error", function (e) {
+        if(self.isPaused) {
+            this.generatedError = e;
         } else {
-            var matrix3d = match[2].split(',').map(toFloat);
-            return [matrix3d[0], matrix3d[1], matrix3d[4], matrix3d[5], matrix3d[12], matrix3d[13]];
+            self.error(e);
+        }
+    })
+    .on("end", function () {
+        if(self.isPaused) {
+            self._upstreamEnded = true;
+        } else {
+            self.end();
+        }
+    });
+};
+NodejsStreamInputAdapter.prototype.pause = function () {
+    if(!GenericWorker.prototype.pause.call(this)) {
+        return false;
+    }
+    this._stream.pause();
+    return true;
+};
+NodejsStreamInputAdapter.prototype.resume = function () {
+    if(!GenericWorker.prototype.resume.call(this)) {
+        return false;
+    }
+
+    if(this._upstreamEnded) {
+        this.end();
+    } else {
+        this._stream.resume();
+    }
+
+    return true;
+};
+
+module.exports = NodejsStreamInputAdapter;
+
+},{"../stream/GenericWorker":28,"../utils":32}],13:[function(require,module,exports){
+'use strict';
+
+var Readable = require('readable-stream').Readable;
+
+var utils = require('../utils');
+utils.inherits(NodejsStreamOutputAdapter, Readable);
+
+/**
+* A nodejs stream using a worker as source.
+* @see the SourceWrapper in http://nodejs.org/api/stream.html
+* @constructor
+* @param {StreamHelper} helper the helper wrapping the worker
+* @param {Object} options the nodejs stream options
+* @param {Function} updateCb the update callback.
+*/
+function NodejsStreamOutputAdapter(helper, options, updateCb) {
+    Readable.call(this, options);
+    this._helper = helper;
+
+    var self = this;
+    helper.on("data", function (data, meta) {
+        if (!self.push(data)) {
+            self._helper.pause();
+        }
+        if(updateCb) {
+            updateCb(meta);
+        }
+    })
+    .on("error", function(e) {
+        self.emit('error', e);
+    })
+    .on("end", function () {
+        self.push(null);
+    });
+}
+
+
+NodejsStreamOutputAdapter.prototype._read = function() {
+    this._helper.resume();
+};
+
+module.exports = NodejsStreamOutputAdapter;
+
+},{"../utils":32,"readable-stream":16}],14:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+    /**
+     * True if this is running in Nodejs, will be undefined in a browser.
+     * In a browser, browserify won't include this file and the whole module
+     * will be resolved an empty object.
+     */
+    isNode : typeof Buffer !== "undefined",
+    /**
+     * Create a new nodejs Buffer from an existing content.
+     * @param {Object} data the data to pass to the constructor.
+     * @param {String} encoding the encoding to use.
+     * @return {Buffer} a new Buffer.
+     */
+    newBufferFrom: function(data, encoding) {
+        if (Buffer.from && Buffer.from !== Uint8Array.from) {
+            return Buffer.from(data, encoding);
+        } else {
+            if (typeof data === "number") {
+                // Safeguard for old Node.js versions. On newer versions,
+                // Buffer.from(number) / Buffer(number, encoding) already throw.
+                throw new Error("The \"data\" argument must not be a number");
+            }
+            return new Buffer(data, encoding);
+        }
+    },
+    /**
+     * Create a new nodejs Buffer with the specified size.
+     * @param {Integer} size the size of the buffer.
+     * @return {Buffer} a new Buffer.
+     */
+    allocBuffer: function (size) {
+        if (Buffer.alloc) {
+            return Buffer.alloc(size);
+        } else {
+            var buf = new Buffer(size);
+            buf.fill(0);
+            return buf;
+        }
+    },
+    /**
+     * Find out if an object is a Buffer.
+     * @param {Object} b the object to test.
+     * @return {Boolean} true if the object is a Buffer, false otherwise.
+     */
+    isBuffer : function(b){
+        return Buffer.isBuffer(b);
+    },
+
+    isStream : function (obj) {
+        return obj &&
+            typeof obj.on === "function" &&
+            typeof obj.pause === "function" &&
+            typeof obj.resume === "function";
+    }
+};
+
+},{}],15:[function(require,module,exports){
+'use strict';
+var utf8 = require('./utf8');
+var utils = require('./utils');
+var GenericWorker = require('./stream/GenericWorker');
+var StreamHelper = require('./stream/StreamHelper');
+var defaults = require('./defaults');
+var CompressedObject = require('./compressedObject');
+var ZipObject = require('./zipObject');
+var generate = require("./generate");
+var nodejsUtils = require("./nodejsUtils");
+var NodejsStreamInputAdapter = require("./nodejs/NodejsStreamInputAdapter");
+
+
+/**
+ * Add a file in the current folder.
+ * @private
+ * @param {string} name the name of the file
+ * @param {String|ArrayBuffer|Uint8Array|Buffer} data the data of the file
+ * @param {Object} originalOptions the options of the file
+ * @return {Object} the new file.
+ */
+var fileAdd = function(name, data, originalOptions) {
+    // be sure sub folders exist
+    var dataType = utils.getTypeOf(data),
+        parent;
+
+
+    /*
+     * Correct options.
+     */
+
+    var o = utils.extend(originalOptions || {}, defaults);
+    o.date = o.date || new Date();
+    if (o.compression !== null) {
+        o.compression = o.compression.toUpperCase();
+    }
+
+    if (typeof o.unixPermissions === "string") {
+        o.unixPermissions = parseInt(o.unixPermissions, 8);
+    }
+
+    // UNX_IFDIR  0040000 see zipinfo.c
+    if (o.unixPermissions && (o.unixPermissions & 0x4000)) {
+        o.dir = true;
+    }
+    // Bit 4    Directory
+    if (o.dosPermissions && (o.dosPermissions & 0x0010)) {
+        o.dir = true;
+    }
+
+    if (o.dir) {
+        name = forceTrailingSlash(name);
+    }
+    if (o.createFolders && (parent = parentFolder(name))) {
+        folderAdd.call(this, parent, true);
+    }
+
+    var isUnicodeString = dataType === "string" && o.binary === false && o.base64 === false;
+    if (!originalOptions || typeof originalOptions.binary === "undefined") {
+        o.binary = !isUnicodeString;
+    }
+
+
+    var isCompressedEmpty = (data instanceof CompressedObject) && data.uncompressedSize === 0;
+
+    if (isCompressedEmpty || o.dir || !data || data.length === 0) {
+        o.base64 = false;
+        o.binary = true;
+        data = "";
+        o.compression = "STORE";
+        dataType = "string";
+    }
+
+    /*
+     * Convert content to fit.
+     */
+
+    var zipObjectContent = null;
+    if (data instanceof CompressedObject || data instanceof GenericWorker) {
+        zipObjectContent = data;
+    } else if (nodejsUtils.isNode && nodejsUtils.isStream(data)) {
+        zipObjectContent = new NodejsStreamInputAdapter(name, data);
+    } else {
+        zipObjectContent = utils.prepareContent(name, data, o.binary, o.optimizedBinaryString, o.base64);
+    }
+
+    var object = new ZipObject(name, zipObjectContent, o);
+    this.files[name] = object;
+    /*
+    TODO: we can't throw an exception because we have async promises
+    (we can have a promise of a Date() for example) but returning a
+    promise is useless because file(name, data) returns the JSZip
+    object for chaining. Should we break that to allow the user
+    to catch the error ?
+
+    return external.Promise.resolve(zipObjectContent)
+    .then(function () {
+        return object;
+    });
+    */
+};
+
+/**
+ * Find the parent folder of the path.
+ * @private
+ * @param {string} path the path to use
+ * @return {string} the parent folder, or ""
+ */
+var parentFolder = function (path) {
+    if (path.slice(-1) === '/') {
+        path = path.substring(0, path.length - 1);
+    }
+    var lastSlash = path.lastIndexOf('/');
+    return (lastSlash > 0) ? path.substring(0, lastSlash) : "";
+};
+
+/**
+ * Returns the path with a slash at the end.
+ * @private
+ * @param {String} path the path to check.
+ * @return {String} the path with a trailing slash.
+ */
+var forceTrailingSlash = function(path) {
+    // Check the name ends with a /
+    if (path.slice(-1) !== "/") {
+        path += "/"; // IE doesn't like substr(-1)
+    }
+    return path;
+};
+
+/**
+ * Add a (sub) folder in the current folder.
+ * @private
+ * @param {string} name the folder's name
+ * @param {boolean=} [createFolders] If true, automatically create sub
+ *  folders. Defaults to false.
+ * @return {Object} the new folder.
+ */
+var folderAdd = function(name, createFolders) {
+    createFolders = (typeof createFolders !== 'undefined') ? createFolders : defaults.createFolders;
+
+    name = forceTrailingSlash(name);
+
+    // Does this folder already exist?
+    if (!this.files[name]) {
+        fileAdd.call(this, name, null, {
+            dir: true,
+            createFolders: createFolders
+        });
+    }
+    return this.files[name];
+};
+
+/**
+* Cross-window, cross-Node-context regular expression detection
+* @param  {Object}  object Anything
+* @return {Boolean}        true if the object is a regular expression,
+* false otherwise
+*/
+function isRegExp(object) {
+    return Object.prototype.toString.call(object) === "[object RegExp]";
+}
+
+// return the actual prototype of JSZip
+var out = {
+    /**
+     * @see loadAsync
+     */
+    load: function() {
+        throw new Error("This method has been removed in JSZip 3.0, please check the upgrade guide.");
+    },
+
+
+    /**
+     * Call a callback function for each entry at this folder level.
+     * @param {Function} cb the callback function:
+     * function (relativePath, file) {...}
+     * It takes 2 arguments : the relative path and the file.
+     */
+    forEach: function(cb) {
+        var filename, relativePath, file;
+        /* jshint ignore:start */
+        // ignore warning about unwanted properties because this.files is a null prototype object
+        for (filename in this.files) {
+            file = this.files[filename];
+            relativePath = filename.slice(this.root.length, filename.length);
+            if (relativePath && filename.slice(0, this.root.length) === this.root) { // the file is in the current root
+                cb(relativePath, file); // TODO reverse the parameters ? need to be clean AND consistent with the filter search fn...
+            }
+        }
+        /* jshint ignore:end */
+    },
+
+    /**
+     * Filter nested files/folders with the specified function.
+     * @param {Function} search the predicate to use :
+     * function (relativePath, file) {...}
+     * It takes 2 arguments : the relative path and the file.
+     * @return {Array} An array of matching elements.
+     */
+    filter: function(search) {
+        var result = [];
+        this.forEach(function (relativePath, entry) {
+            if (search(relativePath, entry)) { // the file matches the function
+                result.push(entry);
+            }
+
+        });
+        return result;
+    },
+
+    /**
+     * Add a file to the zip file, or search a file.
+     * @param   {string|RegExp} name The name of the file to add (if data is defined),
+     * the name of the file to find (if no data) or a regex to match files.
+     * @param   {String|ArrayBuffer|Uint8Array|Buffer} data  The file data, either raw or base64 encoded
+     * @param   {Object} o     File options
+     * @return  {JSZip|Object|Array} this JSZip object (when adding a file),
+     * a file (when searching by string) or an array of files (when searching by regex).
+     */
+    file: function(name, data, o) {
+        if (arguments.length === 1) {
+            if (isRegExp(name)) {
+                var regexp = name;
+                return this.filter(function(relativePath, file) {
+                    return !file.dir && regexp.test(relativePath);
+                });
+            }
+            else { // text
+                var obj = this.files[this.root + name];
+                if (obj && !obj.dir) {
+                    return obj;
+                } else {
+                    return null;
+                }
+            }
+        }
+        else { // more than one argument : we have data !
+            name = this.root + name;
+            fileAdd.call(this, name, data, o);
+        }
+        return this;
+    },
+
+    /**
+     * Add a directory to the zip file, or search.
+     * @param   {String|RegExp} arg The name of the directory to add, or a regex to search folders.
+     * @return  {JSZip} an object with the new directory as the root, or an array containing matching folders.
+     */
+    folder: function(arg) {
+        if (!arg) {
+            return this;
+        }
+
+        if (isRegExp(arg)) {
+            return this.filter(function(relativePath, file) {
+                return file.dir && arg.test(relativePath);
+            });
+        }
+
+        // else, name is a new folder
+        var name = this.root + arg;
+        var newFolder = folderAdd.call(this, name);
+
+        // Allow chaining by returning a new object with this folder as the root
+        var ret = this.clone();
+        ret.root = newFolder.name;
+        return ret;
+    },
+
+    /**
+     * Delete a file, or a directory and all sub-files, from the zip
+     * @param {string} name the name of the file to delete
+     * @return {JSZip} this JSZip object
+     */
+    remove: function(name) {
+        name = this.root + name;
+        var file = this.files[name];
+        if (!file) {
+            // Look for any folders
+            if (name.slice(-1) !== "/") {
+                name += "/";
+            }
+            file = this.files[name];
+        }
+
+        if (file && !file.dir) {
+            // file
+            delete this.files[name];
+        } else {
+            // maybe a folder, delete recursively
+            var kids = this.filter(function(relativePath, file) {
+                return file.name.slice(0, name.length) === name;
+            });
+            for (var i = 0; i < kids.length; i++) {
+                delete this.files[kids[i].name];
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Generate the complete zip file
+     * @param {Object} options the options to generate the zip file :
+     * - compression, "STORE" by default.
+     * - type, "base64" by default. Values are : string, base64, uint8array, arraybuffer, blob.
+     * @return {String|Uint8Array|ArrayBuffer|Buffer|Blob} the zip file
+     */
+    generate: function(options) {
+        throw new Error("This method has been removed in JSZip 3.0, please check the upgrade guide.");
+    },
+
+    /**
+     * Generate the complete zip file as an internal stream.
+     * @param {Object} options the options to generate the zip file :
+     * - compression, "STORE" by default.
+     * - type, "base64" by default. Values are : string, base64, uint8array, arraybuffer, blob.
+     * @return {StreamHelper} the streamed zip file.
+     */
+    generateInternalStream: function(options) {
+      var worker, opts = {};
+      try {
+          opts = utils.extend(options || {}, {
+              streamFiles: false,
+              compression: "STORE",
+              compressionOptions : null,
+              type: "",
+              platform: "DOS",
+              comment: null,
+              mimeType: 'application/zip',
+              encodeFileName: utf8.utf8encode
+          });
+
+          opts.type = opts.type.toLowerCase();
+          opts.compression = opts.compression.toUpperCase();
+
+          // "binarystring" is preferred but the internals use "string".
+          if(opts.type === "binarystring") {
+            opts.type = "string";
+          }
+
+          if (!opts.type) {
+            throw new Error("No output type specified.");
+          }
+
+          utils.checkSupport(opts.type);
+
+          // accept nodejs `process.platform`
+          if(
+              opts.platform === 'darwin' ||
+              opts.platform === 'freebsd' ||
+              opts.platform === 'linux' ||
+              opts.platform === 'sunos'
+          ) {
+              opts.platform = "UNIX";
+          }
+          if (opts.platform === 'win32') {
+              opts.platform = "DOS";
+          }
+
+          var comment = opts.comment || this.comment || "";
+          worker = generate.generateWorker(this, opts, comment);
+      } catch (e) {
+        worker = new GenericWorker("error");
+        worker.error(e);
+      }
+      return new StreamHelper(worker, opts.type || "string", opts.mimeType);
+    },
+    /**
+     * Generate the complete zip file asynchronously.
+     * @see generateInternalStream
+     */
+    generateAsync: function(options, onUpdate) {
+        return this.generateInternalStream(options).accumulate(onUpdate);
+    },
+    /**
+     * Generate the complete zip file asynchronously.
+     * @see generateInternalStream
+     */
+    generateNodeStream: function(options, onUpdate) {
+        options = options || {};
+        if (!options.type) {
+            options.type = "nodebuffer";
+        }
+        return this.generateInternalStream(options).toNodejsStream(onUpdate);
+    }
+};
+module.exports = out;
+
+},{"./compressedObject":2,"./defaults":5,"./generate":9,"./nodejs/NodejsStreamInputAdapter":12,"./nodejsUtils":14,"./stream/GenericWorker":28,"./stream/StreamHelper":29,"./utf8":31,"./utils":32,"./zipObject":35}],16:[function(require,module,exports){
+/*
+ * This file is used by module bundlers (browserify/webpack/etc) when
+ * including a stream implementation. We use "readable-stream" to get a
+ * consistent behavior between nodejs versions but bundlers often have a shim
+ * for "stream". Using this shim greatly improve the compatibility and greatly
+ * reduce the final size of the bundle (only one stream implementation, not
+ * two).
+ */
+module.exports = require("stream");
+
+},{"stream":undefined}],17:[function(require,module,exports){
+'use strict';
+var DataReader = require('./DataReader');
+var utils = require('../utils');
+
+function ArrayReader(data) {
+    DataReader.call(this, data);
+	for(var i = 0; i < this.data.length; i++) {
+		data[i] = data[i] & 0xFF;
+	}
+}
+utils.inherits(ArrayReader, DataReader);
+/**
+ * @see DataReader.byteAt
+ */
+ArrayReader.prototype.byteAt = function(i) {
+    return this.data[this.zero + i];
+};
+/**
+ * @see DataReader.lastIndexOfSignature
+ */
+ArrayReader.prototype.lastIndexOfSignature = function(sig) {
+    var sig0 = sig.charCodeAt(0),
+        sig1 = sig.charCodeAt(1),
+        sig2 = sig.charCodeAt(2),
+        sig3 = sig.charCodeAt(3);
+    for (var i = this.length - 4; i >= 0; --i) {
+        if (this.data[i] === sig0 && this.data[i + 1] === sig1 && this.data[i + 2] === sig2 && this.data[i + 3] === sig3) {
+            return i - this.zero;
+        }
+    }
+
+    return -1;
+};
+/**
+ * @see DataReader.readAndCheckSignature
+ */
+ArrayReader.prototype.readAndCheckSignature = function (sig) {
+    var sig0 = sig.charCodeAt(0),
+        sig1 = sig.charCodeAt(1),
+        sig2 = sig.charCodeAt(2),
+        sig3 = sig.charCodeAt(3),
+        data = this.readData(4);
+    return sig0 === data[0] && sig1 === data[1] && sig2 === data[2] && sig3 === data[3];
+};
+/**
+ * @see DataReader.readData
+ */
+ArrayReader.prototype.readData = function(size) {
+    this.checkOffset(size);
+    if(size === 0) {
+        return [];
+    }
+    var result = this.data.slice(this.zero + this.index, this.zero + this.index + size);
+    this.index += size;
+    return result;
+};
+module.exports = ArrayReader;
+
+},{"../utils":32,"./DataReader":18}],18:[function(require,module,exports){
+'use strict';
+var utils = require('../utils');
+
+function DataReader(data) {
+    this.data = data; // type : see implementation
+    this.length = data.length;
+    this.index = 0;
+    this.zero = 0;
+}
+DataReader.prototype = {
+    /**
+     * Check that the offset will not go too far.
+     * @param {string} offset the additional offset to check.
+     * @throws {Error} an Error if the offset is out of bounds.
+     */
+    checkOffset: function(offset) {
+        this.checkIndex(this.index + offset);
+    },
+    /**
+     * Check that the specified index will not be too far.
+     * @param {string} newIndex the index to check.
+     * @throws {Error} an Error if the index is out of bounds.
+     */
+    checkIndex: function(newIndex) {
+        if (this.length < this.zero + newIndex || newIndex < 0) {
+            throw new Error("End of data reached (data length = " + this.length + ", asked index = " + (newIndex) + "). Corrupted zip ?");
+        }
+    },
+    /**
+     * Change the index.
+     * @param {number} newIndex The new index.
+     * @throws {Error} if the new index is out of the data.
+     */
+    setIndex: function(newIndex) {
+        this.checkIndex(newIndex);
+        this.index = newIndex;
+    },
+    /**
+     * Skip the next n bytes.
+     * @param {number} n the number of bytes to skip.
+     * @throws {Error} if the new index is out of the data.
+     */
+    skip: function(n) {
+        this.setIndex(this.index + n);
+    },
+    /**
+     * Get the byte at the specified index.
+     * @param {number} i the index to use.
+     * @return {number} a byte.
+     */
+    byteAt: function(i) {
+        // see implementations
+    },
+    /**
+     * Get the next number with a given byte size.
+     * @param {number} size the number of bytes to read.
+     * @return {number} the corresponding number.
+     */
+    readInt: function(size) {
+        var result = 0,
+            i;
+        this.checkOffset(size);
+        for (i = this.index + size - 1; i >= this.index; i--) {
+            result = (result << 8) + this.byteAt(i);
+        }
+        this.index += size;
+        return result;
+    },
+    /**
+     * Get the next string with a given byte size.
+     * @param {number} size the number of bytes to read.
+     * @return {string} the corresponding string.
+     */
+    readString: function(size) {
+        return utils.transformTo("string", this.readData(size));
+    },
+    /**
+     * Get raw data without conversion, <size> bytes.
+     * @param {number} size the number of bytes to read.
+     * @return {Object} the raw data, implementation specific.
+     */
+    readData: function(size) {
+        // see implementations
+    },
+    /**
+     * Find the last occurrence of a zip signature (4 bytes).
+     * @param {string} sig the signature to find.
+     * @return {number} the index of the last occurrence, -1 if not found.
+     */
+    lastIndexOfSignature: function(sig) {
+        // see implementations
+    },
+    /**
+     * Read the signature (4 bytes) at the current position and compare it with sig.
+     * @param {string} sig the expected signature
+     * @return {boolean} true if the signature matches, false otherwise.
+     */
+    readAndCheckSignature: function(sig) {
+        // see implementations
+    },
+    /**
+     * Get the next date.
+     * @return {Date} the date.
+     */
+    readDate: function() {
+        var dostime = this.readInt(4);
+        return new Date(Date.UTC(
+        ((dostime >> 25) & 0x7f) + 1980, // year
+        ((dostime >> 21) & 0x0f) - 1, // month
+        (dostime >> 16) & 0x1f, // day
+        (dostime >> 11) & 0x1f, // hour
+        (dostime >> 5) & 0x3f, // minute
+        (dostime & 0x1f) << 1)); // second
+    }
+};
+module.exports = DataReader;
+
+},{"../utils":32}],19:[function(require,module,exports){
+'use strict';
+var Uint8ArrayReader = require('./Uint8ArrayReader');
+var utils = require('../utils');
+
+function NodeBufferReader(data) {
+    Uint8ArrayReader.call(this, data);
+}
+utils.inherits(NodeBufferReader, Uint8ArrayReader);
+
+/**
+ * @see DataReader.readData
+ */
+NodeBufferReader.prototype.readData = function(size) {
+    this.checkOffset(size);
+    var result = this.data.slice(this.zero + this.index, this.zero + this.index + size);
+    this.index += size;
+    return result;
+};
+module.exports = NodeBufferReader;
+
+},{"../utils":32,"./Uint8ArrayReader":21}],20:[function(require,module,exports){
+'use strict';
+var DataReader = require('./DataReader');
+var utils = require('../utils');
+
+function StringReader(data) {
+    DataReader.call(this, data);
+}
+utils.inherits(StringReader, DataReader);
+/**
+ * @see DataReader.byteAt
+ */
+StringReader.prototype.byteAt = function(i) {
+    return this.data.charCodeAt(this.zero + i);
+};
+/**
+ * @see DataReader.lastIndexOfSignature
+ */
+StringReader.prototype.lastIndexOfSignature = function(sig) {
+    return this.data.lastIndexOf(sig) - this.zero;
+};
+/**
+ * @see DataReader.readAndCheckSignature
+ */
+StringReader.prototype.readAndCheckSignature = function (sig) {
+    var data = this.readData(4);
+    return sig === data;
+};
+/**
+ * @see DataReader.readData
+ */
+StringReader.prototype.readData = function(size) {
+    this.checkOffset(size);
+    // this will work because the constructor applied the "& 0xff" mask.
+    var result = this.data.slice(this.zero + this.index, this.zero + this.index + size);
+    this.index += size;
+    return result;
+};
+module.exports = StringReader;
+
+},{"../utils":32,"./DataReader":18}],21:[function(require,module,exports){
+'use strict';
+var ArrayReader = require('./ArrayReader');
+var utils = require('../utils');
+
+function Uint8ArrayReader(data) {
+    ArrayReader.call(this, data);
+}
+utils.inherits(Uint8ArrayReader, ArrayReader);
+/**
+ * @see DataReader.readData
+ */
+Uint8ArrayReader.prototype.readData = function(size) {
+    this.checkOffset(size);
+    if(size === 0) {
+        // in IE10, when using subarray(idx, idx), we get the array [0x00] instead of [].
+        return new Uint8Array(0);
+    }
+    var result = this.data.subarray(this.zero + this.index, this.zero + this.index + size);
+    this.index += size;
+    return result;
+};
+module.exports = Uint8ArrayReader;
+
+},{"../utils":32,"./ArrayReader":17}],22:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var support = require('../support');
+var ArrayReader = require('./ArrayReader');
+var StringReader = require('./StringReader');
+var NodeBufferReader = require('./NodeBufferReader');
+var Uint8ArrayReader = require('./Uint8ArrayReader');
+
+/**
+ * Create a reader adapted to the data.
+ * @param {String|ArrayBuffer|Uint8Array|Buffer} data the data to read.
+ * @return {DataReader} the data reader.
+ */
+module.exports = function (data) {
+    var type = utils.getTypeOf(data);
+    utils.checkSupport(type);
+    if (type === "string" && !support.uint8array) {
+        return new StringReader(data);
+    }
+    if (type === "nodebuffer") {
+        return new NodeBufferReader(data);
+    }
+    if (support.uint8array) {
+        return new Uint8ArrayReader(utils.transformTo("uint8array", data));
+    }
+    return new ArrayReader(utils.transformTo("array", data));
+};
+
+},{"../support":30,"../utils":32,"./ArrayReader":17,"./NodeBufferReader":19,"./StringReader":20,"./Uint8ArrayReader":21}],23:[function(require,module,exports){
+'use strict';
+exports.LOCAL_FILE_HEADER = "PK\x03\x04";
+exports.CENTRAL_FILE_HEADER = "PK\x01\x02";
+exports.CENTRAL_DIRECTORY_END = "PK\x05\x06";
+exports.ZIP64_CENTRAL_DIRECTORY_LOCATOR = "PK\x06\x07";
+exports.ZIP64_CENTRAL_DIRECTORY_END = "PK\x06\x06";
+exports.DATA_DESCRIPTOR = "PK\x07\x08";
+
+},{}],24:[function(require,module,exports){
+'use strict';
+
+var GenericWorker = require('./GenericWorker');
+var utils = require('../utils');
+
+/**
+ * A worker which convert chunks to a specified type.
+ * @constructor
+ * @param {String} destType the destination type.
+ */
+function ConvertWorker(destType) {
+    GenericWorker.call(this, "ConvertWorker to " + destType);
+    this.destType = destType;
+}
+utils.inherits(ConvertWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+ConvertWorker.prototype.processChunk = function (chunk) {
+    this.push({
+        data : utils.transformTo(this.destType, chunk.data),
+        meta : chunk.meta
+    });
+};
+module.exports = ConvertWorker;
+
+},{"../utils":32,"./GenericWorker":28}],25:[function(require,module,exports){
+'use strict';
+
+var GenericWorker = require('./GenericWorker');
+var crc32 = require('../crc32');
+var utils = require('../utils');
+
+/**
+ * A worker which calculate the crc32 of the data flowing through.
+ * @constructor
+ */
+function Crc32Probe() {
+    GenericWorker.call(this, "Crc32Probe");
+    this.withStreamInfo("crc32", 0);
+}
+utils.inherits(Crc32Probe, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+Crc32Probe.prototype.processChunk = function (chunk) {
+    this.streamInfo.crc32 = crc32(chunk.data, this.streamInfo.crc32 || 0);
+    this.push(chunk);
+};
+module.exports = Crc32Probe;
+
+},{"../crc32":4,"../utils":32,"./GenericWorker":28}],26:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var GenericWorker = require('./GenericWorker');
+
+/**
+ * A worker which calculate the total length of the data flowing through.
+ * @constructor
+ * @param {String} propName the name used to expose the length
+ */
+function DataLengthProbe(propName) {
+    GenericWorker.call(this, "DataLengthProbe for " + propName);
+    this.propName = propName;
+    this.withStreamInfo(propName, 0);
+}
+utils.inherits(DataLengthProbe, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+DataLengthProbe.prototype.processChunk = function (chunk) {
+    if(chunk) {
+        var length = this.streamInfo[this.propName] || 0;
+        this.streamInfo[this.propName] = length + chunk.data.length;
+    }
+    GenericWorker.prototype.processChunk.call(this, chunk);
+};
+module.exports = DataLengthProbe;
+
+
+},{"../utils":32,"./GenericWorker":28}],27:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var GenericWorker = require('./GenericWorker');
+
+// the size of the generated chunks
+// TODO expose this as a public variable
+var DEFAULT_BLOCK_SIZE = 16 * 1024;
+
+/**
+ * A worker that reads a content and emits chunks.
+ * @constructor
+ * @param {Promise} dataP the promise of the data to split
+ */
+function DataWorker(dataP) {
+    GenericWorker.call(this, "DataWorker");
+    var self = this;
+    this.dataIsReady = false;
+    this.index = 0;
+    this.max = 0;
+    this.data = null;
+    this.type = "";
+
+    this._tickScheduled = false;
+
+    dataP.then(function (data) {
+        self.dataIsReady = true;
+        self.data = data;
+        self.max = data && data.length || 0;
+        self.type = utils.getTypeOf(data);
+        if(!self.isPaused) {
+            self._tickAndRepeat();
+        }
+    }, function (e) {
+        self.error(e);
+    });
+}
+
+utils.inherits(DataWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.cleanUp
+ */
+DataWorker.prototype.cleanUp = function () {
+    GenericWorker.prototype.cleanUp.call(this);
+    this.data = null;
+};
+
+/**
+ * @see GenericWorker.resume
+ */
+DataWorker.prototype.resume = function () {
+    if(!GenericWorker.prototype.resume.call(this)) {
+        return false;
+    }
+
+    if (!this._tickScheduled && this.dataIsReady) {
+        this._tickScheduled = true;
+        utils.delay(this._tickAndRepeat, [], this);
+    }
+    return true;
+};
+
+/**
+ * Trigger a tick a schedule an other call to this function.
+ */
+DataWorker.prototype._tickAndRepeat = function() {
+    this._tickScheduled = false;
+    if(this.isPaused || this.isFinished) {
+        return;
+    }
+    this._tick();
+    if(!this.isFinished) {
+        utils.delay(this._tickAndRepeat, [], this);
+        this._tickScheduled = true;
+    }
+};
+
+/**
+ * Read and push a chunk.
+ */
+DataWorker.prototype._tick = function() {
+
+    if(this.isPaused || this.isFinished) {
+        return false;
+    }
+
+    var size = DEFAULT_BLOCK_SIZE;
+    var data = null, nextIndex = Math.min(this.max, this.index + size);
+    if (this.index >= this.max) {
+        // EOF
+        return this.end();
+    } else {
+        switch(this.type) {
+            case "string":
+                data = this.data.substring(this.index, nextIndex);
+            break;
+            case "uint8array":
+                data = this.data.subarray(this.index, nextIndex);
+            break;
+            case "array":
+            case "nodebuffer":
+                data = this.data.slice(this.index, nextIndex);
+            break;
+        }
+        this.index = nextIndex;
+        return this.push({
+            data : data,
+            meta : {
+                percent : this.max ? this.index / this.max * 100 : 0
+            }
+        });
+    }
+};
+
+module.exports = DataWorker;
+
+},{"../utils":32,"./GenericWorker":28}],28:[function(require,module,exports){
+'use strict';
+
+/**
+ * A worker that does nothing but passing chunks to the next one. This is like
+ * a nodejs stream but with some differences. On the good side :
+ * - it works on IE 6-9 without any issue / polyfill
+ * - it weights less than the full dependencies bundled with browserify
+ * - it forwards errors (no need to declare an error handler EVERYWHERE)
+ *
+ * A chunk is an object with 2 attributes : `meta` and `data`. The former is an
+ * object containing anything (`percent` for example), see each worker for more
+ * details. The latter is the real data (String, Uint8Array, etc).
+ *
+ * @constructor
+ * @param {String} name the name of the stream (mainly used for debugging purposes)
+ */
+function GenericWorker(name) {
+    // the name of the worker
+    this.name = name || "default";
+    // an object containing metadata about the workers chain
+    this.streamInfo = {};
+    // an error which happened when the worker was paused
+    this.generatedError = null;
+    // an object containing metadata to be merged by this worker into the general metadata
+    this.extraStreamInfo = {};
+    // true if the stream is paused (and should not do anything), false otherwise
+    this.isPaused = true;
+    // true if the stream is finished (and should not do anything), false otherwise
+    this.isFinished = false;
+    // true if the stream is locked to prevent further structure updates (pipe), false otherwise
+    this.isLocked = false;
+    // the event listeners
+    this._listeners = {
+        'data':[],
+        'end':[],
+        'error':[]
+    };
+    // the previous worker, if any
+    this.previous = null;
+}
+
+GenericWorker.prototype = {
+    /**
+     * Push a chunk to the next workers.
+     * @param {Object} chunk the chunk to push
+     */
+    push : function (chunk) {
+        this.emit("data", chunk);
+    },
+    /**
+     * End the stream.
+     * @return {Boolean} true if this call ended the worker, false otherwise.
+     */
+    end : function () {
+        if (this.isFinished) {
+            return false;
+        }
+
+        this.flush();
+        try {
+            this.emit("end");
+            this.cleanUp();
+            this.isFinished = true;
+        } catch (e) {
+            this.emit("error", e);
+        }
+        return true;
+    },
+    /**
+     * End the stream with an error.
+     * @param {Error} e the error which caused the premature end.
+     * @return {Boolean} true if this call ended the worker with an error, false otherwise.
+     */
+    error : function (e) {
+        if (this.isFinished) {
+            return false;
+        }
+
+        if(this.isPaused) {
+            this.generatedError = e;
+        } else {
+            this.isFinished = true;
+
+            this.emit("error", e);
+
+            // in the workers chain exploded in the middle of the chain,
+            // the error event will go downward but we also need to notify
+            // workers upward that there has been an error.
+            if(this.previous) {
+                this.previous.error(e);
+            }
+
+            this.cleanUp();
+        }
+        return true;
+    },
+    /**
+     * Add a callback on an event.
+     * @param {String} name the name of the event (data, end, error)
+     * @param {Function} listener the function to call when the event is triggered
+     * @return {GenericWorker} the current object for chainability
+     */
+    on : function (name, listener) {
+        this._listeners[name].push(listener);
+        return this;
+    },
+    /**
+     * Clean any references when a worker is ending.
+     */
+    cleanUp : function () {
+        this.streamInfo = this.generatedError = this.extraStreamInfo = null;
+        this._listeners = [];
+    },
+    /**
+     * Trigger an event. This will call registered callback with the provided arg.
+     * @param {String} name the name of the event (data, end, error)
+     * @param {Object} arg the argument to call the callback with.
+     */
+    emit : function (name, arg) {
+        if (this._listeners[name]) {
+            for(var i = 0; i < this._listeners[name].length; i++) {
+                this._listeners[name][i].call(this, arg);
+            }
+        }
+    },
+    /**
+     * Chain a worker with an other.
+     * @param {Worker} next the worker receiving events from the current one.
+     * @return {worker} the next worker for chainability
+     */
+    pipe : function (next) {
+        return next.registerPrevious(this);
+    },
+    /**
+     * Same as `pipe` in the other direction.
+     * Using an API with `pipe(next)` is very easy.
+     * Implementing the API with the point of view of the next one registering
+     * a source is easier, see the ZipFileWorker.
+     * @param {Worker} previous the previous worker, sending events to this one
+     * @return {Worker} the current worker for chainability
+     */
+    registerPrevious : function (previous) {
+        if (this.isLocked) {
+            throw new Error("The stream '" + this + "' has already been used.");
+        }
+
+        // sharing the streamInfo...
+        this.streamInfo = previous.streamInfo;
+        // ... and adding our own bits
+        this.mergeStreamInfo();
+        this.previous =  previous;
+        var self = this;
+        previous.on('data', function (chunk) {
+            self.processChunk(chunk);
+        });
+        previous.on('end', function () {
+            self.end();
+        });
+        previous.on('error', function (e) {
+            self.error(e);
+        });
+        return this;
+    },
+    /**
+     * Pause the stream so it doesn't send events anymore.
+     * @return {Boolean} true if this call paused the worker, false otherwise.
+     */
+    pause : function () {
+        if(this.isPaused || this.isFinished) {
+            return false;
+        }
+        this.isPaused = true;
+
+        if(this.previous) {
+            this.previous.pause();
+        }
+        return true;
+    },
+    /**
+     * Resume a paused stream.
+     * @return {Boolean} true if this call resumed the worker, false otherwise.
+     */
+    resume : function () {
+        if(!this.isPaused || this.isFinished) {
+            return false;
+        }
+        this.isPaused = false;
+
+        // if true, the worker tried to resume but failed
+        var withError = false;
+        if(this.generatedError) {
+            this.error(this.generatedError);
+            withError = true;
+        }
+        if(this.previous) {
+            this.previous.resume();
+        }
+
+        return !withError;
+    },
+    /**
+     * Flush any remaining bytes as the stream is ending.
+     */
+    flush : function () {},
+    /**
+     * Process a chunk. This is usually the method overridden.
+     * @param {Object} chunk the chunk to process.
+     */
+    processChunk : function(chunk) {
+        this.push(chunk);
+    },
+    /**
+     * Add a key/value to be added in the workers chain streamInfo once activated.
+     * @param {String} key the key to use
+     * @param {Object} value the associated value
+     * @return {Worker} the current worker for chainability
+     */
+    withStreamInfo : function (key, value) {
+        this.extraStreamInfo[key] = value;
+        this.mergeStreamInfo();
+        return this;
+    },
+    /**
+     * Merge this worker's streamInfo into the chain's streamInfo.
+     */
+    mergeStreamInfo : function () {
+        for(var key in this.extraStreamInfo) {
+            if (!this.extraStreamInfo.hasOwnProperty(key)) {
+                continue;
+            }
+            this.streamInfo[key] = this.extraStreamInfo[key];
+        }
+    },
+
+    /**
+     * Lock the stream to prevent further updates on the workers chain.
+     * After calling this method, all calls to pipe will fail.
+     */
+    lock: function () {
+        if (this.isLocked) {
+            throw new Error("The stream '" + this + "' has already been used.");
+        }
+        this.isLocked = true;
+        if (this.previous) {
+            this.previous.lock();
+        }
+    },
+
+    /**
+     *
+     * Pretty print the workers chain.
+     */
+    toString : function () {
+        var me = "Worker " + this.name;
+        if (this.previous) {
+            return this.previous + " -> " + me;
+        } else {
+            return me;
+        }
+    }
+};
+
+module.exports = GenericWorker;
+
+},{}],29:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var ConvertWorker = require('./ConvertWorker');
+var GenericWorker = require('./GenericWorker');
+var base64 = require('../base64');
+var support = require("../support");
+var external = require("../external");
+
+var NodejsStreamOutputAdapter = null;
+if (support.nodestream) {
+    try {
+        NodejsStreamOutputAdapter = require('../nodejs/NodejsStreamOutputAdapter');
+    } catch(e) {}
+}
+
+/**
+ * Apply the final transformation of the data. If the user wants a Blob for
+ * example, it's easier to work with an U8intArray and finally do the
+ * ArrayBuffer/Blob conversion.
+ * @param {String} type the name of the final type
+ * @param {String|Uint8Array|Buffer} content the content to transform
+ * @param {String} mimeType the mime type of the content, if applicable.
+ * @return {String|Uint8Array|ArrayBuffer|Buffer|Blob} the content in the right format.
+ */
+function transformZipOutput(type, content, mimeType) {
+    switch(type) {
+        case "blob" :
+            return utils.newBlob(utils.transformTo("arraybuffer", content), mimeType);
+        case "base64" :
+            return base64.encode(content);
+        default :
+            return utils.transformTo(type, content);
+    }
+}
+
+/**
+ * Concatenate an array of data of the given type.
+ * @param {String} type the type of the data in the given array.
+ * @param {Array} dataArray the array containing the data chunks to concatenate
+ * @return {String|Uint8Array|Buffer} the concatenated data
+ * @throws Error if the asked type is unsupported
+ */
+function concat (type, dataArray) {
+    var i, index = 0, res = null, totalLength = 0;
+    for(i = 0; i < dataArray.length; i++) {
+        totalLength += dataArray[i].length;
+    }
+    switch(type) {
+        case "string":
+            return dataArray.join("");
+          case "array":
+            return Array.prototype.concat.apply([], dataArray);
+        case "uint8array":
+            res = new Uint8Array(totalLength);
+            for(i = 0; i < dataArray.length; i++) {
+                res.set(dataArray[i], index);
+                index += dataArray[i].length;
+            }
+            return res;
+        case "nodebuffer":
+            return Buffer.concat(dataArray);
+        default:
+            throw new Error("concat : unsupported type '"  + type + "'");
+    }
+}
+
+/**
+ * Listen a StreamHelper, accumulate its content and concatenate it into a
+ * complete block.
+ * @param {StreamHelper} helper the helper to use.
+ * @param {Function} updateCallback a callback called on each update. Called
+ * with one arg :
+ * - the metadata linked to the update received.
+ * @return Promise the promise for the accumulation.
+ */
+function accumulate(helper, updateCallback) {
+    return new external.Promise(function (resolve, reject){
+        var dataArray = [];
+        var chunkType = helper._internalType,
+            resultType = helper._outputType,
+            mimeType = helper._mimeType;
+        helper
+        .on('data', function (data, meta) {
+            dataArray.push(data);
+            if(updateCallback) {
+                updateCallback(meta);
+            }
+        })
+        .on('error', function(err) {
+            dataArray = [];
+            reject(err);
+        })
+        .on('end', function (){
+            try {
+                var result = transformZipOutput(resultType, concat(chunkType, dataArray), mimeType);
+                resolve(result);
+            } catch (e) {
+                reject(e);
+            }
+            dataArray = [];
+        })
+        .resume();
+    });
+}
+
+/**
+ * An helper to easily use workers outside of JSZip.
+ * @constructor
+ * @param {Worker} worker the worker to wrap
+ * @param {String} outputType the type of data expected by the use
+ * @param {String} mimeType the mime type of the content, if applicable.
+ */
+function StreamHelper(worker, outputType, mimeType) {
+    var internalType = outputType;
+    switch(outputType) {
+        case "blob":
+        case "arraybuffer":
+            internalType = "uint8array";
+        break;
+        case "base64":
+            internalType = "string";
+        break;
+    }
+
+    try {
+        // the type used internally
+        this._internalType = internalType;
+        // the type used to output results
+        this._outputType = outputType;
+        // the mime type
+        this._mimeType = mimeType;
+        utils.checkSupport(internalType);
+        this._worker = worker.pipe(new ConvertWorker(internalType));
+        // the last workers can be rewired without issues but we need to
+        // prevent any updates on previous workers.
+        worker.lock();
+    } catch(e) {
+        this._worker = new GenericWorker("error");
+        this._worker.error(e);
+    }
+}
+
+StreamHelper.prototype = {
+    /**
+     * Listen a StreamHelper, accumulate its content and concatenate it into a
+     * complete block.
+     * @param {Function} updateCb the update callback.
+     * @return Promise the promise for the accumulation.
+     */
+    accumulate : function (updateCb) {
+        return accumulate(this, updateCb);
+    },
+    /**
+     * Add a listener on an event triggered on a stream.
+     * @param {String} evt the name of the event
+     * @param {Function} fn the listener
+     * @return {StreamHelper} the current helper.
+     */
+    on : function (evt, fn) {
+        var self = this;
+
+        if(evt === "data") {
+            this._worker.on(evt, function (chunk) {
+                fn.call(self, chunk.data, chunk.meta);
+            });
+        } else {
+            this._worker.on(evt, function () {
+                utils.delay(fn, arguments, self);
+            });
+        }
+        return this;
+    },
+    /**
+     * Resume the flow of chunks.
+     * @return {StreamHelper} the current helper.
+     */
+    resume : function () {
+        utils.delay(this._worker.resume, [], this._worker);
+        return this;
+    },
+    /**
+     * Pause the flow of chunks.
+     * @return {StreamHelper} the current helper.
+     */
+    pause : function () {
+        this._worker.pause();
+        return this;
+    },
+    /**
+     * Return a nodejs stream for this helper.
+     * @param {Function} updateCb the update callback.
+     * @return {NodejsStreamOutputAdapter} the nodejs stream.
+     */
+    toNodejsStream : function (updateCb) {
+        utils.checkSupport("nodestream");
+        if (this._outputType !== "nodebuffer") {
+            // an object stream containing blob/arraybuffer/uint8array/string
+            // is strange and I don't know if it would be useful.
+            // I you find this comment and have a good usecase, please open a
+            // bug report !
+            throw new Error(this._outputType + " is not supported by this method");
+        }
+
+        return new NodejsStreamOutputAdapter(this, {
+            objectMode : this._outputType !== "nodebuffer"
+        }, updateCb);
+    }
+};
+
+
+module.exports = StreamHelper;
+
+},{"../base64":1,"../external":6,"../nodejs/NodejsStreamOutputAdapter":13,"../support":30,"../utils":32,"./ConvertWorker":24,"./GenericWorker":28}],30:[function(require,module,exports){
+'use strict';
+
+exports.base64 = true;
+exports.array = true;
+exports.string = true;
+exports.arraybuffer = typeof ArrayBuffer !== "undefined" && typeof Uint8Array !== "undefined";
+exports.nodebuffer = typeof Buffer !== "undefined";
+// contains true if JSZip can read/generate Uint8Array, false otherwise.
+exports.uint8array = typeof Uint8Array !== "undefined";
+
+if (typeof ArrayBuffer === "undefined") {
+    exports.blob = false;
+}
+else {
+    var buffer = new ArrayBuffer(0);
+    try {
+        exports.blob = new Blob([buffer], {
+            type: "application/zip"
+        }).size === 0;
+    }
+    catch (e) {
+        try {
+            var Builder = self.BlobBuilder || self.WebKitBlobBuilder || self.MozBlobBuilder || self.MSBlobBuilder;
+            var builder = new Builder();
+            builder.append(buffer);
+            exports.blob = builder.getBlob('application/zip').size === 0;
+        }
+        catch (e) {
+            exports.blob = false;
+        }
+    }
+}
+
+try {
+    exports.nodestream = !!require('readable-stream').Readable;
+} catch(e) {
+    exports.nodestream = false;
+}
+
+},{"readable-stream":16}],31:[function(require,module,exports){
+'use strict';
+
+var utils = require('./utils');
+var support = require('./support');
+var nodejsUtils = require('./nodejsUtils');
+var GenericWorker = require('./stream/GenericWorker');
+
+/**
+ * The following functions come from pako, from pako/lib/utils/strings
+ * released under the MIT license, see pako https://github.com/nodeca/pako/
+ */
+
+// Table with utf8 lengths (calculated by first byte of sequence)
+// Note, that 5 & 6-byte values and some 4-byte values can not be represented in JS,
+// because max possible codepoint is 0x10ffff
+var _utf8len = new Array(256);
+for (var i=0; i<256; i++) {
+  _utf8len[i] = (i >= 252 ? 6 : i >= 248 ? 5 : i >= 240 ? 4 : i >= 224 ? 3 : i >= 192 ? 2 : 1);
+}
+_utf8len[254]=_utf8len[254]=1; // Invalid sequence start
+
+// convert string to array (typed, when possible)
+var string2buf = function (str) {
+    var buf, c, c2, m_pos, i, str_len = str.length, buf_len = 0;
+
+    // count binary size
+    for (m_pos = 0; m_pos < str_len; m_pos++) {
+        c = str.charCodeAt(m_pos);
+        if ((c & 0xfc00) === 0xd800 && (m_pos+1 < str_len)) {
+            c2 = str.charCodeAt(m_pos+1);
+            if ((c2 & 0xfc00) === 0xdc00) {
+                c = 0x10000 + ((c - 0xd800) << 10) + (c2 - 0xdc00);
+                m_pos++;
+            }
+        }
+        buf_len += c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4;
+    }
+
+    // allocate buffer
+    if (support.uint8array) {
+        buf = new Uint8Array(buf_len);
+    } else {
+        buf = new Array(buf_len);
+    }
+
+    // convert
+    for (i=0, m_pos = 0; i < buf_len; m_pos++) {
+        c = str.charCodeAt(m_pos);
+        if ((c & 0xfc00) === 0xd800 && (m_pos+1 < str_len)) {
+            c2 = str.charCodeAt(m_pos+1);
+            if ((c2 & 0xfc00) === 0xdc00) {
+                c = 0x10000 + ((c - 0xd800) << 10) + (c2 - 0xdc00);
+                m_pos++;
+            }
+        }
+        if (c < 0x80) {
+            /* one byte */
+            buf[i++] = c;
+        } else if (c < 0x800) {
+            /* two bytes */
+            buf[i++] = 0xC0 | (c >>> 6);
+            buf[i++] = 0x80 | (c & 0x3f);
+        } else if (c < 0x10000) {
+            /* three bytes */
+            buf[i++] = 0xE0 | (c >>> 12);
+            buf[i++] = 0x80 | (c >>> 6 & 0x3f);
+            buf[i++] = 0x80 | (c & 0x3f);
+        } else {
+            /* four bytes */
+            buf[i++] = 0xf0 | (c >>> 18);
+            buf[i++] = 0x80 | (c >>> 12 & 0x3f);
+            buf[i++] = 0x80 | (c >>> 6 & 0x3f);
+            buf[i++] = 0x80 | (c & 0x3f);
+        }
+    }
+
+    return buf;
+};
+
+// Calculate max possible position in utf8 buffer,
+// that will not break sequence. If that's not possible
+// - (very small limits) return max size as is.
+//
+// buf[] - utf8 bytes array
+// max   - length limit (mandatory);
+var utf8border = function(buf, max) {
+    var pos;
+
+    max = max || buf.length;
+    if (max > buf.length) { max = buf.length; }
+
+    // go back from last position, until start of sequence found
+    pos = max-1;
+    while (pos >= 0 && (buf[pos] & 0xC0) === 0x80) { pos--; }
+
+    // Fuckup - very small and broken sequence,
+    // return max, because we should return something anyway.
+    if (pos < 0) { return max; }
+
+    // If we came to start of buffer - that means vuffer is too small,
+    // return max too.
+    if (pos === 0) { return max; }
+
+    return (pos + _utf8len[buf[pos]] > max) ? pos : max;
+};
+
+// convert array to string
+var buf2string = function (buf) {
+    var str, i, out, c, c_len;
+    var len = buf.length;
+
+    // Reserve max possible length (2 words per char)
+    // NB: by unknown reasons, Array is significantly faster for
+    //     String.fromCharCode.apply than Uint16Array.
+    var utf16buf = new Array(len*2);
+
+    for (out=0, i=0; i<len;) {
+        c = buf[i++];
+        // quick process ascii
+        if (c < 0x80) { utf16buf[out++] = c; continue; }
+
+        c_len = _utf8len[c];
+        // skip 5 & 6 byte codes
+        if (c_len > 4) { utf16buf[out++] = 0xfffd; i += c_len-1; continue; }
+
+        // apply mask on first byte
+        c &= c_len === 2 ? 0x1f : c_len === 3 ? 0x0f : 0x07;
+        // join the rest
+        while (c_len > 1 && i < len) {
+            c = (c << 6) | (buf[i++] & 0x3f);
+            c_len--;
+        }
+
+        // terminated by end of string?
+        if (c_len > 1) { utf16buf[out++] = 0xfffd; continue; }
+
+        if (c < 0x10000) {
+            utf16buf[out++] = c;
+        } else {
+            c -= 0x10000;
+            utf16buf[out++] = 0xd800 | ((c >> 10) & 0x3ff);
+            utf16buf[out++] = 0xdc00 | (c & 0x3ff);
+        }
+    }
+
+    // shrinkBuf(utf16buf, out)
+    if (utf16buf.length !== out) {
+        if(utf16buf.subarray) {
+            utf16buf = utf16buf.subarray(0, out);
+        } else {
+            utf16buf.length = out;
+        }
+    }
+
+    // return String.fromCharCode.apply(null, utf16buf);
+    return utils.applyFromCharCode(utf16buf);
+};
+
+
+// That's all for the pako functions.
+
+
+/**
+ * Transform a javascript string into an array (typed if possible) of bytes,
+ * UTF-8 encoded.
+ * @param {String} str the string to encode
+ * @return {Array|Uint8Array|Buffer} the UTF-8 encoded string.
+ */
+exports.utf8encode = function utf8encode(str) {
+    if (support.nodebuffer) {
+        return nodejsUtils.newBufferFrom(str, "utf-8");
+    }
+
+    return string2buf(str);
+};
+
+
+/**
+ * Transform a bytes array (or a representation) representing an UTF-8 encoded
+ * string into a javascript string.
+ * @param {Array|Uint8Array|Buffer} buf the data de decode
+ * @return {String} the decoded string.
+ */
+exports.utf8decode = function utf8decode(buf) {
+    if (support.nodebuffer) {
+        return utils.transformTo("nodebuffer", buf).toString("utf-8");
+    }
+
+    buf = utils.transformTo(support.uint8array ? "uint8array" : "array", buf);
+
+    return buf2string(buf);
+};
+
+/**
+ * A worker to decode utf8 encoded binary chunks into string chunks.
+ * @constructor
+ */
+function Utf8DecodeWorker() {
+    GenericWorker.call(this, "utf-8 decode");
+    // the last bytes if a chunk didn't end with a complete codepoint.
+    this.leftOver = null;
+}
+utils.inherits(Utf8DecodeWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+Utf8DecodeWorker.prototype.processChunk = function (chunk) {
+
+    var data = utils.transformTo(support.uint8array ? "uint8array" : "array", chunk.data);
+
+    // 1st step, re-use what's left of the previous chunk
+    if (this.leftOver && this.leftOver.length) {
+        if(support.uint8array) {
+            var previousData = data;
+            data = new Uint8Array(previousData.length + this.leftOver.length);
+            data.set(this.leftOver, 0);
+            data.set(previousData, this.leftOver.length);
+        } else {
+            data = this.leftOver.concat(data);
+        }
+        this.leftOver = null;
+    }
+
+    var nextBoundary = utf8border(data);
+    var usableData = data;
+    if (nextBoundary !== data.length) {
+        if (support.uint8array) {
+            usableData = data.subarray(0, nextBoundary);
+            this.leftOver = data.subarray(nextBoundary, data.length);
+        } else {
+            usableData = data.slice(0, nextBoundary);
+            this.leftOver = data.slice(nextBoundary, data.length);
+        }
+    }
+
+    this.push({
+        data : exports.utf8decode(usableData),
+        meta : chunk.meta
+    });
+};
+
+/**
+ * @see GenericWorker.flush
+ */
+Utf8DecodeWorker.prototype.flush = function () {
+    if(this.leftOver && this.leftOver.length) {
+        this.push({
+            data : exports.utf8decode(this.leftOver),
+            meta : {}
+        });
+        this.leftOver = null;
+    }
+};
+exports.Utf8DecodeWorker = Utf8DecodeWorker;
+
+/**
+ * A worker to endcode string chunks into utf8 encoded binary chunks.
+ * @constructor
+ */
+function Utf8EncodeWorker() {
+    GenericWorker.call(this, "utf-8 encode");
+}
+utils.inherits(Utf8EncodeWorker, GenericWorker);
+
+/**
+ * @see GenericWorker.processChunk
+ */
+Utf8EncodeWorker.prototype.processChunk = function (chunk) {
+    this.push({
+        data : exports.utf8encode(chunk.data),
+        meta : chunk.meta
+    });
+};
+exports.Utf8EncodeWorker = Utf8EncodeWorker;
+
+},{"./nodejsUtils":14,"./stream/GenericWorker":28,"./support":30,"./utils":32}],32:[function(require,module,exports){
+'use strict';
+
+var support = require('./support');
+var base64 = require('./base64');
+var nodejsUtils = require('./nodejsUtils');
+var setImmediate = require('set-immediate-shim');
+var external = require("./external");
+
+
+/**
+ * Convert a string that pass as a "binary string": it should represent a byte
+ * array but may have > 255 char codes. Be sure to take only the first byte
+ * and returns the byte array.
+ * @param {String} str the string to transform.
+ * @return {Array|Uint8Array} the string in a binary format.
+ */
+function string2binary(str) {
+    var result = null;
+    if (support.uint8array) {
+      result = new Uint8Array(str.length);
+    } else {
+      result = new Array(str.length);
+    }
+    return stringToArrayLike(str, result);
+}
+
+/**
+ * Create a new blob with the given content and the given type.
+ * @param {String|ArrayBuffer} part the content to put in the blob. DO NOT use
+ * an Uint8Array because the stock browser of android 4 won't accept it (it
+ * will be silently converted to a string, "[object Uint8Array]").
+ *
+ * Use only ONE part to build the blob to avoid a memory leak in IE11 / Edge:
+ * when a large amount of Array is used to create the Blob, the amount of
+ * memory consumed is nearly 100 times the original data amount.
+ *
+ * @param {String} type the mime type of the blob.
+ * @return {Blob} the created blob.
+ */
+exports.newBlob = function(part, type) {
+    exports.checkSupport("blob");
+
+    try {
+        // Blob constructor
+        return new Blob([part], {
+            type: type
+        });
+    }
+    catch (e) {
+
+        try {
+            // deprecated, browser only, old way
+            var Builder = self.BlobBuilder || self.WebKitBlobBuilder || self.MozBlobBuilder || self.MSBlobBuilder;
+            var builder = new Builder();
+            builder.append(part);
+            return builder.getBlob(type);
+        }
+        catch (e) {
+
+            // well, fuck ?!
+            throw new Error("Bug : can't construct the Blob.");
+        }
+    }
+
+
+};
+/**
+ * The identity function.
+ * @param {Object} input the input.
+ * @return {Object} the same input.
+ */
+function identity(input) {
+    return input;
+}
+
+/**
+ * Fill in an array with a string.
+ * @param {String} str the string to use.
+ * @param {Array|ArrayBuffer|Uint8Array|Buffer} array the array to fill in (will be mutated).
+ * @return {Array|ArrayBuffer|Uint8Array|Buffer} the updated array.
+ */
+function stringToArrayLike(str, array) {
+    for (var i = 0; i < str.length; ++i) {
+        array[i] = str.charCodeAt(i) & 0xFF;
+    }
+    return array;
+}
+
+/**
+ * An helper for the function arrayLikeToString.
+ * This contains static information and functions that
+ * can be optimized by the browser JIT compiler.
+ */
+var arrayToStringHelper = {
+    /**
+     * Transform an array of int into a string, chunk by chunk.
+     * See the performances notes on arrayLikeToString.
+     * @param {Array|ArrayBuffer|Uint8Array|Buffer} array the array to transform.
+     * @param {String} type the type of the array.
+     * @param {Integer} chunk the chunk size.
+     * @return {String} the resulting string.
+     * @throws Error if the chunk is too big for the stack.
+     */
+    stringifyByChunk: function(array, type, chunk) {
+        var result = [], k = 0, len = array.length;
+        // shortcut
+        if (len <= chunk) {
+            return String.fromCharCode.apply(null, array);
+        }
+        while (k < len) {
+            if (type === "array" || type === "nodebuffer") {
+                result.push(String.fromCharCode.apply(null, array.slice(k, Math.min(k + chunk, len))));
+            }
+            else {
+                result.push(String.fromCharCode.apply(null, array.subarray(k, Math.min(k + chunk, len))));
+            }
+            k += chunk;
+        }
+        return result.join("");
+    },
+    /**
+     * Call String.fromCharCode on every item in the array.
+     * This is the naive implementation, which generate A LOT of intermediate string.
+     * This should be used when everything else fail.
+     * @param {Array|ArrayBuffer|Uint8Array|Buffer} array the array to transform.
+     * @return {String} the result.
+     */
+    stringifyByChar: function(array){
+        var resultStr = "";
+        for(var i = 0; i < array.length; i++) {
+            resultStr += String.fromCharCode(array[i]);
+        }
+        return resultStr;
+    },
+    applyCanBeUsed : {
+        /**
+         * true if the browser accepts to use String.fromCharCode on Uint8Array
+         */
+        uint8array : (function () {
+            try {
+                return support.uint8array && String.fromCharCode.apply(null, new Uint8Array(1)).length === 1;
+            } catch (e) {
+                return false;
+            }
+        })(),
+        /**
+         * true if the browser accepts to use String.fromCharCode on nodejs Buffer.
+         */
+        nodebuffer : (function () {
+            try {
+                return support.nodebuffer && String.fromCharCode.apply(null, nodejsUtils.allocBuffer(1)).length === 1;
+            } catch (e) {
+                return false;
+            }
+        })()
+    }
+};
+
+/**
+ * Transform an array-like object to a string.
+ * @param {Array|ArrayBuffer|Uint8Array|Buffer} array the array to transform.
+ * @return {String} the result.
+ */
+function arrayLikeToString(array) {
+    // Performances notes :
+    // --------------------
+    // String.fromCharCode.apply(null, array) is the fastest, see
+    // see http://jsperf.com/converting-a-uint8array-to-a-string/2
+    // but the stack is limited (and we can get huge arrays !).
+    //
+    // result += String.fromCharCode(array[i]); generate too many strings !
+    //
+    // This code is inspired by http://jsperf.com/arraybuffer-to-string-apply-performance/2
+    // TODO : we now have workers that split the work. Do we still need that ?
+    var chunk = 65536,
+        type = exports.getTypeOf(array),
+        canUseApply = true;
+    if (type === "uint8array") {
+        canUseApply = arrayToStringHelper.applyCanBeUsed.uint8array;
+    } else if (type === "nodebuffer") {
+        canUseApply = arrayToStringHelper.applyCanBeUsed.nodebuffer;
+    }
+
+    if (canUseApply) {
+        while (chunk > 1) {
+            try {
+                return arrayToStringHelper.stringifyByChunk(array, type, chunk);
+            } catch (e) {
+                chunk = Math.floor(chunk / 2);
+            }
+        }
+    }
+
+    // no apply or chunk error : slow and painful algorithm
+    // default browser on android 4.*
+    return arrayToStringHelper.stringifyByChar(array);
+}
+
+exports.applyFromCharCode = arrayLikeToString;
+
+
+/**
+ * Copy the data from an array-like to an other array-like.
+ * @param {Array|ArrayBuffer|Uint8Array|Buffer} arrayFrom the origin array.
+ * @param {Array|ArrayBuffer|Uint8Array|Buffer} arrayTo the destination array which will be mutated.
+ * @return {Array|ArrayBuffer|Uint8Array|Buffer} the updated destination array.
+ */
+function arrayLikeToArrayLike(arrayFrom, arrayTo) {
+    for (var i = 0; i < arrayFrom.length; i++) {
+        arrayTo[i] = arrayFrom[i];
+    }
+    return arrayTo;
+}
+
+// a matrix containing functions to transform everything into everything.
+var transform = {};
+
+// string to ?
+transform["string"] = {
+    "string": identity,
+    "array": function(input) {
+        return stringToArrayLike(input, new Array(input.length));
+    },
+    "arraybuffer": function(input) {
+        return transform["string"]["uint8array"](input).buffer;
+    },
+    "uint8array": function(input) {
+        return stringToArrayLike(input, new Uint8Array(input.length));
+    },
+    "nodebuffer": function(input) {
+        return stringToArrayLike(input, nodejsUtils.allocBuffer(input.length));
+    }
+};
+
+// array to ?
+transform["array"] = {
+    "string": arrayLikeToString,
+    "array": identity,
+    "arraybuffer": function(input) {
+        return (new Uint8Array(input)).buffer;
+    },
+    "uint8array": function(input) {
+        return new Uint8Array(input);
+    },
+    "nodebuffer": function(input) {
+        return nodejsUtils.newBufferFrom(input);
+    }
+};
+
+// arraybuffer to ?
+transform["arraybuffer"] = {
+    "string": function(input) {
+        return arrayLikeToString(new Uint8Array(input));
+    },
+    "array": function(input) {
+        return arrayLikeToArrayLike(new Uint8Array(input), new Array(input.byteLength));
+    },
+    "arraybuffer": identity,
+    "uint8array": function(input) {
+        return new Uint8Array(input);
+    },
+    "nodebuffer": function(input) {
+        return nodejsUtils.newBufferFrom(new Uint8Array(input));
+    }
+};
+
+// uint8array to ?
+transform["uint8array"] = {
+    "string": arrayLikeToString,
+    "array": function(input) {
+        return arrayLikeToArrayLike(input, new Array(input.length));
+    },
+    "arraybuffer": function(input) {
+        return input.buffer;
+    },
+    "uint8array": identity,
+    "nodebuffer": function(input) {
+        return nodejsUtils.newBufferFrom(input);
+    }
+};
+
+// nodebuffer to ?
+transform["nodebuffer"] = {
+    "string": arrayLikeToString,
+    "array": function(input) {
+        return arrayLikeToArrayLike(input, new Array(input.length));
+    },
+    "arraybuffer": function(input) {
+        return transform["nodebuffer"]["uint8array"](input).buffer;
+    },
+    "uint8array": function(input) {
+        return arrayLikeToArrayLike(input, new Uint8Array(input.length));
+    },
+    "nodebuffer": identity
+};
+
+/**
+ * Transform an input into any type.
+ * The supported output type are : string, array, uint8array, arraybuffer, nodebuffer.
+ * If no output type is specified, the unmodified input will be returned.
+ * @param {String} outputType the output type.
+ * @param {String|Array|ArrayBuffer|Uint8Array|Buffer} input the input to convert.
+ * @throws {Error} an Error if the browser doesn't support the requested output type.
+ */
+exports.transformTo = function(outputType, input) {
+    if (!input) {
+        // undefined, null, etc
+        // an empty string won't harm.
+        input = "";
+    }
+    if (!outputType) {
+        return input;
+    }
+    exports.checkSupport(outputType);
+    var inputType = exports.getTypeOf(input);
+    var result = transform[inputType][outputType](input);
+    return result;
+};
+
+/**
+ * Return the type of the input.
+ * The type will be in a format valid for JSZip.utils.transformTo : string, array, uint8array, arraybuffer.
+ * @param {Object} input the input to identify.
+ * @return {String} the (lowercase) type of the input.
+ */
+exports.getTypeOf = function(input) {
+    if (typeof input === "string") {
+        return "string";
+    }
+    if (Object.prototype.toString.call(input) === "[object Array]") {
+        return "array";
+    }
+    if (support.nodebuffer && nodejsUtils.isBuffer(input)) {
+        return "nodebuffer";
+    }
+    if (support.uint8array && input instanceof Uint8Array) {
+        return "uint8array";
+    }
+    if (support.arraybuffer && input instanceof ArrayBuffer) {
+        return "arraybuffer";
+    }
+};
+
+/**
+ * Throw an exception if the type is not supported.
+ * @param {String} type the type to check.
+ * @throws {Error} an Error if the browser doesn't support the requested type.
+ */
+exports.checkSupport = function(type) {
+    var supported = support[type.toLowerCase()];
+    if (!supported) {
+        throw new Error(type + " is not supported by this platform");
+    }
+};
+
+exports.MAX_VALUE_16BITS = 65535;
+exports.MAX_VALUE_32BITS = -1; // well, "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" is parsed as -1
+
+/**
+ * Prettify a string read as binary.
+ * @param {string} str the string to prettify.
+ * @return {string} a pretty string.
+ */
+exports.pretty = function(str) {
+    var res = '',
+        code, i;
+    for (i = 0; i < (str || "").length; i++) {
+        code = str.charCodeAt(i);
+        res += '\\x' + (code < 16 ? "0" : "") + code.toString(16).toUpperCase();
+    }
+    return res;
+};
+
+/**
+ * Defer the call of a function.
+ * @param {Function} callback the function to call asynchronously.
+ * @param {Array} args the arguments to give to the callback.
+ */
+exports.delay = function(callback, args, self) {
+    setImmediate(function () {
+        callback.apply(self || null, args || []);
+    });
+};
+
+/**
+ * Extends a prototype with an other, without calling a constructor with
+ * side effects. Inspired by nodejs' `utils.inherits`
+ * @param {Function} ctor the constructor to augment
+ * @param {Function} superCtor the parent constructor to use
+ */
+exports.inherits = function (ctor, superCtor) {
+    var Obj = function() {};
+    Obj.prototype = superCtor.prototype;
+    ctor.prototype = new Obj();
+};
+
+/**
+ * Merge the objects passed as parameters into a new one.
+ * @private
+ * @param {...Object} var_args All objects to merge.
+ * @return {Object} a new object with the data of the others.
+ */
+exports.extend = function() {
+    var result = {}, i, attr;
+    for (i = 0; i < arguments.length; i++) { // arguments is not enumerable in some browsers
+        for (attr in arguments[i]) {
+            if (arguments[i].hasOwnProperty(attr) && typeof result[attr] === "undefined") {
+                result[attr] = arguments[i][attr];
+            }
+        }
+    }
+    return result;
+};
+
+/**
+ * Transform arbitrary content into a Promise.
+ * @param {String} name a name for the content being processed.
+ * @param {Object} inputData the content to process.
+ * @param {Boolean} isBinary true if the content is not an unicode string
+ * @param {Boolean} isOptimizedBinaryString true if the string content only has one byte per character.
+ * @param {Boolean} isBase64 true if the string content is encoded with base64.
+ * @return {Promise} a promise in a format usable by JSZip.
+ */
+exports.prepareContent = function(name, inputData, isBinary, isOptimizedBinaryString, isBase64) {
+
+    // if inputData is already a promise, this flatten it.
+    var promise = external.Promise.resolve(inputData).then(function(data) {
+        
+        
+        var isBlob = support.blob && (data instanceof Blob || ['[object File]', '[object Blob]'].indexOf(Object.prototype.toString.call(data)) !== -1);
+
+        if (isBlob && typeof FileReader !== "undefined") {
+            return new external.Promise(function (resolve, reject) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                reader.onerror = function(e) {
+                    reject(e.target.error);
+                };
+                reader.readAsArrayBuffer(data);
+            });
+        } else {
+            return data;
+        }
+    });
+
+    return promise.then(function(data) {
+        var dataType = exports.getTypeOf(data);
+
+        if (!dataType) {
+            return external.Promise.reject(
+                new Error("Can't read the data of '" + name + "'. Is it " +
+                          "in a supported JavaScript type (String, Blob, ArrayBuffer, etc) ?")
+            );
+        }
+        // special case : it's way easier to work with Uint8Array than with ArrayBuffer
+        if (dataType === "arraybuffer") {
+            data = exports.transformTo("uint8array", data);
+        } else if (dataType === "string") {
+            if (isBase64) {
+                data = base64.decode(data);
+            }
+            else if (isBinary) {
+                // optimizedBinaryString === true means that the file has already been filtered with a 0xFF mask
+                if (isOptimizedBinaryString !== true) {
+                    // this is a string, not in a base64 format.
+                    // Be sure that this is a correct "binary string"
+                    data = string2binary(data);
+                }
+            }
+        }
+        return data;
+    });
+};
+
+},{"./base64":1,"./external":6,"./nodejsUtils":14,"./support":30,"set-immediate-shim":54}],33:[function(require,module,exports){
+'use strict';
+var readerFor = require('./reader/readerFor');
+var utils = require('./utils');
+var sig = require('./signature');
+var ZipEntry = require('./zipEntry');
+var utf8 = require('./utf8');
+var support = require('./support');
+//  class ZipEntries {{{
+/**
+ * All the entries in the zip file.
+ * @constructor
+ * @param {Object} loadOptions Options for loading the stream.
+ */
+function ZipEntries(loadOptions) {
+    this.files = [];
+    this.loadOptions = loadOptions;
+}
+ZipEntries.prototype = {
+    /**
+     * Check that the reader is on the specified signature.
+     * @param {string} expectedSignature the expected signature.
+     * @throws {Error} if it is an other signature.
+     */
+    checkSignature: function(expectedSignature) {
+        if (!this.reader.readAndCheckSignature(expectedSignature)) {
+            this.reader.index -= 4;
+            var signature = this.reader.readString(4);
+            throw new Error("Corrupted zip or bug: unexpected signature " + "(" + utils.pretty(signature) + ", expected " + utils.pretty(expectedSignature) + ")");
+        }
+    },
+    /**
+     * Check if the given signature is at the given index.
+     * @param {number} askedIndex the index to check.
+     * @param {string} expectedSignature the signature to expect.
+     * @return {boolean} true if the signature is here, false otherwise.
+     */
+    isSignature: function(askedIndex, expectedSignature) {
+        var currentIndex = this.reader.index;
+        this.reader.setIndex(askedIndex);
+        var signature = this.reader.readString(4);
+        var result = signature === expectedSignature;
+        this.reader.setIndex(currentIndex);
+        return result;
+    },
+    /**
+     * Read the end of the central directory.
+     */
+    readBlockEndOfCentral: function() {
+        this.diskNumber = this.reader.readInt(2);
+        this.diskWithCentralDirStart = this.reader.readInt(2);
+        this.centralDirRecordsOnThisDisk = this.reader.readInt(2);
+        this.centralDirRecords = this.reader.readInt(2);
+        this.centralDirSize = this.reader.readInt(4);
+        this.centralDirOffset = this.reader.readInt(4);
+
+        this.zipCommentLength = this.reader.readInt(2);
+        // warning : the encoding depends of the system locale
+        // On a linux machine with LANG=en_US.utf8, this field is utf8 encoded.
+        // On a windows machine, this field is encoded with the localized windows code page.
+        var zipComment = this.reader.readData(this.zipCommentLength);
+        var decodeParamType = support.uint8array ? "uint8array" : "array";
+        // To get consistent behavior with the generation part, we will assume that
+        // this is utf8 encoded unless specified otherwise.
+        var decodeContent = utils.transformTo(decodeParamType, zipComment);
+        this.zipComment = this.loadOptions.decodeFileName(decodeContent);
+    },
+    /**
+     * Read the end of the Zip 64 central directory.
+     * Not merged with the method readEndOfCentral :
+     * The end of central can coexist with its Zip64 brother,
+     * I don't want to read the wrong number of bytes !
+     */
+    readBlockZip64EndOfCentral: function() {
+        this.zip64EndOfCentralSize = this.reader.readInt(8);
+        this.reader.skip(4);
+        // this.versionMadeBy = this.reader.readString(2);
+        // this.versionNeeded = this.reader.readInt(2);
+        this.diskNumber = this.reader.readInt(4);
+        this.diskWithCentralDirStart = this.reader.readInt(4);
+        this.centralDirRecordsOnThisDisk = this.reader.readInt(8);
+        this.centralDirRecords = this.reader.readInt(8);
+        this.centralDirSize = this.reader.readInt(8);
+        this.centralDirOffset = this.reader.readInt(8);
+
+        this.zip64ExtensibleData = {};
+        var extraDataSize = this.zip64EndOfCentralSize - 44,
+            index = 0,
+            extraFieldId,
+            extraFieldLength,
+            extraFieldValue;
+        while (index < extraDataSize) {
+            extraFieldId = this.reader.readInt(2);
+            extraFieldLength = this.reader.readInt(4);
+            extraFieldValue = this.reader.readData(extraFieldLength);
+            this.zip64ExtensibleData[extraFieldId] = {
+                id: extraFieldId,
+                length: extraFieldLength,
+                value: extraFieldValue
+            };
+        }
+    },
+    /**
+     * Read the end of the Zip 64 central directory locator.
+     */
+    readBlockZip64EndOfCentralLocator: function() {
+        this.diskWithZip64CentralDirStart = this.reader.readInt(4);
+        this.relativeOffsetEndOfZip64CentralDir = this.reader.readInt(8);
+        this.disksCount = this.reader.readInt(4);
+        if (this.disksCount > 1) {
+            throw new Error("Multi-volumes zip are not supported");
+        }
+    },
+    /**
+     * Read the local files, based on the offset read in the central part.
+     */
+    readLocalFiles: function() {
+        var i, file;
+        for (i = 0; i < this.files.length; i++) {
+            file = this.files[i];
+            this.reader.setIndex(file.localHeaderOffset);
+            this.checkSignature(sig.LOCAL_FILE_HEADER);
+            file.readLocalPart(this.reader);
+            file.handleUTF8();
+            file.processAttributes();
+        }
+    },
+    /**
+     * Read the central directory.
+     */
+    readCentralDir: function() {
+        var file;
+
+        this.reader.setIndex(this.centralDirOffset);
+        while (this.reader.readAndCheckSignature(sig.CENTRAL_FILE_HEADER)) {
+            file = new ZipEntry({
+                zip64: this.zip64
+            }, this.loadOptions);
+            file.readCentralPart(this.reader);
+            this.files.push(file);
+        }
+
+        if (this.centralDirRecords !== this.files.length) {
+            if (this.centralDirRecords !== 0 && this.files.length === 0) {
+                // We expected some records but couldn't find ANY.
+                // This is really suspicious, as if something went wrong.
+                throw new Error("Corrupted zip or bug: expected " + this.centralDirRecords + " records in central dir, got " + this.files.length);
+            } else {
+                // We found some records but not all.
+                // Something is wrong but we got something for the user: no error here.
+                // console.warn("expected", this.centralDirRecords, "records in central dir, got", this.files.length);
+            }
+        }
+    },
+    /**
+     * Read the end of central directory.
+     */
+    readEndOfCentral: function() {
+        var offset = this.reader.lastIndexOfSignature(sig.CENTRAL_DIRECTORY_END);
+        if (offset < 0) {
+            // Check if the content is a truncated zip or complete garbage.
+            // A "LOCAL_FILE_HEADER" is not required at the beginning (auto
+            // extractible zip for example) but it can give a good hint.
+            // If an ajax request was used without responseType, we will also
+            // get unreadable data.
+            var isGarbage = !this.isSignature(0, sig.LOCAL_FILE_HEADER);
+
+            if (isGarbage) {
+                throw new Error("Can't find end of central directory : is this a zip file ? " +
+                                "If it is, see https://stuk.github.io/jszip/documentation/howto/read_zip.html");
+            } else {
+                throw new Error("Corrupted zip: can't find end of central directory");
+            }
+
+        }
+        this.reader.setIndex(offset);
+        var endOfCentralDirOffset = offset;
+        this.checkSignature(sig.CENTRAL_DIRECTORY_END);
+        this.readBlockEndOfCentral();
+
+
+        /* extract from the zip spec :
+            4)  If one of the fields in the end of central directory
+                record is too small to hold required data, the field
+                should be set to -1 (0xFFFF or 0xFFFFFFFF) and the
+                ZIP64 format record should be created.
+            5)  The end of central directory record and the
+                Zip64 end of central directory locator record must
+                reside on the same disk when splitting or spanning
+                an archive.
+         */
+        if (this.diskNumber === utils.MAX_VALUE_16BITS || this.diskWithCentralDirStart === utils.MAX_VALUE_16BITS || this.centralDirRecordsOnThisDisk === utils.MAX_VALUE_16BITS || this.centralDirRecords === utils.MAX_VALUE_16BITS || this.centralDirSize === utils.MAX_VALUE_32BITS || this.centralDirOffset === utils.MAX_VALUE_32BITS) {
+            this.zip64 = true;
+
+            /*
+            Warning : the zip64 extension is supported, but ONLY if the 64bits integer read from
+            the zip file can fit into a 32bits integer. This cannot be solved : JavaScript represents
+            all numbers as 64-bit double precision IEEE 754 floating point numbers.
+            So, we have 53bits for integers and bitwise operations treat everything as 32bits.
+            see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Bitwise_Operators
+            and http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf section 8.5
+            */
+
+            // should look for a zip64 EOCD locator
+            offset = this.reader.lastIndexOfSignature(sig.ZIP64_CENTRAL_DIRECTORY_LOCATOR);
+            if (offset < 0) {
+                throw new Error("Corrupted zip: can't find the ZIP64 end of central directory locator");
+            }
+            this.reader.setIndex(offset);
+            this.checkSignature(sig.ZIP64_CENTRAL_DIRECTORY_LOCATOR);
+            this.readBlockZip64EndOfCentralLocator();
+
+            // now the zip64 EOCD record
+            if (!this.isSignature(this.relativeOffsetEndOfZip64CentralDir, sig.ZIP64_CENTRAL_DIRECTORY_END)) {
+                // console.warn("ZIP64 end of central directory not where expected.");
+                this.relativeOffsetEndOfZip64CentralDir = this.reader.lastIndexOfSignature(sig.ZIP64_CENTRAL_DIRECTORY_END);
+                if (this.relativeOffsetEndOfZip64CentralDir < 0) {
+                    throw new Error("Corrupted zip: can't find the ZIP64 end of central directory");
+                }
+            }
+            this.reader.setIndex(this.relativeOffsetEndOfZip64CentralDir);
+            this.checkSignature(sig.ZIP64_CENTRAL_DIRECTORY_END);
+            this.readBlockZip64EndOfCentral();
+        }
+
+        var expectedEndOfCentralDirOffset = this.centralDirOffset + this.centralDirSize;
+        if (this.zip64) {
+            expectedEndOfCentralDirOffset += 20; // end of central dir 64 locator
+            expectedEndOfCentralDirOffset += 12 /* should not include the leading 12 bytes */ + this.zip64EndOfCentralSize;
+        }
+
+        var extraBytes = endOfCentralDirOffset - expectedEndOfCentralDirOffset;
+
+        if (extraBytes > 0) {
+            // console.warn(extraBytes, "extra bytes at beginning or within zipfile");
+            if (this.isSignature(endOfCentralDirOffset, sig.CENTRAL_FILE_HEADER)) {
+                // The offsets seem wrong, but we have something at the specified offset.
+                // So… we keep it.
+            } else {
+                // the offset is wrong, update the "zero" of the reader
+                // this happens if data has been prepended (crx files for example)
+                this.reader.zero = extraBytes;
+            }
+        } else if (extraBytes < 0) {
+            throw new Error("Corrupted zip: missing " + Math.abs(extraBytes) + " bytes.");
+        }
+    },
+    prepareReader: function(data) {
+        this.reader = readerFor(data);
+    },
+    /**
+     * Read a zip file and create ZipEntries.
+     * @param {String|ArrayBuffer|Uint8Array|Buffer} data the binary string representing a zip file.
+     */
+    load: function(data) {
+        this.prepareReader(data);
+        this.readEndOfCentral();
+        this.readCentralDir();
+        this.readLocalFiles();
+    }
+};
+// }}} end of ZipEntries
+module.exports = ZipEntries;
+
+},{"./reader/readerFor":22,"./signature":23,"./support":30,"./utf8":31,"./utils":32,"./zipEntry":34}],34:[function(require,module,exports){
+'use strict';
+var readerFor = require('./reader/readerFor');
+var utils = require('./utils');
+var CompressedObject = require('./compressedObject');
+var crc32fn = require('./crc32');
+var utf8 = require('./utf8');
+var compressions = require('./compressions');
+var support = require('./support');
+
+var MADE_BY_DOS = 0x00;
+var MADE_BY_UNIX = 0x03;
+
+/**
+ * Find a compression registered in JSZip.
+ * @param {string} compressionMethod the method magic to find.
+ * @return {Object|null} the JSZip compression object, null if none found.
+ */
+var findCompression = function(compressionMethod) {
+    for (var method in compressions) {
+        if (!compressions.hasOwnProperty(method)) {
+            continue;
+        }
+        if (compressions[method].magic === compressionMethod) {
+            return compressions[method];
         }
     }
     return null;
 };
 
-/***/ }),
+// class ZipEntry {{{
+/**
+ * An entry in the zip file.
+ * @constructor
+ * @param {Object} options Options of the current file.
+ * @param {Object} loadOptions Options for loading the stream.
+ */
+function ZipEntry(options, loadOptions) {
+    this.options = options;
+    this.loadOptions = loadOptions;
+}
+ZipEntry.prototype = {
+    /**
+     * say if the file is encrypted.
+     * @return {boolean} true if the file is encrypted, false otherwise.
+     */
+    isEncrypted: function() {
+        // bit 1 is set
+        return (this.bitFlag & 0x0001) === 0x0001;
+    },
+    /**
+     * say if the file has utf-8 filename/comment.
+     * @return {boolean} true if the filename/comment is in utf-8, false otherwise.
+     */
+    useUTF8: function() {
+        // bit 11 is set
+        return (this.bitFlag & 0x0800) === 0x0800;
+    },
+    /**
+     * Read the local part of a zip file and add the info in this object.
+     * @param {DataReader} reader the reader to use.
+     */
+    readLocalPart: function(reader) {
+        var compression, localExtraFieldsLength;
 
-/***/ "./node_modules/html2canvas/dist/npm/parsing/visibility.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/visibility.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+        // we already know everything from the central dir !
+        // If the central dir data are false, we are doomed.
+        // On the bright side, the local part is scary  : zip64, data descriptors, both, etc.
+        // The less data we get here, the more reliable this should be.
+        // Let's skip the whole header and dash to the data !
+        reader.skip(22);
+        // in some zip created on windows, the filename stored in the central dir contains \ instead of /.
+        // Strangely, the filename here is OK.
+        // I would love to treat these zip files as corrupted (see http://www.info-zip.org/FAQ.html#backslashes
+        // or APPNOTE#4.4.17.1, "All slashes MUST be forward slashes '/'") but there are a lot of bad zip generators...
+        // Search "unzip mismatching "local" filename continuing with "central" filename version" on
+        // the internet.
+        //
+        // I think I see the logic here : the central directory is used to display
+        // content and the local directory is used to extract the files. Mixing / and \
+        // may be used to display \ to windows users and use / when extracting the files.
+        // Unfortunately, this lead also to some issues : http://seclists.org/fulldisclosure/2009/Sep/394
+        this.fileNameLength = reader.readInt(2);
+        localExtraFieldsLength = reader.readInt(2); // can't be sure this will be the same as the central dir
+        // the fileName is stored as binary data, the handleUTF8 method will take care of the encoding.
+        this.fileName = reader.readData(this.fileNameLength);
+        reader.skip(localExtraFieldsLength);
 
-"use strict";
+        if (this.compressedSize === -1 || this.uncompressedSize === -1) {
+            throw new Error("Bug or corrupted zip : didn't get enough information from the central directory " + "(compressedSize === -1 || uncompressedSize === -1)");
+        }
 
+        compression = findCompression(this.compressionMethod);
+        if (compression === null) { // no compression found
+            throw new Error("Corrupted zip : compression " + utils.pretty(this.compressionMethod) + " unknown (inner file : " + utils.transformTo("string", this.fileName) + ")");
+        }
+        this.decompressed = new CompressedObject(this.compressedSize, this.uncompressedSize, this.crc32, compression, reader.readData(this.compressedSize));
+    },
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var VISIBILITY = exports.VISIBILITY = {
-    VISIBLE: 0,
-    HIDDEN: 1,
-    COLLAPSE: 2
-};
+    /**
+     * Read the central part of a zip file and add the info in this object.
+     * @param {DataReader} reader the reader to use.
+     */
+    readCentralPart: function(reader) {
+        this.versionMadeBy = reader.readInt(2);
+        reader.skip(2);
+        // this.versionNeeded = reader.readInt(2);
+        this.bitFlag = reader.readInt(2);
+        this.compressionMethod = reader.readString(2);
+        this.date = reader.readDate();
+        this.crc32 = reader.readInt(4);
+        this.compressedSize = reader.readInt(4);
+        this.uncompressedSize = reader.readInt(4);
+        var fileNameLength = reader.readInt(2);
+        this.extraFieldsLength = reader.readInt(2);
+        this.fileCommentLength = reader.readInt(2);
+        this.diskNumberStart = reader.readInt(2);
+        this.internalFileAttributes = reader.readInt(2);
+        this.externalFileAttributes = reader.readInt(4);
+        this.localHeaderOffset = reader.readInt(4);
 
-var parseVisibility = exports.parseVisibility = function parseVisibility(visibility) {
-    switch (visibility) {
-        case 'hidden':
-            return VISIBILITY.HIDDEN;
-        case 'collapse':
-            return VISIBILITY.COLLAPSE;
-        case 'visible':
-        default:
-            return VISIBILITY.VISIBLE;
+        if (this.isEncrypted()) {
+            throw new Error("Encrypted zip are not supported");
+        }
+
+        // will be read in the local part, see the comments there
+        reader.skip(fileNameLength);
+        this.readExtraFields(reader);
+        this.parseZIP64ExtraField(reader);
+        this.fileComment = reader.readData(this.fileCommentLength);
+    },
+
+    /**
+     * Parse the external file attributes and get the unix/dos permissions.
+     */
+    processAttributes: function () {
+        this.unixPermissions = null;
+        this.dosPermissions = null;
+        var madeBy = this.versionMadeBy >> 8;
+
+        // Check if we have the DOS directory flag set.
+        // We look for it in the DOS and UNIX permissions
+        // but some unknown platform could set it as a compatibility flag.
+        this.dir = this.externalFileAttributes & 0x0010 ? true : false;
+
+        if(madeBy === MADE_BY_DOS) {
+            // first 6 bits (0 to 5)
+            this.dosPermissions = this.externalFileAttributes & 0x3F;
+        }
+
+        if(madeBy === MADE_BY_UNIX) {
+            this.unixPermissions = (this.externalFileAttributes >> 16) & 0xFFFF;
+            // the octal permissions are in (this.unixPermissions & 0x01FF).toString(8);
+        }
+
+        // fail safe : if the name ends with a / it probably means a folder
+        if (!this.dir && this.fileNameStr.slice(-1) === '/') {
+            this.dir = true;
+        }
+    },
+
+    /**
+     * Parse the ZIP64 extra field and merge the info in the current ZipEntry.
+     * @param {DataReader} reader the reader to use.
+     */
+    parseZIP64ExtraField: function(reader) {
+
+        if (!this.extraFields[0x0001]) {
+            return;
+        }
+
+        // should be something, preparing the extra reader
+        var extraReader = readerFor(this.extraFields[0x0001].value);
+
+        // I really hope that these 64bits integer can fit in 32 bits integer, because js
+        // won't let us have more.
+        if (this.uncompressedSize === utils.MAX_VALUE_32BITS) {
+            this.uncompressedSize = extraReader.readInt(8);
+        }
+        if (this.compressedSize === utils.MAX_VALUE_32BITS) {
+            this.compressedSize = extraReader.readInt(8);
+        }
+        if (this.localHeaderOffset === utils.MAX_VALUE_32BITS) {
+            this.localHeaderOffset = extraReader.readInt(8);
+        }
+        if (this.diskNumberStart === utils.MAX_VALUE_32BITS) {
+            this.diskNumberStart = extraReader.readInt(4);
+        }
+    },
+    /**
+     * Read the central part of a zip file and add the info in this object.
+     * @param {DataReader} reader the reader to use.
+     */
+    readExtraFields: function(reader) {
+        var end = reader.index + this.extraFieldsLength,
+            extraFieldId,
+            extraFieldLength,
+            extraFieldValue;
+
+        if (!this.extraFields) {
+            this.extraFields = {};
+        }
+
+        while (reader.index + 4 < end) {
+            extraFieldId = reader.readInt(2);
+            extraFieldLength = reader.readInt(2);
+            extraFieldValue = reader.readData(extraFieldLength);
+
+            this.extraFields[extraFieldId] = {
+                id: extraFieldId,
+                length: extraFieldLength,
+                value: extraFieldValue
+            };
+        }
+
+        reader.setIndex(end);
+    },
+    /**
+     * Apply an UTF8 transformation if needed.
+     */
+    handleUTF8: function() {
+        var decodeParamType = support.uint8array ? "uint8array" : "array";
+        if (this.useUTF8()) {
+            this.fileNameStr = utf8.utf8decode(this.fileName);
+            this.fileCommentStr = utf8.utf8decode(this.fileComment);
+        } else {
+            var upath = this.findExtraFieldUnicodePath();
+            if (upath !== null) {
+                this.fileNameStr = upath;
+            } else {
+                // ASCII text or unsupported code page
+                var fileNameByteArray =  utils.transformTo(decodeParamType, this.fileName);
+                this.fileNameStr = this.loadOptions.decodeFileName(fileNameByteArray);
+            }
+
+            var ucomment = this.findExtraFieldUnicodeComment();
+            if (ucomment !== null) {
+                this.fileCommentStr = ucomment;
+            } else {
+                // ASCII text or unsupported code page
+                var commentByteArray =  utils.transformTo(decodeParamType, this.fileComment);
+                this.fileCommentStr = this.loadOptions.decodeFileName(commentByteArray);
+            }
+        }
+    },
+
+    /**
+     * Find the unicode path declared in the extra field, if any.
+     * @return {String} the unicode path, null otherwise.
+     */
+    findExtraFieldUnicodePath: function() {
+        var upathField = this.extraFields[0x7075];
+        if (upathField) {
+            var extraReader = readerFor(upathField.value);
+
+            // wrong version
+            if (extraReader.readInt(1) !== 1) {
+                return null;
+            }
+
+            // the crc of the filename changed, this field is out of date.
+            if (crc32fn(this.fileName) !== extraReader.readInt(4)) {
+                return null;
+            }
+
+            return utf8.utf8decode(extraReader.readData(upathField.length - 5));
+        }
+        return null;
+    },
+
+    /**
+     * Find the unicode comment declared in the extra field, if any.
+     * @return {String} the unicode comment, null otherwise.
+     */
+    findExtraFieldUnicodeComment: function() {
+        var ucommentField = this.extraFields[0x6375];
+        if (ucommentField) {
+            var extraReader = readerFor(ucommentField.value);
+
+            // wrong version
+            if (extraReader.readInt(1) !== 1) {
+                return null;
+            }
+
+            // the crc of the comment changed, this field is out of date.
+            if (crc32fn(this.fileComment) !== extraReader.readInt(4)) {
+                return null;
+            }
+
+            return utf8.utf8decode(extraReader.readData(ucommentField.length - 5));
+        }
+        return null;
     }
 };
+module.exports = ZipEntry;
 
-/***/ }),
+},{"./compressedObject":2,"./compressions":3,"./crc32":4,"./reader/readerFor":22,"./support":30,"./utf8":31,"./utils":32}],35:[function(require,module,exports){
+'use strict';
 
-/***/ "./node_modules/html2canvas/dist/npm/parsing/word-break.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/word-break.js ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+var StreamHelper = require('./stream/StreamHelper');
+var DataWorker = require('./stream/DataWorker');
+var utf8 = require('./utf8');
+var CompressedObject = require('./compressedObject');
+var GenericWorker = require('./stream/GenericWorker');
 
-"use strict";
+/**
+ * A simple object representing a file in the zip file.
+ * @constructor
+ * @param {string} name the name of the file
+ * @param {String|ArrayBuffer|Uint8Array|Buffer} data the data
+ * @param {Object} options the options of the file
+ */
+var ZipObject = function(name, data, options) {
+    this.name = name;
+    this.dir = options.dir;
+    this.date = options.date;
+    this.comment = options.comment;
+    this.unixPermissions = options.unixPermissions;
+    this.dosPermissions = options.dosPermissions;
 
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var WORD_BREAK = exports.WORD_BREAK = {
-    NORMAL: 'normal',
-    BREAK_ALL: 'break-all',
-    KEEP_ALL: 'keep-all'
-};
-
-var parseWordBreak = exports.parseWordBreak = function parseWordBreak(wordBreak) {
-    switch (wordBreak) {
-        case 'break-all':
-            return WORD_BREAK.BREAK_ALL;
-        case 'keep-all':
-            return WORD_BREAK.KEEP_ALL;
-        case 'normal':
-        default:
-            return WORD_BREAK.NORMAL;
-    }
-};
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/parsing/zIndex.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/parsing/zIndex.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var parseZIndex = exports.parseZIndex = function parseZIndex(zIndex) {
-    var auto = zIndex === 'auto';
-    return {
-        auto: auto,
-        order: auto ? 0 : parseInt(zIndex, 10)
+    this._data = data;
+    this._dataBinary = options.binary;
+    // keep only the compression
+    this.options = {
+        compression : options.compression,
+        compressionOptions : options.compressionOptions
     };
 };
 
-/***/ }),
+ZipObject.prototype = {
+    /**
+     * Create an internal stream for the content of this object.
+     * @param {String} type the type of each chunk.
+     * @return StreamHelper the stream.
+     */
+    internalStream: function (type) {
+        var result = null, outputType = "string";
+        try {
+            if (!type) {
+                throw new Error("No output type specified.");
+            }
+            outputType = type.toLowerCase();
+            var askUnicodeString = outputType === "string" || outputType === "text";
+            if (outputType === "binarystring" || outputType === "text") {
+                outputType = "string";
+            }
+            result = this._decompressWorker();
 
-/***/ "./node_modules/html2canvas/dist/npm/renderer/CanvasRenderer.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/renderer/CanvasRenderer.js ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+            var isUnicodeString = !this._dataBinary;
 
-"use strict";
+            if (isUnicodeString && !askUnicodeString) {
+                result = result.pipe(new utf8.Utf8EncodeWorker());
+            }
+            if (!isUnicodeString && askUnicodeString) {
+                result = result.pipe(new utf8.Utf8DecodeWorker());
+            }
+        } catch (e) {
+            result = new GenericWorker("error");
+            result.error(e);
+        }
 
+        return new StreamHelper(result, outputType, "");
+    },
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+    /**
+     * Prepare the content in the asked type.
+     * @param {String} type the type of the result.
+     * @param {Function} onUpdate a function to call on each internal update.
+     * @return Promise the promise of the result.
+     */
+    async: function (type, onUpdate) {
+        return this.internalStream(type).accumulate(onUpdate);
+    },
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+    /**
+     * Prepare the content as a nodejs stream.
+     * @param {String} type the type of each chunk.
+     * @param {Function} onUpdate a function to call on each internal update.
+     * @return Stream the stream.
+     */
+    nodeStream: function (type, onUpdate) {
+        return this.internalStream(type || "nodebuffer").toNodejsStream(onUpdate);
+    },
 
-var _Path = __webpack_require__(/*! ../drawing/Path */ "./node_modules/html2canvas/dist/npm/drawing/Path.js");
-
-var _textDecoration = __webpack_require__(/*! ../parsing/textDecoration */ "./node_modules/html2canvas/dist/npm/parsing/textDecoration.js");
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var addColorStops = function addColorStops(gradient, canvasGradient) {
-    var maxStop = Math.max.apply(null, gradient.colorStops.map(function (colorStop) {
-        return colorStop.stop;
-    }));
-    var f = 1 / Math.max(1, maxStop);
-    gradient.colorStops.forEach(function (colorStop) {
-        canvasGradient.addColorStop(f * colorStop.stop, colorStop.color.toString());
-    });
+    /**
+     * Return a worker for the compressed content.
+     * @private
+     * @param {Object} compression the compression object to use.
+     * @param {Object} compressionOptions the options to use when compressing.
+     * @return Worker the worker.
+     */
+    _compressWorker: function (compression, compressionOptions) {
+        if (
+            this._data instanceof CompressedObject &&
+            this._data.compression.magic === compression.magic
+        ) {
+            return this._data.getCompressedWorker();
+        } else {
+            var result = this._decompressWorker();
+            if(!this._dataBinary) {
+                result = result.pipe(new utf8.Utf8EncodeWorker());
+            }
+            return CompressedObject.createWorkerFrom(result, compression, compressionOptions);
+        }
+    },
+    /**
+     * Return a worker for the decompressed content.
+     * @private
+     * @return Worker the worker.
+     */
+    _decompressWorker : function () {
+        if (this._data instanceof CompressedObject) {
+            return this._data.getContentWorker();
+        } else if (this._data instanceof GenericWorker) {
+            return this._data;
+        } else {
+            return new DataWorker(this._data);
+        }
+    }
 };
 
-var CanvasRenderer = function () {
-    function CanvasRenderer(canvas) {
-        _classCallCheck(this, CanvasRenderer);
+var removedMethods = ["asText", "asBinary", "asNodeBuffer", "asUint8Array", "asArrayBuffer"];
+var removedFn = function () {
+    throw new Error("This method has been removed in JSZip 3.0, please check the upgrade guide.");
+};
 
-        this.canvas = canvas ? canvas : document.createElement('canvas');
+for(var i = 0; i < removedMethods.length; i++) {
+    ZipObject.prototype[removedMethods[i]] = removedFn;
+}
+module.exports = ZipObject;
+
+},{"./compressedObject":2,"./stream/DataWorker":27,"./stream/GenericWorker":28,"./stream/StreamHelper":29,"./utf8":31}],36:[function(require,module,exports){
+(function (global){
+'use strict';
+var Mutation = global.MutationObserver || global.WebKitMutationObserver;
+
+var scheduleDrain;
+
+{
+  if (Mutation) {
+    var called = 0;
+    var observer = new Mutation(nextTick);
+    var element = global.document.createTextNode('');
+    observer.observe(element, {
+      characterData: true
+    });
+    scheduleDrain = function () {
+      element.data = (called = ++called % 2);
+    };
+  } else if (!global.setImmediate && typeof global.MessageChannel !== 'undefined') {
+    var channel = new global.MessageChannel();
+    channel.port1.onmessage = nextTick;
+    scheduleDrain = function () {
+      channel.port2.postMessage(0);
+    };
+  } else if ('document' in global && 'onreadystatechange' in global.document.createElement('script')) {
+    scheduleDrain = function () {
+
+      // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+      // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+      var scriptEl = global.document.createElement('script');
+      scriptEl.onreadystatechange = function () {
+        nextTick();
+
+        scriptEl.onreadystatechange = null;
+        scriptEl.parentNode.removeChild(scriptEl);
+        scriptEl = null;
+      };
+      global.document.documentElement.appendChild(scriptEl);
+    };
+  } else {
+    scheduleDrain = function () {
+      setTimeout(nextTick, 0);
+    };
+  }
+}
+
+var draining;
+var queue = [];
+//named nextTick for less confusing stack traces
+function nextTick() {
+  draining = true;
+  var i, oldQueue;
+  var len = queue.length;
+  while (len) {
+    oldQueue = queue;
+    queue = [];
+    i = -1;
+    while (++i < len) {
+      oldQueue[i]();
+    }
+    len = queue.length;
+  }
+  draining = false;
+}
+
+module.exports = immediate;
+function immediate(task) {
+  if (queue.push(task) === 1 && !draining) {
+    scheduleDrain();
+  }
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],37:[function(require,module,exports){
+'use strict';
+var immediate = require('immediate');
+
+/* istanbul ignore next */
+function INTERNAL() {}
+
+var handlers = {};
+
+var REJECTED = ['REJECTED'];
+var FULFILLED = ['FULFILLED'];
+var PENDING = ['PENDING'];
+
+module.exports = Promise;
+
+function Promise(resolver) {
+  if (typeof resolver !== 'function') {
+    throw new TypeError('resolver must be a function');
+  }
+  this.state = PENDING;
+  this.queue = [];
+  this.outcome = void 0;
+  if (resolver !== INTERNAL) {
+    safelyResolveThenable(this, resolver);
+  }
+}
+
+Promise.prototype["finally"] = function (callback) {
+  if (typeof callback !== 'function') {
+    return this;
+  }
+  var p = this.constructor;
+  return this.then(resolve, reject);
+
+  function resolve(value) {
+    function yes () {
+      return value;
+    }
+    return p.resolve(callback()).then(yes);
+  }
+  function reject(reason) {
+    function no () {
+      throw reason;
+    }
+    return p.resolve(callback()).then(no);
+  }
+};
+Promise.prototype["catch"] = function (onRejected) {
+  return this.then(null, onRejected);
+};
+Promise.prototype.then = function (onFulfilled, onRejected) {
+  if (typeof onFulfilled !== 'function' && this.state === FULFILLED ||
+    typeof onRejected !== 'function' && this.state === REJECTED) {
+    return this;
+  }
+  var promise = new this.constructor(INTERNAL);
+  if (this.state !== PENDING) {
+    var resolver = this.state === FULFILLED ? onFulfilled : onRejected;
+    unwrap(promise, resolver, this.outcome);
+  } else {
+    this.queue.push(new QueueItem(promise, onFulfilled, onRejected));
+  }
+
+  return promise;
+};
+function QueueItem(promise, onFulfilled, onRejected) {
+  this.promise = promise;
+  if (typeof onFulfilled === 'function') {
+    this.onFulfilled = onFulfilled;
+    this.callFulfilled = this.otherCallFulfilled;
+  }
+  if (typeof onRejected === 'function') {
+    this.onRejected = onRejected;
+    this.callRejected = this.otherCallRejected;
+  }
+}
+QueueItem.prototype.callFulfilled = function (value) {
+  handlers.resolve(this.promise, value);
+};
+QueueItem.prototype.otherCallFulfilled = function (value) {
+  unwrap(this.promise, this.onFulfilled, value);
+};
+QueueItem.prototype.callRejected = function (value) {
+  handlers.reject(this.promise, value);
+};
+QueueItem.prototype.otherCallRejected = function (value) {
+  unwrap(this.promise, this.onRejected, value);
+};
+
+function unwrap(promise, func, value) {
+  immediate(function () {
+    var returnValue;
+    try {
+      returnValue = func(value);
+    } catch (e) {
+      return handlers.reject(promise, e);
+    }
+    if (returnValue === promise) {
+      handlers.reject(promise, new TypeError('Cannot resolve promise with itself'));
+    } else {
+      handlers.resolve(promise, returnValue);
+    }
+  });
+}
+
+handlers.resolve = function (self, value) {
+  var result = tryCatch(getThen, value);
+  if (result.status === 'error') {
+    return handlers.reject(self, result.value);
+  }
+  var thenable = result.value;
+
+  if (thenable) {
+    safelyResolveThenable(self, thenable);
+  } else {
+    self.state = FULFILLED;
+    self.outcome = value;
+    var i = -1;
+    var len = self.queue.length;
+    while (++i < len) {
+      self.queue[i].callFulfilled(value);
+    }
+  }
+  return self;
+};
+handlers.reject = function (self, error) {
+  self.state = REJECTED;
+  self.outcome = error;
+  var i = -1;
+  var len = self.queue.length;
+  while (++i < len) {
+    self.queue[i].callRejected(error);
+  }
+  return self;
+};
+
+function getThen(obj) {
+  // Make sure we only access the accessor once as required by the spec
+  var then = obj && obj.then;
+  if (obj && (typeof obj === 'object' || typeof obj === 'function') && typeof then === 'function') {
+    return function appyThen() {
+      then.apply(obj, arguments);
+    };
+  }
+}
+
+function safelyResolveThenable(self, thenable) {
+  // Either fulfill, reject or reject with error
+  var called = false;
+  function onError(value) {
+    if (called) {
+      return;
+    }
+    called = true;
+    handlers.reject(self, value);
+  }
+
+  function onSuccess(value) {
+    if (called) {
+      return;
+    }
+    called = true;
+    handlers.resolve(self, value);
+  }
+
+  function tryToUnwrap() {
+    thenable(onSuccess, onError);
+  }
+
+  var result = tryCatch(tryToUnwrap);
+  if (result.status === 'error') {
+    onError(result.value);
+  }
+}
+
+function tryCatch(func, value) {
+  var out = {};
+  try {
+    out.value = func(value);
+    out.status = 'success';
+  } catch (e) {
+    out.status = 'error';
+    out.value = e;
+  }
+  return out;
+}
+
+Promise.resolve = resolve;
+function resolve(value) {
+  if (value instanceof this) {
+    return value;
+  }
+  return handlers.resolve(new this(INTERNAL), value);
+}
+
+Promise.reject = reject;
+function reject(reason) {
+  var promise = new this(INTERNAL);
+  return handlers.reject(promise, reason);
+}
+
+Promise.all = all;
+function all(iterable) {
+  var self = this;
+  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
+    return this.reject(new TypeError('must be an array'));
+  }
+
+  var len = iterable.length;
+  var called = false;
+  if (!len) {
+    return this.resolve([]);
+  }
+
+  var values = new Array(len);
+  var resolved = 0;
+  var i = -1;
+  var promise = new this(INTERNAL);
+
+  while (++i < len) {
+    allResolver(iterable[i], i);
+  }
+  return promise;
+  function allResolver(value, i) {
+    self.resolve(value).then(resolveFromAll, function (error) {
+      if (!called) {
+        called = true;
+        handlers.reject(promise, error);
+      }
+    });
+    function resolveFromAll(outValue) {
+      values[i] = outValue;
+      if (++resolved === len && !called) {
+        called = true;
+        handlers.resolve(promise, values);
+      }
+    }
+  }
+}
+
+Promise.race = race;
+function race(iterable) {
+  var self = this;
+  if (Object.prototype.toString.call(iterable) !== '[object Array]') {
+    return this.reject(new TypeError('must be an array'));
+  }
+
+  var len = iterable.length;
+  var called = false;
+  if (!len) {
+    return this.resolve([]);
+  }
+
+  var i = -1;
+  var promise = new this(INTERNAL);
+
+  while (++i < len) {
+    resolver(iterable[i]);
+  }
+  return promise;
+  function resolver(value) {
+    self.resolve(value).then(function (response) {
+      if (!called) {
+        called = true;
+        handlers.resolve(promise, response);
+      }
+    }, function (error) {
+      if (!called) {
+        called = true;
+        handlers.reject(promise, error);
+      }
+    });
+  }
+}
+
+},{"immediate":36}],38:[function(require,module,exports){
+// Top level file is just a mixin of submodules & constants
+'use strict';
+
+var assign    = require('./lib/utils/common').assign;
+
+var deflate   = require('./lib/deflate');
+var inflate   = require('./lib/inflate');
+var constants = require('./lib/zlib/constants');
+
+var pako = {};
+
+assign(pako, deflate, inflate, constants);
+
+module.exports = pako;
+
+},{"./lib/deflate":39,"./lib/inflate":40,"./lib/utils/common":41,"./lib/zlib/constants":44}],39:[function(require,module,exports){
+'use strict';
+
+
+var zlib_deflate = require('./zlib/deflate');
+var utils        = require('./utils/common');
+var strings      = require('./utils/strings');
+var msg          = require('./zlib/messages');
+var ZStream      = require('./zlib/zstream');
+
+var toString = Object.prototype.toString;
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+var Z_NO_FLUSH      = 0;
+var Z_FINISH        = 4;
+
+var Z_OK            = 0;
+var Z_STREAM_END    = 1;
+var Z_SYNC_FLUSH    = 2;
+
+var Z_DEFAULT_COMPRESSION = -1;
+
+var Z_DEFAULT_STRATEGY    = 0;
+
+var Z_DEFLATED  = 8;
+
+/* ===========================================================================*/
+
+
+/**
+ * class Deflate
+ *
+ * Generic JS-style wrapper for zlib calls. If you don't need
+ * streaming behaviour - use more simple functions: [[deflate]],
+ * [[deflateRaw]] and [[gzip]].
+ **/
+
+/* internal
+ * Deflate.chunks -> Array
+ *
+ * Chunks of output data, if [[Deflate#onData]] not overriden.
+ **/
+
+/**
+ * Deflate.result -> Uint8Array|Array
+ *
+ * Compressed result, generated by default [[Deflate#onData]]
+ * and [[Deflate#onEnd]] handlers. Filled after you push last chunk
+ * (call [[Deflate#push]] with `Z_FINISH` / `true` param)  or if you
+ * push a chunk with explicit flush (call [[Deflate#push]] with
+ * `Z_SYNC_FLUSH` param).
+ **/
+
+/**
+ * Deflate.err -> Number
+ *
+ * Error code after deflate finished. 0 (Z_OK) on success.
+ * You will not need it in real life, because deflate errors
+ * are possible only on wrong options or bad `onData` / `onEnd`
+ * custom handlers.
+ **/
+
+/**
+ * Deflate.msg -> String
+ *
+ * Error message, if [[Deflate.err]] != 0
+ **/
+
+
+/**
+ * new Deflate(options)
+ * - options (Object): zlib deflate options.
+ *
+ * Creates new deflator instance with specified params. Throws exception
+ * on bad params. Supported options:
+ *
+ * - `level`
+ * - `windowBits`
+ * - `memLevel`
+ * - `strategy`
+ * - `dictionary`
+ *
+ * [http://zlib.net/manual.html#Advanced](http://zlib.net/manual.html#Advanced)
+ * for more information on these.
+ *
+ * Additional options, for internal needs:
+ *
+ * - `chunkSize` - size of generated data chunks (16K by default)
+ * - `raw` (Boolean) - do raw deflate
+ * - `gzip` (Boolean) - create gzip wrapper
+ * - `to` (String) - if equal to 'string', then result will be "binary string"
+ *    (each char code [0..255])
+ * - `header` (Object) - custom header for gzip
+ *   - `text` (Boolean) - true if compressed data believed to be text
+ *   - `time` (Number) - modification time, unix timestamp
+ *   - `os` (Number) - operation system code
+ *   - `extra` (Array) - array of bytes with extra data (max 65536)
+ *   - `name` (String) - file name (binary string)
+ *   - `comment` (String) - comment (binary string)
+ *   - `hcrc` (Boolean) - true if header crc should be added
+ *
+ * ##### Example:
+ *
+ * ```javascript
+ * var pako = require('pako')
+ *   , chunk1 = Uint8Array([1,2,3,4,5,6,7,8,9])
+ *   , chunk2 = Uint8Array([10,11,12,13,14,15,16,17,18,19]);
+ *
+ * var deflate = new pako.Deflate({ level: 3});
+ *
+ * deflate.push(chunk1, false);
+ * deflate.push(chunk2, true);  // true -> last chunk
+ *
+ * if (deflate.err) { throw new Error(deflate.err); }
+ *
+ * console.log(deflate.result);
+ * ```
+ **/
+function Deflate(options) {
+  if (!(this instanceof Deflate)) return new Deflate(options);
+
+  this.options = utils.assign({
+    level: Z_DEFAULT_COMPRESSION,
+    method: Z_DEFLATED,
+    chunkSize: 16384,
+    windowBits: 15,
+    memLevel: 8,
+    strategy: Z_DEFAULT_STRATEGY,
+    to: ''
+  }, options || {});
+
+  var opt = this.options;
+
+  if (opt.raw && (opt.windowBits > 0)) {
+    opt.windowBits = -opt.windowBits;
+  }
+
+  else if (opt.gzip && (opt.windowBits > 0) && (opt.windowBits < 16)) {
+    opt.windowBits += 16;
+  }
+
+  this.err    = 0;      // error code, if happens (0 = Z_OK)
+  this.msg    = '';     // error message
+  this.ended  = false;  // used to avoid multiple onEnd() calls
+  this.chunks = [];     // chunks of compressed data
+
+  this.strm = new ZStream();
+  this.strm.avail_out = 0;
+
+  var status = zlib_deflate.deflateInit2(
+    this.strm,
+    opt.level,
+    opt.method,
+    opt.windowBits,
+    opt.memLevel,
+    opt.strategy
+  );
+
+  if (status !== Z_OK) {
+    throw new Error(msg[status]);
+  }
+
+  if (opt.header) {
+    zlib_deflate.deflateSetHeader(this.strm, opt.header);
+  }
+
+  if (opt.dictionary) {
+    var dict;
+    // Convert data if needed
+    if (typeof opt.dictionary === 'string') {
+      // If we need to compress text, change encoding to utf8.
+      dict = strings.string2buf(opt.dictionary);
+    } else if (toString.call(opt.dictionary) === '[object ArrayBuffer]') {
+      dict = new Uint8Array(opt.dictionary);
+    } else {
+      dict = opt.dictionary;
     }
 
-    _createClass(CanvasRenderer, [{
-        key: 'render',
-        value: function render(options) {
-            this.ctx = this.canvas.getContext('2d');
-            this.options = options;
-            this.canvas.width = Math.floor(options.width * options.scale);
-            this.canvas.height = Math.floor(options.height * options.scale);
-            this.canvas.style.width = options.width + 'px';
-            this.canvas.style.height = options.height + 'px';
+    status = zlib_deflate.deflateSetDictionary(this.strm, dict);
 
-            this.ctx.scale(this.options.scale, this.options.scale);
-            this.ctx.translate(-options.x, -options.y);
-            this.ctx.textBaseline = 'bottom';
-            options.logger.log('Canvas renderer initialized (' + options.width + 'x' + options.height + ' at ' + options.x + ',' + options.y + ') with scale ' + this.options.scale);
-        }
-    }, {
-        key: 'clip',
-        value: function clip(clipPaths, callback) {
-            var _this = this;
-
-            if (clipPaths.length) {
-                this.ctx.save();
-                clipPaths.forEach(function (path) {
-                    _this.path(path);
-                    _this.ctx.clip();
-                });
-            }
-
-            callback();
-
-            if (clipPaths.length) {
-                this.ctx.restore();
-            }
-        }
-    }, {
-        key: 'drawImage',
-        value: function drawImage(image, source, destination) {
-            this.ctx.drawImage(image, source.left, source.top, source.width, source.height, destination.left, destination.top, destination.width, destination.height);
-        }
-    }, {
-        key: 'drawShape',
-        value: function drawShape(path, color) {
-            this.path(path);
-            this.ctx.fillStyle = color.toString();
-            this.ctx.fill();
-        }
-    }, {
-        key: 'fill',
-        value: function fill(color) {
-            this.ctx.fillStyle = color.toString();
-            this.ctx.fill();
-        }
-    }, {
-        key: 'getTarget',
-        value: function getTarget() {
-            this.canvas.getContext('2d').setTransform(1, 0, 0, 1, 0, 0);
-            return Promise.resolve(this.canvas);
-        }
-    }, {
-        key: 'path',
-        value: function path(_path) {
-            var _this2 = this;
-
-            this.ctx.beginPath();
-            if (Array.isArray(_path)) {
-                _path.forEach(function (point, index) {
-                    var start = point.type === _Path.PATH.VECTOR ? point : point.start;
-                    if (index === 0) {
-                        _this2.ctx.moveTo(start.x, start.y);
-                    } else {
-                        _this2.ctx.lineTo(start.x, start.y);
-                    }
-
-                    if (point.type === _Path.PATH.BEZIER_CURVE) {
-                        _this2.ctx.bezierCurveTo(point.startControl.x, point.startControl.y, point.endControl.x, point.endControl.y, point.end.x, point.end.y);
-                    }
-                });
-            } else {
-                this.ctx.arc(_path.x + _path.radius, _path.y + _path.radius, _path.radius, 0, Math.PI * 2, true);
-            }
-
-            this.ctx.closePath();
-        }
-    }, {
-        key: 'rectangle',
-        value: function rectangle(x, y, width, height, color) {
-            this.ctx.fillStyle = color.toString();
-            this.ctx.fillRect(x, y, width, height);
-        }
-    }, {
-        key: 'renderLinearGradient',
-        value: function renderLinearGradient(bounds, gradient) {
-            var linearGradient = this.ctx.createLinearGradient(bounds.left + gradient.direction.x1, bounds.top + gradient.direction.y1, bounds.left + gradient.direction.x0, bounds.top + gradient.direction.y0);
-
-            addColorStops(gradient, linearGradient);
-            this.ctx.fillStyle = linearGradient;
-            this.ctx.fillRect(bounds.left, bounds.top, bounds.width, bounds.height);
-        }
-    }, {
-        key: 'renderRadialGradient',
-        value: function renderRadialGradient(bounds, gradient) {
-            var _this3 = this;
-
-            var x = bounds.left + gradient.center.x;
-            var y = bounds.top + gradient.center.y;
-
-            var radialGradient = this.ctx.createRadialGradient(x, y, 0, x, y, gradient.radius.x);
-            if (!radialGradient) {
-                return;
-            }
-
-            addColorStops(gradient, radialGradient);
-            this.ctx.fillStyle = radialGradient;
-
-            if (gradient.radius.x !== gradient.radius.y) {
-                // transforms for elliptical radial gradient
-                var midX = bounds.left + 0.5 * bounds.width;
-                var midY = bounds.top + 0.5 * bounds.height;
-                var f = gradient.radius.y / gradient.radius.x;
-                var invF = 1 / f;
-
-                this.transform(midX, midY, [1, 0, 0, f, 0, 0], function () {
-                    return _this3.ctx.fillRect(bounds.left, invF * (bounds.top - midY) + midY, bounds.width, bounds.height * invF);
-                });
-            } else {
-                this.ctx.fillRect(bounds.left, bounds.top, bounds.width, bounds.height);
-            }
-        }
-    }, {
-        key: 'renderRepeat',
-        value: function renderRepeat(path, image, imageSize, offsetX, offsetY) {
-            this.path(path);
-            this.ctx.fillStyle = this.ctx.createPattern(this.resizeImage(image, imageSize), 'repeat');
-            this.ctx.translate(offsetX, offsetY);
-            this.ctx.fill();
-            this.ctx.translate(-offsetX, -offsetY);
-        }
-    }, {
-        key: 'renderTextNode',
-        value: function renderTextNode(textBounds, color, font, textDecoration, textShadows) {
-            var _this4 = this;
-
-            this.ctx.font = [font.fontStyle, font.fontVariant, font.fontWeight, font.fontSize, font.fontFamily].join(' ');
-
-            textBounds.forEach(function (text) {
-                _this4.ctx.fillStyle = color.toString();
-                if (textShadows && text.text.trim().length) {
-                    textShadows.slice(0).reverse().forEach(function (textShadow) {
-                        _this4.ctx.shadowColor = textShadow.color.toString();
-                        _this4.ctx.shadowOffsetX = textShadow.offsetX * _this4.options.scale;
-                        _this4.ctx.shadowOffsetY = textShadow.offsetY * _this4.options.scale;
-                        _this4.ctx.shadowBlur = textShadow.blur;
-
-                        _this4.ctx.fillText(text.text, text.bounds.left, text.bounds.top + text.bounds.height);
-                    });
-                } else {
-                    _this4.ctx.fillText(text.text, text.bounds.left, text.bounds.top + text.bounds.height);
-                }
-
-                if (textDecoration !== null) {
-                    var textDecorationColor = textDecoration.textDecorationColor || color;
-                    textDecoration.textDecorationLine.forEach(function (textDecorationLine) {
-                        switch (textDecorationLine) {
-                            case _textDecoration.TEXT_DECORATION_LINE.UNDERLINE:
-                                // Draws a line at the baseline of the font
-                                // TODO As some browsers display the line as more than 1px if the font-size is big,
-                                // need to take that into account both in position and size
-                                var _options$fontMetrics$ = _this4.options.fontMetrics.getMetrics(font),
-                                    baseline = _options$fontMetrics$.baseline;
-
-                                _this4.rectangle(text.bounds.left, Math.round(text.bounds.top + baseline), text.bounds.width, 1, textDecorationColor);
-                                break;
-                            case _textDecoration.TEXT_DECORATION_LINE.OVERLINE:
-                                _this4.rectangle(text.bounds.left, Math.round(text.bounds.top), text.bounds.width, 1, textDecorationColor);
-                                break;
-                            case _textDecoration.TEXT_DECORATION_LINE.LINE_THROUGH:
-                                // TODO try and find exact position for line-through
-                                var _options$fontMetrics$2 = _this4.options.fontMetrics.getMetrics(font),
-                                    middle = _options$fontMetrics$2.middle;
-
-                                _this4.rectangle(text.bounds.left, Math.ceil(text.bounds.top + middle), text.bounds.width, 1, textDecorationColor);
-                                break;
-                        }
-                    });
-                }
-            });
-        }
-    }, {
-        key: 'resizeImage',
-        value: function resizeImage(image, size) {
-            if (image.width === size.width && image.height === size.height) {
-                return image;
-            }
-
-            var canvas = this.canvas.ownerDocument.createElement('canvas');
-            canvas.width = size.width;
-            canvas.height = size.height;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, size.width, size.height);
-            return canvas;
-        }
-    }, {
-        key: 'setOpacity',
-        value: function setOpacity(opacity) {
-            this.ctx.globalAlpha = opacity;
-        }
-    }, {
-        key: 'transform',
-        value: function transform(offsetX, offsetY, matrix, callback) {
-            this.ctx.save();
-            this.ctx.translate(offsetX, offsetY);
-            this.ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-            this.ctx.translate(-offsetX, -offsetY);
-
-            callback();
-
-            this.ctx.restore();
-        }
-    }]);
-
-    return CanvasRenderer;
-}();
-
-exports.default = CanvasRenderer;
-
-/***/ }),
-
-/***/ "./node_modules/html2canvas/dist/npm/renderer/ForeignObjectRenderer.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/html2canvas/dist/npm/renderer/ForeignObjectRenderer.js ***!
-  \*****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ForeignObjectRenderer = function () {
-    function ForeignObjectRenderer(element) {
-        _classCallCheck(this, ForeignObjectRenderer);
-
-        this.element = element;
+    if (status !== Z_OK) {
+      throw new Error(msg[status]);
     }
 
-    _createClass(ForeignObjectRenderer, [{
-        key: 'render',
-        value: function render(options) {
-            var _this = this;
+    this._dict_set = true;
+  }
+}
 
-            this.options = options;
-            this.canvas = document.createElement('canvas');
-            this.ctx = this.canvas.getContext('2d');
-            this.canvas.width = Math.floor(options.width) * options.scale;
-            this.canvas.height = Math.floor(options.height) * options.scale;
-            this.canvas.style.width = options.width + 'px';
-            this.canvas.style.height = options.height + 'px';
+/**
+ * Deflate#push(data[, mode]) -> Boolean
+ * - data (Uint8Array|Array|ArrayBuffer|String): input data. Strings will be
+ *   converted to utf8 byte sequence.
+ * - mode (Number|Boolean): 0..6 for corresponding Z_NO_FLUSH..Z_TREE modes.
+ *   See constants. Skipped or `false` means Z_NO_FLUSH, `true` meansh Z_FINISH.
+ *
+ * Sends input data to deflate pipe, generating [[Deflate#onData]] calls with
+ * new compressed chunks. Returns `true` on success. The last data block must have
+ * mode Z_FINISH (or `true`). That will flush internal pending buffers and call
+ * [[Deflate#onEnd]]. For interim explicit flushes (without ending the stream) you
+ * can use mode Z_SYNC_FLUSH, keeping the compression context.
+ *
+ * On fail call [[Deflate#onEnd]] with error code and return false.
+ *
+ * We strongly recommend to use `Uint8Array` on input for best speed (output
+ * array format is detected automatically). Also, don't skip last param and always
+ * use the same type in your code (boolean or number). That will improve JS speed.
+ *
+ * For regular `Array`-s make sure all elements are [0..255].
+ *
+ * ##### Example
+ *
+ * ```javascript
+ * push(chunk, false); // push one of data chunks
+ * ...
+ * push(chunk, true);  // push last chunk
+ * ```
+ **/
+Deflate.prototype.push = function (data, mode) {
+  var strm = this.strm;
+  var chunkSize = this.options.chunkSize;
+  var status, _mode;
 
-            options.logger.log('ForeignObject renderer initialized (' + options.width + 'x' + options.height + ' at ' + options.x + ',' + options.y + ') with scale ' + options.scale);
-            var svg = createForeignObjectSVG(Math.max(options.windowWidth, options.width) * options.scale, Math.max(options.windowHeight, options.height) * options.scale, options.scrollX * options.scale, options.scrollY * options.scale, this.element);
+  if (this.ended) { return false; }
 
-            return loadSerializedSVG(svg).then(function (img) {
-                if (options.backgroundColor) {
-                    _this.ctx.fillStyle = options.backgroundColor.toString();
-                    _this.ctx.fillRect(0, 0, options.width * options.scale, options.height * options.scale);
+  _mode = (mode === ~~mode) ? mode : ((mode === true) ? Z_FINISH : Z_NO_FLUSH);
+
+  // Convert data if needed
+  if (typeof data === 'string') {
+    // If we need to compress text, change encoding to utf8.
+    strm.input = strings.string2buf(data);
+  } else if (toString.call(data) === '[object ArrayBuffer]') {
+    strm.input = new Uint8Array(data);
+  } else {
+    strm.input = data;
+  }
+
+  strm.next_in = 0;
+  strm.avail_in = strm.input.length;
+
+  do {
+    if (strm.avail_out === 0) {
+      strm.output = new utils.Buf8(chunkSize);
+      strm.next_out = 0;
+      strm.avail_out = chunkSize;
+    }
+    status = zlib_deflate.deflate(strm, _mode);    /* no bad return value */
+
+    if (status !== Z_STREAM_END && status !== Z_OK) {
+      this.onEnd(status);
+      this.ended = true;
+      return false;
+    }
+    if (strm.avail_out === 0 || (strm.avail_in === 0 && (_mode === Z_FINISH || _mode === Z_SYNC_FLUSH))) {
+      if (this.options.to === 'string') {
+        this.onData(strings.buf2binstring(utils.shrinkBuf(strm.output, strm.next_out)));
+      } else {
+        this.onData(utils.shrinkBuf(strm.output, strm.next_out));
+      }
+    }
+  } while ((strm.avail_in > 0 || strm.avail_out === 0) && status !== Z_STREAM_END);
+
+  // Finalize on the last chunk.
+  if (_mode === Z_FINISH) {
+    status = zlib_deflate.deflateEnd(this.strm);
+    this.onEnd(status);
+    this.ended = true;
+    return status === Z_OK;
+  }
+
+  // callback interim results if Z_SYNC_FLUSH.
+  if (_mode === Z_SYNC_FLUSH) {
+    this.onEnd(Z_OK);
+    strm.avail_out = 0;
+    return true;
+  }
+
+  return true;
+};
+
+
+/**
+ * Deflate#onData(chunk) -> Void
+ * - chunk (Uint8Array|Array|String): ouput data. Type of array depends
+ *   on js engine support. When string output requested, each chunk
+ *   will be string.
+ *
+ * By default, stores data blocks in `chunks[]` property and glue
+ * those in `onEnd`. Override this handler, if you need another behaviour.
+ **/
+Deflate.prototype.onData = function (chunk) {
+  this.chunks.push(chunk);
+};
+
+
+/**
+ * Deflate#onEnd(status) -> Void
+ * - status (Number): deflate status. 0 (Z_OK) on success,
+ *   other if not.
+ *
+ * Called once after you tell deflate that the input stream is
+ * complete (Z_FINISH) or should be flushed (Z_SYNC_FLUSH)
+ * or if an error happened. By default - join collected chunks,
+ * free memory and fill `results` / `err` properties.
+ **/
+Deflate.prototype.onEnd = function (status) {
+  // On success - join
+  if (status === Z_OK) {
+    if (this.options.to === 'string') {
+      this.result = this.chunks.join('');
+    } else {
+      this.result = utils.flattenChunks(this.chunks);
+    }
+  }
+  this.chunks = [];
+  this.err = status;
+  this.msg = this.strm.msg;
+};
+
+
+/**
+ * deflate(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to compress.
+ * - options (Object): zlib deflate options.
+ *
+ * Compress `data` with deflate algorithm and `options`.
+ *
+ * Supported options are:
+ *
+ * - level
+ * - windowBits
+ * - memLevel
+ * - strategy
+ * - dictionary
+ *
+ * [http://zlib.net/manual.html#Advanced](http://zlib.net/manual.html#Advanced)
+ * for more information on these.
+ *
+ * Sugar (options):
+ *
+ * - `raw` (Boolean) - say that we work with raw stream, if you don't wish to specify
+ *   negative windowBits implicitly.
+ * - `to` (String) - if equal to 'string', then result will be "binary string"
+ *    (each char code [0..255])
+ *
+ * ##### Example:
+ *
+ * ```javascript
+ * var pako = require('pako')
+ *   , data = Uint8Array([1,2,3,4,5,6,7,8,9]);
+ *
+ * console.log(pako.deflate(data));
+ * ```
+ **/
+function deflate(input, options) {
+  var deflator = new Deflate(options);
+
+  deflator.push(input, true);
+
+  // That will never happens, if you don't cheat with options :)
+  if (deflator.err) { throw deflator.msg || msg[deflator.err]; }
+
+  return deflator.result;
+}
+
+
+/**
+ * deflateRaw(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to compress.
+ * - options (Object): zlib deflate options.
+ *
+ * The same as [[deflate]], but creates raw data, without wrapper
+ * (header and adler32 crc).
+ **/
+function deflateRaw(input, options) {
+  options = options || {};
+  options.raw = true;
+  return deflate(input, options);
+}
+
+
+/**
+ * gzip(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to compress.
+ * - options (Object): zlib deflate options.
+ *
+ * The same as [[deflate]], but create gzip wrapper instead of
+ * deflate one.
+ **/
+function gzip(input, options) {
+  options = options || {};
+  options.gzip = true;
+  return deflate(input, options);
+}
+
+
+exports.Deflate = Deflate;
+exports.deflate = deflate;
+exports.deflateRaw = deflateRaw;
+exports.gzip = gzip;
+
+},{"./utils/common":41,"./utils/strings":42,"./zlib/deflate":46,"./zlib/messages":51,"./zlib/zstream":53}],40:[function(require,module,exports){
+'use strict';
+
+
+var zlib_inflate = require('./zlib/inflate');
+var utils        = require('./utils/common');
+var strings      = require('./utils/strings');
+var c            = require('./zlib/constants');
+var msg          = require('./zlib/messages');
+var ZStream      = require('./zlib/zstream');
+var GZheader     = require('./zlib/gzheader');
+
+var toString = Object.prototype.toString;
+
+/**
+ * class Inflate
+ *
+ * Generic JS-style wrapper for zlib calls. If you don't need
+ * streaming behaviour - use more simple functions: [[inflate]]
+ * and [[inflateRaw]].
+ **/
+
+/* internal
+ * inflate.chunks -> Array
+ *
+ * Chunks of output data, if [[Inflate#onData]] not overriden.
+ **/
+
+/**
+ * Inflate.result -> Uint8Array|Array|String
+ *
+ * Uncompressed result, generated by default [[Inflate#onData]]
+ * and [[Inflate#onEnd]] handlers. Filled after you push last chunk
+ * (call [[Inflate#push]] with `Z_FINISH` / `true` param) or if you
+ * push a chunk with explicit flush (call [[Inflate#push]] with
+ * `Z_SYNC_FLUSH` param).
+ **/
+
+/**
+ * Inflate.err -> Number
+ *
+ * Error code after inflate finished. 0 (Z_OK) on success.
+ * Should be checked if broken data possible.
+ **/
+
+/**
+ * Inflate.msg -> String
+ *
+ * Error message, if [[Inflate.err]] != 0
+ **/
+
+
+/**
+ * new Inflate(options)
+ * - options (Object): zlib inflate options.
+ *
+ * Creates new inflator instance with specified params. Throws exception
+ * on bad params. Supported options:
+ *
+ * - `windowBits`
+ * - `dictionary`
+ *
+ * [http://zlib.net/manual.html#Advanced](http://zlib.net/manual.html#Advanced)
+ * for more information on these.
+ *
+ * Additional options, for internal needs:
+ *
+ * - `chunkSize` - size of generated data chunks (16K by default)
+ * - `raw` (Boolean) - do raw inflate
+ * - `to` (String) - if equal to 'string', then result will be converted
+ *   from utf8 to utf16 (javascript) string. When string output requested,
+ *   chunk length can differ from `chunkSize`, depending on content.
+ *
+ * By default, when no options set, autodetect deflate/gzip data format via
+ * wrapper header.
+ *
+ * ##### Example:
+ *
+ * ```javascript
+ * var pako = require('pako')
+ *   , chunk1 = Uint8Array([1,2,3,4,5,6,7,8,9])
+ *   , chunk2 = Uint8Array([10,11,12,13,14,15,16,17,18,19]);
+ *
+ * var inflate = new pako.Inflate({ level: 3});
+ *
+ * inflate.push(chunk1, false);
+ * inflate.push(chunk2, true);  // true -> last chunk
+ *
+ * if (inflate.err) { throw new Error(inflate.err); }
+ *
+ * console.log(inflate.result);
+ * ```
+ **/
+function Inflate(options) {
+  if (!(this instanceof Inflate)) return new Inflate(options);
+
+  this.options = utils.assign({
+    chunkSize: 16384,
+    windowBits: 0,
+    to: ''
+  }, options || {});
+
+  var opt = this.options;
+
+  // Force window size for `raw` data, if not set directly,
+  // because we have no header for autodetect.
+  if (opt.raw && (opt.windowBits >= 0) && (opt.windowBits < 16)) {
+    opt.windowBits = -opt.windowBits;
+    if (opt.windowBits === 0) { opt.windowBits = -15; }
+  }
+
+  // If `windowBits` not defined (and mode not raw) - set autodetect flag for gzip/deflate
+  if ((opt.windowBits >= 0) && (opt.windowBits < 16) &&
+      !(options && options.windowBits)) {
+    opt.windowBits += 32;
+  }
+
+  // Gzip header has no info about windows size, we can do autodetect only
+  // for deflate. So, if window size not set, force it to max when gzip possible
+  if ((opt.windowBits > 15) && (opt.windowBits < 48)) {
+    // bit 3 (16) -> gzipped data
+    // bit 4 (32) -> autodetect gzip/deflate
+    if ((opt.windowBits & 15) === 0) {
+      opt.windowBits |= 15;
+    }
+  }
+
+  this.err    = 0;      // error code, if happens (0 = Z_OK)
+  this.msg    = '';     // error message
+  this.ended  = false;  // used to avoid multiple onEnd() calls
+  this.chunks = [];     // chunks of compressed data
+
+  this.strm   = new ZStream();
+  this.strm.avail_out = 0;
+
+  var status  = zlib_inflate.inflateInit2(
+    this.strm,
+    opt.windowBits
+  );
+
+  if (status !== c.Z_OK) {
+    throw new Error(msg[status]);
+  }
+
+  this.header = new GZheader();
+
+  zlib_inflate.inflateGetHeader(this.strm, this.header);
+}
+
+/**
+ * Inflate#push(data[, mode]) -> Boolean
+ * - data (Uint8Array|Array|ArrayBuffer|String): input data
+ * - mode (Number|Boolean): 0..6 for corresponding Z_NO_FLUSH..Z_TREE modes.
+ *   See constants. Skipped or `false` means Z_NO_FLUSH, `true` meansh Z_FINISH.
+ *
+ * Sends input data to inflate pipe, generating [[Inflate#onData]] calls with
+ * new output chunks. Returns `true` on success. The last data block must have
+ * mode Z_FINISH (or `true`). That will flush internal pending buffers and call
+ * [[Inflate#onEnd]]. For interim explicit flushes (without ending the stream) you
+ * can use mode Z_SYNC_FLUSH, keeping the decompression context.
+ *
+ * On fail call [[Inflate#onEnd]] with error code and return false.
+ *
+ * We strongly recommend to use `Uint8Array` on input for best speed (output
+ * format is detected automatically). Also, don't skip last param and always
+ * use the same type in your code (boolean or number). That will improve JS speed.
+ *
+ * For regular `Array`-s make sure all elements are [0..255].
+ *
+ * ##### Example
+ *
+ * ```javascript
+ * push(chunk, false); // push one of data chunks
+ * ...
+ * push(chunk, true);  // push last chunk
+ * ```
+ **/
+Inflate.prototype.push = function (data, mode) {
+  var strm = this.strm;
+  var chunkSize = this.options.chunkSize;
+  var dictionary = this.options.dictionary;
+  var status, _mode;
+  var next_out_utf8, tail, utf8str;
+  var dict;
+
+  // Flag to properly process Z_BUF_ERROR on testing inflate call
+  // when we check that all output data was flushed.
+  var allowBufError = false;
+
+  if (this.ended) { return false; }
+  _mode = (mode === ~~mode) ? mode : ((mode === true) ? c.Z_FINISH : c.Z_NO_FLUSH);
+
+  // Convert data if needed
+  if (typeof data === 'string') {
+    // Only binary strings can be decompressed on practice
+    strm.input = strings.binstring2buf(data);
+  } else if (toString.call(data) === '[object ArrayBuffer]') {
+    strm.input = new Uint8Array(data);
+  } else {
+    strm.input = data;
+  }
+
+  strm.next_in = 0;
+  strm.avail_in = strm.input.length;
+
+  do {
+    if (strm.avail_out === 0) {
+      strm.output = new utils.Buf8(chunkSize);
+      strm.next_out = 0;
+      strm.avail_out = chunkSize;
+    }
+
+    status = zlib_inflate.inflate(strm, c.Z_NO_FLUSH);    /* no bad return value */
+
+    if (status === c.Z_NEED_DICT && dictionary) {
+      // Convert data if needed
+      if (typeof dictionary === 'string') {
+        dict = strings.string2buf(dictionary);
+      } else if (toString.call(dictionary) === '[object ArrayBuffer]') {
+        dict = new Uint8Array(dictionary);
+      } else {
+        dict = dictionary;
+      }
+
+      status = zlib_inflate.inflateSetDictionary(this.strm, dict);
+
+    }
+
+    if (status === c.Z_BUF_ERROR && allowBufError === true) {
+      status = c.Z_OK;
+      allowBufError = false;
+    }
+
+    if (status !== c.Z_STREAM_END && status !== c.Z_OK) {
+      this.onEnd(status);
+      this.ended = true;
+      return false;
+    }
+
+    if (strm.next_out) {
+      if (strm.avail_out === 0 || status === c.Z_STREAM_END || (strm.avail_in === 0 && (_mode === c.Z_FINISH || _mode === c.Z_SYNC_FLUSH))) {
+
+        if (this.options.to === 'string') {
+
+          next_out_utf8 = strings.utf8border(strm.output, strm.next_out);
+
+          tail = strm.next_out - next_out_utf8;
+          utf8str = strings.buf2string(strm.output, next_out_utf8);
+
+          // move tail
+          strm.next_out = tail;
+          strm.avail_out = chunkSize - tail;
+          if (tail) { utils.arraySet(strm.output, strm.output, next_out_utf8, tail, 0); }
+
+          this.onData(utf8str);
+
+        } else {
+          this.onData(utils.shrinkBuf(strm.output, strm.next_out));
+        }
+      }
+    }
+
+    // When no more input data, we should check that internal inflate buffers
+    // are flushed. The only way to do it when avail_out = 0 - run one more
+    // inflate pass. But if output data not exists, inflate return Z_BUF_ERROR.
+    // Here we set flag to process this error properly.
+    //
+    // NOTE. Deflate does not return error in this case and does not needs such
+    // logic.
+    if (strm.avail_in === 0 && strm.avail_out === 0) {
+      allowBufError = true;
+    }
+
+  } while ((strm.avail_in > 0 || strm.avail_out === 0) && status !== c.Z_STREAM_END);
+
+  if (status === c.Z_STREAM_END) {
+    _mode = c.Z_FINISH;
+  }
+
+  // Finalize on the last chunk.
+  if (_mode === c.Z_FINISH) {
+    status = zlib_inflate.inflateEnd(this.strm);
+    this.onEnd(status);
+    this.ended = true;
+    return status === c.Z_OK;
+  }
+
+  // callback interim results if Z_SYNC_FLUSH.
+  if (_mode === c.Z_SYNC_FLUSH) {
+    this.onEnd(c.Z_OK);
+    strm.avail_out = 0;
+    return true;
+  }
+
+  return true;
+};
+
+
+/**
+ * Inflate#onData(chunk) -> Void
+ * - chunk (Uint8Array|Array|String): ouput data. Type of array depends
+ *   on js engine support. When string output requested, each chunk
+ *   will be string.
+ *
+ * By default, stores data blocks in `chunks[]` property and glue
+ * those in `onEnd`. Override this handler, if you need another behaviour.
+ **/
+Inflate.prototype.onData = function (chunk) {
+  this.chunks.push(chunk);
+};
+
+
+/**
+ * Inflate#onEnd(status) -> Void
+ * - status (Number): inflate status. 0 (Z_OK) on success,
+ *   other if not.
+ *
+ * Called either after you tell inflate that the input stream is
+ * complete (Z_FINISH) or should be flushed (Z_SYNC_FLUSH)
+ * or if an error happened. By default - join collected chunks,
+ * free memory and fill `results` / `err` properties.
+ **/
+Inflate.prototype.onEnd = function (status) {
+  // On success - join
+  if (status === c.Z_OK) {
+    if (this.options.to === 'string') {
+      // Glue & convert here, until we teach pako to send
+      // utf8 alligned strings to onData
+      this.result = this.chunks.join('');
+    } else {
+      this.result = utils.flattenChunks(this.chunks);
+    }
+  }
+  this.chunks = [];
+  this.err = status;
+  this.msg = this.strm.msg;
+};
+
+
+/**
+ * inflate(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to decompress.
+ * - options (Object): zlib inflate options.
+ *
+ * Decompress `data` with inflate/ungzip and `options`. Autodetect
+ * format via wrapper header by default. That's why we don't provide
+ * separate `ungzip` method.
+ *
+ * Supported options are:
+ *
+ * - windowBits
+ *
+ * [http://zlib.net/manual.html#Advanced](http://zlib.net/manual.html#Advanced)
+ * for more information.
+ *
+ * Sugar (options):
+ *
+ * - `raw` (Boolean) - say that we work with raw stream, if you don't wish to specify
+ *   negative windowBits implicitly.
+ * - `to` (String) - if equal to 'string', then result will be converted
+ *   from utf8 to utf16 (javascript) string. When string output requested,
+ *   chunk length can differ from `chunkSize`, depending on content.
+ *
+ *
+ * ##### Example:
+ *
+ * ```javascript
+ * var pako = require('pako')
+ *   , input = pako.deflate([1,2,3,4,5,6,7,8,9])
+ *   , output;
+ *
+ * try {
+ *   output = pako.inflate(input);
+ * } catch (err)
+ *   console.log(err);
+ * }
+ * ```
+ **/
+function inflate(input, options) {
+  var inflator = new Inflate(options);
+
+  inflator.push(input, true);
+
+  // That will never happens, if you don't cheat with options :)
+  if (inflator.err) { throw inflator.msg || msg[inflator.err]; }
+
+  return inflator.result;
+}
+
+
+/**
+ * inflateRaw(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to decompress.
+ * - options (Object): zlib inflate options.
+ *
+ * The same as [[inflate]], but creates raw data, without wrapper
+ * (header and adler32 crc).
+ **/
+function inflateRaw(input, options) {
+  options = options || {};
+  options.raw = true;
+  return inflate(input, options);
+}
+
+
+/**
+ * ungzip(data[, options]) -> Uint8Array|Array|String
+ * - data (Uint8Array|Array|String): input data to decompress.
+ * - options (Object): zlib inflate options.
+ *
+ * Just shortcut to [[inflate]], because it autodetects format
+ * by header.content. Done for convenience.
+ **/
+
+
+exports.Inflate = Inflate;
+exports.inflate = inflate;
+exports.inflateRaw = inflateRaw;
+exports.ungzip  = inflate;
+
+},{"./utils/common":41,"./utils/strings":42,"./zlib/constants":44,"./zlib/gzheader":47,"./zlib/inflate":49,"./zlib/messages":51,"./zlib/zstream":53}],41:[function(require,module,exports){
+'use strict';
+
+
+var TYPED_OK =  (typeof Uint8Array !== 'undefined') &&
+                (typeof Uint16Array !== 'undefined') &&
+                (typeof Int32Array !== 'undefined');
+
+
+exports.assign = function (obj /*from1, from2, from3, ...*/) {
+  var sources = Array.prototype.slice.call(arguments, 1);
+  while (sources.length) {
+    var source = sources.shift();
+    if (!source) { continue; }
+
+    if (typeof source !== 'object') {
+      throw new TypeError(source + 'must be non-object');
+    }
+
+    for (var p in source) {
+      if (source.hasOwnProperty(p)) {
+        obj[p] = source[p];
+      }
+    }
+  }
+
+  return obj;
+};
+
+
+// reduce buffer size, avoiding mem copy
+exports.shrinkBuf = function (buf, size) {
+  if (buf.length === size) { return buf; }
+  if (buf.subarray) { return buf.subarray(0, size); }
+  buf.length = size;
+  return buf;
+};
+
+
+var fnTyped = {
+  arraySet: function (dest, src, src_offs, len, dest_offs) {
+    if (src.subarray && dest.subarray) {
+      dest.set(src.subarray(src_offs, src_offs + len), dest_offs);
+      return;
+    }
+    // Fallback to ordinary array
+    for (var i = 0; i < len; i++) {
+      dest[dest_offs + i] = src[src_offs + i];
+    }
+  },
+  // Join array of chunks to single array.
+  flattenChunks: function (chunks) {
+    var i, l, len, pos, chunk, result;
+
+    // calculate data length
+    len = 0;
+    for (i = 0, l = chunks.length; i < l; i++) {
+      len += chunks[i].length;
+    }
+
+    // join chunks
+    result = new Uint8Array(len);
+    pos = 0;
+    for (i = 0, l = chunks.length; i < l; i++) {
+      chunk = chunks[i];
+      result.set(chunk, pos);
+      pos += chunk.length;
+    }
+
+    return result;
+  }
+};
+
+var fnUntyped = {
+  arraySet: function (dest, src, src_offs, len, dest_offs) {
+    for (var i = 0; i < len; i++) {
+      dest[dest_offs + i] = src[src_offs + i];
+    }
+  },
+  // Join array of chunks to single array.
+  flattenChunks: function (chunks) {
+    return [].concat.apply([], chunks);
+  }
+};
+
+
+// Enable/Disable typed arrays use, for testing
+//
+exports.setTyped = function (on) {
+  if (on) {
+    exports.Buf8  = Uint8Array;
+    exports.Buf16 = Uint16Array;
+    exports.Buf32 = Int32Array;
+    exports.assign(exports, fnTyped);
+  } else {
+    exports.Buf8  = Array;
+    exports.Buf16 = Array;
+    exports.Buf32 = Array;
+    exports.assign(exports, fnUntyped);
+  }
+};
+
+exports.setTyped(TYPED_OK);
+
+},{}],42:[function(require,module,exports){
+// String encode/decode helpers
+'use strict';
+
+
+var utils = require('./common');
+
+
+// Quick check if we can use fast array to bin string conversion
+//
+// - apply(Array) can fail on Android 2.2
+// - apply(Uint8Array) can fail on iOS 5.1 Safary
+//
+var STR_APPLY_OK = true;
+var STR_APPLY_UIA_OK = true;
+
+try { String.fromCharCode.apply(null, [ 0 ]); } catch (__) { STR_APPLY_OK = false; }
+try { String.fromCharCode.apply(null, new Uint8Array(1)); } catch (__) { STR_APPLY_UIA_OK = false; }
+
+
+// Table with utf8 lengths (calculated by first byte of sequence)
+// Note, that 5 & 6-byte values and some 4-byte values can not be represented in JS,
+// because max possible codepoint is 0x10ffff
+var _utf8len = new utils.Buf8(256);
+for (var q = 0; q < 256; q++) {
+  _utf8len[q] = (q >= 252 ? 6 : q >= 248 ? 5 : q >= 240 ? 4 : q >= 224 ? 3 : q >= 192 ? 2 : 1);
+}
+_utf8len[254] = _utf8len[254] = 1; // Invalid sequence start
+
+
+// convert string to array (typed, when possible)
+exports.string2buf = function (str) {
+  var buf, c, c2, m_pos, i, str_len = str.length, buf_len = 0;
+
+  // count binary size
+  for (m_pos = 0; m_pos < str_len; m_pos++) {
+    c = str.charCodeAt(m_pos);
+    if ((c & 0xfc00) === 0xd800 && (m_pos + 1 < str_len)) {
+      c2 = str.charCodeAt(m_pos + 1);
+      if ((c2 & 0xfc00) === 0xdc00) {
+        c = 0x10000 + ((c - 0xd800) << 10) + (c2 - 0xdc00);
+        m_pos++;
+      }
+    }
+    buf_len += c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4;
+  }
+
+  // allocate buffer
+  buf = new utils.Buf8(buf_len);
+
+  // convert
+  for (i = 0, m_pos = 0; i < buf_len; m_pos++) {
+    c = str.charCodeAt(m_pos);
+    if ((c & 0xfc00) === 0xd800 && (m_pos + 1 < str_len)) {
+      c2 = str.charCodeAt(m_pos + 1);
+      if ((c2 & 0xfc00) === 0xdc00) {
+        c = 0x10000 + ((c - 0xd800) << 10) + (c2 - 0xdc00);
+        m_pos++;
+      }
+    }
+    if (c < 0x80) {
+      /* one byte */
+      buf[i++] = c;
+    } else if (c < 0x800) {
+      /* two bytes */
+      buf[i++] = 0xC0 | (c >>> 6);
+      buf[i++] = 0x80 | (c & 0x3f);
+    } else if (c < 0x10000) {
+      /* three bytes */
+      buf[i++] = 0xE0 | (c >>> 12);
+      buf[i++] = 0x80 | (c >>> 6 & 0x3f);
+      buf[i++] = 0x80 | (c & 0x3f);
+    } else {
+      /* four bytes */
+      buf[i++] = 0xf0 | (c >>> 18);
+      buf[i++] = 0x80 | (c >>> 12 & 0x3f);
+      buf[i++] = 0x80 | (c >>> 6 & 0x3f);
+      buf[i++] = 0x80 | (c & 0x3f);
+    }
+  }
+
+  return buf;
+};
+
+// Helper (used in 2 places)
+function buf2binstring(buf, len) {
+  // use fallback for big arrays to avoid stack overflow
+  if (len < 65537) {
+    if ((buf.subarray && STR_APPLY_UIA_OK) || (!buf.subarray && STR_APPLY_OK)) {
+      return String.fromCharCode.apply(null, utils.shrinkBuf(buf, len));
+    }
+  }
+
+  var result = '';
+  for (var i = 0; i < len; i++) {
+    result += String.fromCharCode(buf[i]);
+  }
+  return result;
+}
+
+
+// Convert byte array to binary string
+exports.buf2binstring = function (buf) {
+  return buf2binstring(buf, buf.length);
+};
+
+
+// Convert binary string (typed, when possible)
+exports.binstring2buf = function (str) {
+  var buf = new utils.Buf8(str.length);
+  for (var i = 0, len = buf.length; i < len; i++) {
+    buf[i] = str.charCodeAt(i);
+  }
+  return buf;
+};
+
+
+// convert array to string
+exports.buf2string = function (buf, max) {
+  var i, out, c, c_len;
+  var len = max || buf.length;
+
+  // Reserve max possible length (2 words per char)
+  // NB: by unknown reasons, Array is significantly faster for
+  //     String.fromCharCode.apply than Uint16Array.
+  var utf16buf = new Array(len * 2);
+
+  for (out = 0, i = 0; i < len;) {
+    c = buf[i++];
+    // quick process ascii
+    if (c < 0x80) { utf16buf[out++] = c; continue; }
+
+    c_len = _utf8len[c];
+    // skip 5 & 6 byte codes
+    if (c_len > 4) { utf16buf[out++] = 0xfffd; i += c_len - 1; continue; }
+
+    // apply mask on first byte
+    c &= c_len === 2 ? 0x1f : c_len === 3 ? 0x0f : 0x07;
+    // join the rest
+    while (c_len > 1 && i < len) {
+      c = (c << 6) | (buf[i++] & 0x3f);
+      c_len--;
+    }
+
+    // terminated by end of string?
+    if (c_len > 1) { utf16buf[out++] = 0xfffd; continue; }
+
+    if (c < 0x10000) {
+      utf16buf[out++] = c;
+    } else {
+      c -= 0x10000;
+      utf16buf[out++] = 0xd800 | ((c >> 10) & 0x3ff);
+      utf16buf[out++] = 0xdc00 | (c & 0x3ff);
+    }
+  }
+
+  return buf2binstring(utf16buf, out);
+};
+
+
+// Calculate max possible position in utf8 buffer,
+// that will not break sequence. If that's not possible
+// - (very small limits) return max size as is.
+//
+// buf[] - utf8 bytes array
+// max   - length limit (mandatory);
+exports.utf8border = function (buf, max) {
+  var pos;
+
+  max = max || buf.length;
+  if (max > buf.length) { max = buf.length; }
+
+  // go back from last position, until start of sequence found
+  pos = max - 1;
+  while (pos >= 0 && (buf[pos] & 0xC0) === 0x80) { pos--; }
+
+  // Fuckup - very small and broken sequence,
+  // return max, because we should return something anyway.
+  if (pos < 0) { return max; }
+
+  // If we came to start of buffer - that means vuffer is too small,
+  // return max too.
+  if (pos === 0) { return max; }
+
+  return (pos + _utf8len[buf[pos]] > max) ? pos : max;
+};
+
+},{"./common":41}],43:[function(require,module,exports){
+'use strict';
+
+// Note: adler32 takes 12% for level 0 and 2% for level 6.
+// It doesn't worth to make additional optimizationa as in original.
+// Small size is preferable.
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+function adler32(adler, buf, len, pos) {
+  var s1 = (adler & 0xffff) |0,
+      s2 = ((adler >>> 16) & 0xffff) |0,
+      n = 0;
+
+  while (len !== 0) {
+    // Set limit ~ twice less than 5552, to keep
+    // s2 in 31-bits, because we force signed ints.
+    // in other case %= will fail.
+    n = len > 2000 ? 2000 : len;
+    len -= n;
+
+    do {
+      s1 = (s1 + buf[pos++]) |0;
+      s2 = (s2 + s1) |0;
+    } while (--n);
+
+    s1 %= 65521;
+    s2 %= 65521;
+  }
+
+  return (s1 | (s2 << 16)) |0;
+}
+
+
+module.exports = adler32;
+
+},{}],44:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+module.exports = {
+
+  /* Allowed flush values; see deflate() and inflate() below for details */
+  Z_NO_FLUSH:         0,
+  Z_PARTIAL_FLUSH:    1,
+  Z_SYNC_FLUSH:       2,
+  Z_FULL_FLUSH:       3,
+  Z_FINISH:           4,
+  Z_BLOCK:            5,
+  Z_TREES:            6,
+
+  /* Return codes for the compression/decompression functions. Negative values
+  * are errors, positive values are used for special but normal events.
+  */
+  Z_OK:               0,
+  Z_STREAM_END:       1,
+  Z_NEED_DICT:        2,
+  Z_ERRNO:           -1,
+  Z_STREAM_ERROR:    -2,
+  Z_DATA_ERROR:      -3,
+  //Z_MEM_ERROR:     -4,
+  Z_BUF_ERROR:       -5,
+  //Z_VERSION_ERROR: -6,
+
+  /* compression levels */
+  Z_NO_COMPRESSION:         0,
+  Z_BEST_SPEED:             1,
+  Z_BEST_COMPRESSION:       9,
+  Z_DEFAULT_COMPRESSION:   -1,
+
+
+  Z_FILTERED:               1,
+  Z_HUFFMAN_ONLY:           2,
+  Z_RLE:                    3,
+  Z_FIXED:                  4,
+  Z_DEFAULT_STRATEGY:       0,
+
+  /* Possible values of the data_type field (though see inflate()) */
+  Z_BINARY:                 0,
+  Z_TEXT:                   1,
+  //Z_ASCII:                1, // = Z_TEXT (deprecated)
+  Z_UNKNOWN:                2,
+
+  /* The deflate compression method */
+  Z_DEFLATED:               8
+  //Z_NULL:                 null // Use -1 or null inline, depending on var type
+};
+
+},{}],45:[function(require,module,exports){
+'use strict';
+
+// Note: we can't get significant speed boost here.
+// So write code to minimize size - no pregenerated tables
+// and array tools dependencies.
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+// Use ordinary array, since untyped makes no boost here
+function makeTable() {
+  var c, table = [];
+
+  for (var n = 0; n < 256; n++) {
+    c = n;
+    for (var k = 0; k < 8; k++) {
+      c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+    }
+    table[n] = c;
+  }
+
+  return table;
+}
+
+// Create table on load. Just 255 signed longs. Not a problem.
+var crcTable = makeTable();
+
+
+function crc32(crc, buf, len, pos) {
+  var t = crcTable,
+      end = pos + len;
+
+  crc ^= -1;
+
+  for (var i = pos; i < end; i++) {
+    crc = (crc >>> 8) ^ t[(crc ^ buf[i]) & 0xFF];
+  }
+
+  return (crc ^ (-1)); // >>> 0;
+}
+
+
+module.exports = crc32;
+
+},{}],46:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils   = require('../utils/common');
+var trees   = require('./trees');
+var adler32 = require('./adler32');
+var crc32   = require('./crc32');
+var msg     = require('./messages');
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+
+/* Allowed flush values; see deflate() and inflate() below for details */
+var Z_NO_FLUSH      = 0;
+var Z_PARTIAL_FLUSH = 1;
+//var Z_SYNC_FLUSH    = 2;
+var Z_FULL_FLUSH    = 3;
+var Z_FINISH        = 4;
+var Z_BLOCK         = 5;
+//var Z_TREES         = 6;
+
+
+/* Return codes for the compression/decompression functions. Negative values
+ * are errors, positive values are used for special but normal events.
+ */
+var Z_OK            = 0;
+var Z_STREAM_END    = 1;
+//var Z_NEED_DICT     = 2;
+//var Z_ERRNO         = -1;
+var Z_STREAM_ERROR  = -2;
+var Z_DATA_ERROR    = -3;
+//var Z_MEM_ERROR     = -4;
+var Z_BUF_ERROR     = -5;
+//var Z_VERSION_ERROR = -6;
+
+
+/* compression levels */
+//var Z_NO_COMPRESSION      = 0;
+//var Z_BEST_SPEED          = 1;
+//var Z_BEST_COMPRESSION    = 9;
+var Z_DEFAULT_COMPRESSION = -1;
+
+
+var Z_FILTERED            = 1;
+var Z_HUFFMAN_ONLY        = 2;
+var Z_RLE                 = 3;
+var Z_FIXED               = 4;
+var Z_DEFAULT_STRATEGY    = 0;
+
+/* Possible values of the data_type field (though see inflate()) */
+//var Z_BINARY              = 0;
+//var Z_TEXT                = 1;
+//var Z_ASCII               = 1; // = Z_TEXT
+var Z_UNKNOWN             = 2;
+
+
+/* The deflate compression method */
+var Z_DEFLATED  = 8;
+
+/*============================================================================*/
+
+
+var MAX_MEM_LEVEL = 9;
+/* Maximum value for memLevel in deflateInit2 */
+var MAX_WBITS = 15;
+/* 32K LZ77 window */
+var DEF_MEM_LEVEL = 8;
+
+
+var LENGTH_CODES  = 29;
+/* number of length codes, not counting the special END_BLOCK code */
+var LITERALS      = 256;
+/* number of literal bytes 0..255 */
+var L_CODES       = LITERALS + 1 + LENGTH_CODES;
+/* number of Literal or Length codes, including the END_BLOCK code */
+var D_CODES       = 30;
+/* number of distance codes */
+var BL_CODES      = 19;
+/* number of codes used to transfer the bit lengths */
+var HEAP_SIZE     = 2 * L_CODES + 1;
+/* maximum heap size */
+var MAX_BITS  = 15;
+/* All codes must not exceed MAX_BITS bits */
+
+var MIN_MATCH = 3;
+var MAX_MATCH = 258;
+var MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
+
+var PRESET_DICT = 0x20;
+
+var INIT_STATE = 42;
+var EXTRA_STATE = 69;
+var NAME_STATE = 73;
+var COMMENT_STATE = 91;
+var HCRC_STATE = 103;
+var BUSY_STATE = 113;
+var FINISH_STATE = 666;
+
+var BS_NEED_MORE      = 1; /* block not completed, need more input or more output */
+var BS_BLOCK_DONE     = 2; /* block flush performed */
+var BS_FINISH_STARTED = 3; /* finish started, need only more output at next deflate */
+var BS_FINISH_DONE    = 4; /* finish done, accept no more input or output */
+
+var OS_CODE = 0x03; // Unix :) . Don't detect, use this default.
+
+function err(strm, errorCode) {
+  strm.msg = msg[errorCode];
+  return errorCode;
+}
+
+function rank(f) {
+  return ((f) << 1) - ((f) > 4 ? 9 : 0);
+}
+
+function zero(buf) { var len = buf.length; while (--len >= 0) { buf[len] = 0; } }
+
+
+/* =========================================================================
+ * Flush as much pending output as possible. All deflate() output goes
+ * through this function so some applications may wish to modify it
+ * to avoid allocating a large strm->output buffer and copying into it.
+ * (See also read_buf()).
+ */
+function flush_pending(strm) {
+  var s = strm.state;
+
+  //_tr_flush_bits(s);
+  var len = s.pending;
+  if (len > strm.avail_out) {
+    len = strm.avail_out;
+  }
+  if (len === 0) { return; }
+
+  utils.arraySet(strm.output, s.pending_buf, s.pending_out, len, strm.next_out);
+  strm.next_out += len;
+  s.pending_out += len;
+  strm.total_out += len;
+  strm.avail_out -= len;
+  s.pending -= len;
+  if (s.pending === 0) {
+    s.pending_out = 0;
+  }
+}
+
+
+function flush_block_only(s, last) {
+  trees._tr_flush_block(s, (s.block_start >= 0 ? s.block_start : -1), s.strstart - s.block_start, last);
+  s.block_start = s.strstart;
+  flush_pending(s.strm);
+}
+
+
+function put_byte(s, b) {
+  s.pending_buf[s.pending++] = b;
+}
+
+
+/* =========================================================================
+ * Put a short in the pending buffer. The 16-bit value is put in MSB order.
+ * IN assertion: the stream state is correct and there is enough room in
+ * pending_buf.
+ */
+function putShortMSB(s, b) {
+//  put_byte(s, (Byte)(b >> 8));
+//  put_byte(s, (Byte)(b & 0xff));
+  s.pending_buf[s.pending++] = (b >>> 8) & 0xff;
+  s.pending_buf[s.pending++] = b & 0xff;
+}
+
+
+/* ===========================================================================
+ * Read a new buffer from the current input stream, update the adler32
+ * and total number of bytes read.  All deflate() input goes through
+ * this function so some applications may wish to modify it to avoid
+ * allocating a large strm->input buffer and copying from it.
+ * (See also flush_pending()).
+ */
+function read_buf(strm, buf, start, size) {
+  var len = strm.avail_in;
+
+  if (len > size) { len = size; }
+  if (len === 0) { return 0; }
+
+  strm.avail_in -= len;
+
+  // zmemcpy(buf, strm->next_in, len);
+  utils.arraySet(buf, strm.input, strm.next_in, len, start);
+  if (strm.state.wrap === 1) {
+    strm.adler = adler32(strm.adler, buf, len, start);
+  }
+
+  else if (strm.state.wrap === 2) {
+    strm.adler = crc32(strm.adler, buf, len, start);
+  }
+
+  strm.next_in += len;
+  strm.total_in += len;
+
+  return len;
+}
+
+
+/* ===========================================================================
+ * Set match_start to the longest match starting at the given string and
+ * return its length. Matches shorter or equal to prev_length are discarded,
+ * in which case the result is equal to prev_length and match_start is
+ * garbage.
+ * IN assertions: cur_match is the head of the hash chain for the current
+ *   string (strstart) and its distance is <= MAX_DIST, and prev_length >= 1
+ * OUT assertion: the match length is not greater than s->lookahead.
+ */
+function longest_match(s, cur_match) {
+  var chain_length = s.max_chain_length;      /* max hash chain length */
+  var scan = s.strstart; /* current string */
+  var match;                       /* matched string */
+  var len;                           /* length of current match */
+  var best_len = s.prev_length;              /* best match length so far */
+  var nice_match = s.nice_match;             /* stop if match long enough */
+  var limit = (s.strstart > (s.w_size - MIN_LOOKAHEAD)) ?
+      s.strstart - (s.w_size - MIN_LOOKAHEAD) : 0/*NIL*/;
+
+  var _win = s.window; // shortcut
+
+  var wmask = s.w_mask;
+  var prev  = s.prev;
+
+  /* Stop when cur_match becomes <= limit. To simplify the code,
+   * we prevent matches with the string of window index 0.
+   */
+
+  var strend = s.strstart + MAX_MATCH;
+  var scan_end1  = _win[scan + best_len - 1];
+  var scan_end   = _win[scan + best_len];
+
+  /* The code is optimized for HASH_BITS >= 8 and MAX_MATCH-2 multiple of 16.
+   * It is easy to get rid of this optimization if necessary.
+   */
+  // Assert(s->hash_bits >= 8 && MAX_MATCH == 258, "Code too clever");
+
+  /* Do not waste too much time if we already have a good match: */
+  if (s.prev_length >= s.good_match) {
+    chain_length >>= 2;
+  }
+  /* Do not look for matches beyond the end of the input. This is necessary
+   * to make deflate deterministic.
+   */
+  if (nice_match > s.lookahead) { nice_match = s.lookahead; }
+
+  // Assert((ulg)s->strstart <= s->window_size-MIN_LOOKAHEAD, "need lookahead");
+
+  do {
+    // Assert(cur_match < s->strstart, "no future");
+    match = cur_match;
+
+    /* Skip to next match if the match length cannot increase
+     * or if the match length is less than 2.  Note that the checks below
+     * for insufficient lookahead only occur occasionally for performance
+     * reasons.  Therefore uninitialized memory will be accessed, and
+     * conditional jumps will be made that depend on those values.
+     * However the length of the match is limited to the lookahead, so
+     * the output of deflate is not affected by the uninitialized values.
+     */
+
+    if (_win[match + best_len]     !== scan_end  ||
+        _win[match + best_len - 1] !== scan_end1 ||
+        _win[match]                !== _win[scan] ||
+        _win[++match]              !== _win[scan + 1]) {
+      continue;
+    }
+
+    /* The check at best_len-1 can be removed because it will be made
+     * again later. (This heuristic is not always a win.)
+     * It is not necessary to compare scan[2] and match[2] since they
+     * are always equal when the other bytes match, given that
+     * the hash keys are equal and that HASH_BITS >= 8.
+     */
+    scan += 2;
+    match++;
+    // Assert(*scan == *match, "match[2]?");
+
+    /* We check for insufficient lookahead only every 8th comparison;
+     * the 256th check will be made at strstart+258.
+     */
+    do {
+      /*jshint noempty:false*/
+    } while (_win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             _win[++scan] === _win[++match] && _win[++scan] === _win[++match] &&
+             scan < strend);
+
+    // Assert(scan <= s->window+(unsigned)(s->window_size-1), "wild scan");
+
+    len = MAX_MATCH - (strend - scan);
+    scan = strend - MAX_MATCH;
+
+    if (len > best_len) {
+      s.match_start = cur_match;
+      best_len = len;
+      if (len >= nice_match) {
+        break;
+      }
+      scan_end1  = _win[scan + best_len - 1];
+      scan_end   = _win[scan + best_len];
+    }
+  } while ((cur_match = prev[cur_match & wmask]) > limit && --chain_length !== 0);
+
+  if (best_len <= s.lookahead) {
+    return best_len;
+  }
+  return s.lookahead;
+}
+
+
+/* ===========================================================================
+ * Fill the window when the lookahead becomes insufficient.
+ * Updates strstart and lookahead.
+ *
+ * IN assertion: lookahead < MIN_LOOKAHEAD
+ * OUT assertions: strstart <= window_size-MIN_LOOKAHEAD
+ *    At least one byte has been read, or avail_in == 0; reads are
+ *    performed for at least two bytes (required for the zip translate_eol
+ *    option -- not supported here).
+ */
+function fill_window(s) {
+  var _w_size = s.w_size;
+  var p, n, m, more, str;
+
+  //Assert(s->lookahead < MIN_LOOKAHEAD, "already enough lookahead");
+
+  do {
+    more = s.window_size - s.lookahead - s.strstart;
+
+    // JS ints have 32 bit, block below not needed
+    /* Deal with !@#$% 64K limit: */
+    //if (sizeof(int) <= 2) {
+    //    if (more == 0 && s->strstart == 0 && s->lookahead == 0) {
+    //        more = wsize;
+    //
+    //  } else if (more == (unsigned)(-1)) {
+    //        /* Very unlikely, but possible on 16 bit machine if
+    //         * strstart == 0 && lookahead == 1 (input done a byte at time)
+    //         */
+    //        more--;
+    //    }
+    //}
+
+
+    /* If the window is almost full and there is insufficient lookahead,
+     * move the upper half to the lower one to make room in the upper half.
+     */
+    if (s.strstart >= _w_size + (_w_size - MIN_LOOKAHEAD)) {
+
+      utils.arraySet(s.window, s.window, _w_size, _w_size, 0);
+      s.match_start -= _w_size;
+      s.strstart -= _w_size;
+      /* we now have strstart >= MAX_DIST */
+      s.block_start -= _w_size;
+
+      /* Slide the hash table (could be avoided with 32 bit values
+       at the expense of memory usage). We slide even when level == 0
+       to keep the hash table consistent if we switch back to level > 0
+       later. (Using level 0 permanently is not an optimal usage of
+       zlib, so we don't care about this pathological case.)
+       */
+
+      n = s.hash_size;
+      p = n;
+      do {
+        m = s.head[--p];
+        s.head[p] = (m >= _w_size ? m - _w_size : 0);
+      } while (--n);
+
+      n = _w_size;
+      p = n;
+      do {
+        m = s.prev[--p];
+        s.prev[p] = (m >= _w_size ? m - _w_size : 0);
+        /* If n is not on any hash chain, prev[n] is garbage but
+         * its value will never be used.
+         */
+      } while (--n);
+
+      more += _w_size;
+    }
+    if (s.strm.avail_in === 0) {
+      break;
+    }
+
+    /* If there was no sliding:
+     *    strstart <= WSIZE+MAX_DIST-1 && lookahead <= MIN_LOOKAHEAD - 1 &&
+     *    more == window_size - lookahead - strstart
+     * => more >= window_size - (MIN_LOOKAHEAD-1 + WSIZE + MAX_DIST-1)
+     * => more >= window_size - 2*WSIZE + 2
+     * In the BIG_MEM or MMAP case (not yet supported),
+     *   window_size == input_size + MIN_LOOKAHEAD  &&
+     *   strstart + s->lookahead <= input_size => more >= MIN_LOOKAHEAD.
+     * Otherwise, window_size == 2*WSIZE so more >= 2.
+     * If there was sliding, more >= WSIZE. So in all cases, more >= 2.
+     */
+    //Assert(more >= 2, "more < 2");
+    n = read_buf(s.strm, s.window, s.strstart + s.lookahead, more);
+    s.lookahead += n;
+
+    /* Initialize the hash value now that we have some input: */
+    if (s.lookahead + s.insert >= MIN_MATCH) {
+      str = s.strstart - s.insert;
+      s.ins_h = s.window[str];
+
+      /* UPDATE_HASH(s, s->ins_h, s->window[str + 1]); */
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + 1]) & s.hash_mask;
+//#if MIN_MATCH != 3
+//        Call update_hash() MIN_MATCH-3 more times
+//#endif
+      while (s.insert) {
+        /* UPDATE_HASH(s, s->ins_h, s->window[str + MIN_MATCH-1]); */
+        s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + MIN_MATCH - 1]) & s.hash_mask;
+
+        s.prev[str & s.w_mask] = s.head[s.ins_h];
+        s.head[s.ins_h] = str;
+        str++;
+        s.insert--;
+        if (s.lookahead + s.insert < MIN_MATCH) {
+          break;
+        }
+      }
+    }
+    /* If the whole input has less than MIN_MATCH bytes, ins_h is garbage,
+     * but this is not important since only literal bytes will be emitted.
+     */
+
+  } while (s.lookahead < MIN_LOOKAHEAD && s.strm.avail_in !== 0);
+
+  /* If the WIN_INIT bytes after the end of the current data have never been
+   * written, then zero those bytes in order to avoid memory check reports of
+   * the use of uninitialized (or uninitialised as Julian writes) bytes by
+   * the longest match routines.  Update the high water mark for the next
+   * time through here.  WIN_INIT is set to MAX_MATCH since the longest match
+   * routines allow scanning to strstart + MAX_MATCH, ignoring lookahead.
+   */
+//  if (s.high_water < s.window_size) {
+//    var curr = s.strstart + s.lookahead;
+//    var init = 0;
+//
+//    if (s.high_water < curr) {
+//      /* Previous high water mark below current data -- zero WIN_INIT
+//       * bytes or up to end of window, whichever is less.
+//       */
+//      init = s.window_size - curr;
+//      if (init > WIN_INIT)
+//        init = WIN_INIT;
+//      zmemzero(s->window + curr, (unsigned)init);
+//      s->high_water = curr + init;
+//    }
+//    else if (s->high_water < (ulg)curr + WIN_INIT) {
+//      /* High water mark at or above current data, but below current data
+//       * plus WIN_INIT -- zero out to current data plus WIN_INIT, or up
+//       * to end of window, whichever is less.
+//       */
+//      init = (ulg)curr + WIN_INIT - s->high_water;
+//      if (init > s->window_size - s->high_water)
+//        init = s->window_size - s->high_water;
+//      zmemzero(s->window + s->high_water, (unsigned)init);
+//      s->high_water += init;
+//    }
+//  }
+//
+//  Assert((ulg)s->strstart <= s->window_size - MIN_LOOKAHEAD,
+//    "not enough room for search");
+}
+
+/* ===========================================================================
+ * Copy without compression as much as possible from the input stream, return
+ * the current block state.
+ * This function does not insert new strings in the dictionary since
+ * uncompressible data is probably not useful. This function is used
+ * only for the level=0 compression option.
+ * NOTE: this function should be optimized to avoid extra copying from
+ * window to pending_buf.
+ */
+function deflate_stored(s, flush) {
+  /* Stored blocks are limited to 0xffff bytes, pending_buf is limited
+   * to pending_buf_size, and each stored block has a 5 byte header:
+   */
+  var max_block_size = 0xffff;
+
+  if (max_block_size > s.pending_buf_size - 5) {
+    max_block_size = s.pending_buf_size - 5;
+  }
+
+  /* Copy as much as possible from input to output: */
+  for (;;) {
+    /* Fill the window as much as possible: */
+    if (s.lookahead <= 1) {
+
+      //Assert(s->strstart < s->w_size+MAX_DIST(s) ||
+      //  s->block_start >= (long)s->w_size, "slide too late");
+//      if (!(s.strstart < s.w_size + (s.w_size - MIN_LOOKAHEAD) ||
+//        s.block_start >= s.w_size)) {
+//        throw  new Error("slide too late");
+//      }
+
+      fill_window(s);
+      if (s.lookahead === 0 && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+
+      if (s.lookahead === 0) {
+        break;
+      }
+      /* flush the current block */
+    }
+    //Assert(s->block_start >= 0L, "block gone");
+//    if (s.block_start < 0) throw new Error("block gone");
+
+    s.strstart += s.lookahead;
+    s.lookahead = 0;
+
+    /* Emit a stored block if pending_buf will be full: */
+    var max_start = s.block_start + max_block_size;
+
+    if (s.strstart === 0 || s.strstart >= max_start) {
+      /* strstart == 0 is possible when wraparound on 16-bit machine */
+      s.lookahead = s.strstart - max_start;
+      s.strstart = max_start;
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+
+
+    }
+    /* Flush if we may have to slide, otherwise block_start may become
+     * negative and the data will be gone:
+     */
+    if (s.strstart - s.block_start >= (s.w_size - MIN_LOOKAHEAD)) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+
+  s.insert = 0;
+
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+
+  if (s.strstart > s.block_start) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+
+  return BS_NEED_MORE;
+}
+
+/* ===========================================================================
+ * Compress as much as possible from the input stream, return the current
+ * block state.
+ * This function does not perform lazy evaluation of matches and inserts
+ * new strings in the dictionary only for unmatched strings or for short
+ * matches. It is used only for the fast compression options.
+ */
+function deflate_fast(s, flush) {
+  var hash_head;        /* head of the hash chain */
+  var bflush;           /* set if current block must be flushed */
+
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the next match, plus MIN_MATCH bytes to insert the
+     * string following the next match.
+     */
+    if (s.lookahead < MIN_LOOKAHEAD) {
+      fill_window(s);
+      if (s.lookahead < MIN_LOOKAHEAD && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) {
+        break; /* flush the current block */
+      }
+    }
+
+    /* Insert the string window[strstart .. strstart+2] in the
+     * dictionary, and set hash_head to the head of the hash chain:
+     */
+    hash_head = 0/*NIL*/;
+    if (s.lookahead >= MIN_MATCH) {
+      /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+      hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+      s.head[s.ins_h] = s.strstart;
+      /***/
+    }
+
+    /* Find the longest match, discarding those <= prev_length.
+     * At this point we have always match_length < MIN_MATCH
+     */
+    if (hash_head !== 0/*NIL*/ && ((s.strstart - hash_head) <= (s.w_size - MIN_LOOKAHEAD))) {
+      /* To simplify the code, we prevent matches with the string
+       * of window index 0 (in particular we have to avoid a match
+       * of the string with itself at the start of the input file).
+       */
+      s.match_length = longest_match(s, hash_head);
+      /* longest_match() sets match_start */
+    }
+    if (s.match_length >= MIN_MATCH) {
+      // check_match(s, s.strstart, s.match_start, s.match_length); // for debug only
+
+      /*** _tr_tally_dist(s, s.strstart - s.match_start,
+                     s.match_length - MIN_MATCH, bflush); ***/
+      bflush = trees._tr_tally(s, s.strstart - s.match_start, s.match_length - MIN_MATCH);
+
+      s.lookahead -= s.match_length;
+
+      /* Insert new strings in the hash table only if the match length
+       * is not too large. This saves time but degrades compression.
+       */
+      if (s.match_length <= s.max_lazy_match/*max_insert_length*/ && s.lookahead >= MIN_MATCH) {
+        s.match_length--; /* string at strstart already in table */
+        do {
+          s.strstart++;
+          /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+          s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+          hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+          s.head[s.ins_h] = s.strstart;
+          /***/
+          /* strstart never exceeds WSIZE-MAX_MATCH, so there are
+           * always MIN_MATCH bytes ahead.
+           */
+        } while (--s.match_length !== 0);
+        s.strstart++;
+      } else
+      {
+        s.strstart += s.match_length;
+        s.match_length = 0;
+        s.ins_h = s.window[s.strstart];
+        /* UPDATE_HASH(s, s.ins_h, s.window[s.strstart+1]); */
+        s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + 1]) & s.hash_mask;
+
+//#if MIN_MATCH != 3
+//                Call UPDATE_HASH() MIN_MATCH-3 more times
+//#endif
+        /* If lookahead < MIN_MATCH, ins_h is garbage, but it does not
+         * matter since it will be recomputed at next deflate call.
+         */
+      }
+    } else {
+      /* No match, output a literal byte */
+      //Tracevv((stderr,"%c", s.window[s.strstart]));
+      /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+
+      s.lookahead--;
+      s.strstart++;
+    }
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = ((s.strstart < (MIN_MATCH - 1)) ? s.strstart : MIN_MATCH - 1);
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* ===========================================================================
+ * Same as above, but achieves better compression. We use a lazy
+ * evaluation for matches: a match is finally adopted only if there is
+ * no better match at the next window position.
+ */
+function deflate_slow(s, flush) {
+  var hash_head;          /* head of hash chain */
+  var bflush;              /* set if current block must be flushed */
+
+  var max_insert;
+
+  /* Process the input block. */
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the next match, plus MIN_MATCH bytes to insert the
+     * string following the next match.
+     */
+    if (s.lookahead < MIN_LOOKAHEAD) {
+      fill_window(s);
+      if (s.lookahead < MIN_LOOKAHEAD && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) { break; } /* flush the current block */
+    }
+
+    /* Insert the string window[strstart .. strstart+2] in the
+     * dictionary, and set hash_head to the head of the hash chain:
+     */
+    hash_head = 0/*NIL*/;
+    if (s.lookahead >= MIN_MATCH) {
+      /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+      hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+      s.head[s.ins_h] = s.strstart;
+      /***/
+    }
+
+    /* Find the longest match, discarding those <= prev_length.
+     */
+    s.prev_length = s.match_length;
+    s.prev_match = s.match_start;
+    s.match_length = MIN_MATCH - 1;
+
+    if (hash_head !== 0/*NIL*/ && s.prev_length < s.max_lazy_match &&
+        s.strstart - hash_head <= (s.w_size - MIN_LOOKAHEAD)/*MAX_DIST(s)*/) {
+      /* To simplify the code, we prevent matches with the string
+       * of window index 0 (in particular we have to avoid a match
+       * of the string with itself at the start of the input file).
+       */
+      s.match_length = longest_match(s, hash_head);
+      /* longest_match() sets match_start */
+
+      if (s.match_length <= 5 &&
+         (s.strategy === Z_FILTERED || (s.match_length === MIN_MATCH && s.strstart - s.match_start > 4096/*TOO_FAR*/))) {
+
+        /* If prev_match is also MIN_MATCH, match_start is garbage
+         * but we will ignore the current match anyway.
+         */
+        s.match_length = MIN_MATCH - 1;
+      }
+    }
+    /* If there was a match at the previous step and the current
+     * match is not better, output the previous match:
+     */
+    if (s.prev_length >= MIN_MATCH && s.match_length <= s.prev_length) {
+      max_insert = s.strstart + s.lookahead - MIN_MATCH;
+      /* Do not insert strings in hash table beyond this. */
+
+      //check_match(s, s.strstart-1, s.prev_match, s.prev_length);
+
+      /***_tr_tally_dist(s, s.strstart - 1 - s.prev_match,
+                     s.prev_length - MIN_MATCH, bflush);***/
+      bflush = trees._tr_tally(s, s.strstart - 1 - s.prev_match, s.prev_length - MIN_MATCH);
+      /* Insert in hash table all strings up to the end of the match.
+       * strstart-1 and strstart are already inserted. If there is not
+       * enough lookahead, the last two strings are not inserted in
+       * the hash table.
+       */
+      s.lookahead -= s.prev_length - 1;
+      s.prev_length -= 2;
+      do {
+        if (++s.strstart <= max_insert) {
+          /*** INSERT_STRING(s, s.strstart, hash_head); ***/
+          s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[s.strstart + MIN_MATCH - 1]) & s.hash_mask;
+          hash_head = s.prev[s.strstart & s.w_mask] = s.head[s.ins_h];
+          s.head[s.ins_h] = s.strstart;
+          /***/
+        }
+      } while (--s.prev_length !== 0);
+      s.match_available = 0;
+      s.match_length = MIN_MATCH - 1;
+      s.strstart++;
+
+      if (bflush) {
+        /*** FLUSH_BLOCK(s, 0); ***/
+        flush_block_only(s, false);
+        if (s.strm.avail_out === 0) {
+          return BS_NEED_MORE;
+        }
+        /***/
+      }
+
+    } else if (s.match_available) {
+      /* If there was no match at the previous position, output a
+       * single literal. If there was a match but the current match
+       * is longer, truncate the previous match to a single literal.
+       */
+      //Tracevv((stderr,"%c", s->window[s->strstart-1]));
+      /*** _tr_tally_lit(s, s.window[s.strstart-1], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart - 1]);
+
+      if (bflush) {
+        /*** FLUSH_BLOCK_ONLY(s, 0) ***/
+        flush_block_only(s, false);
+        /***/
+      }
+      s.strstart++;
+      s.lookahead--;
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+    } else {
+      /* There is no previous match to compare with, wait for
+       * the next step to decide.
+       */
+      s.match_available = 1;
+      s.strstart++;
+      s.lookahead--;
+    }
+  }
+  //Assert (flush != Z_NO_FLUSH, "no flush?");
+  if (s.match_available) {
+    //Tracevv((stderr,"%c", s->window[s->strstart-1]));
+    /*** _tr_tally_lit(s, s.window[s.strstart-1], bflush); ***/
+    bflush = trees._tr_tally(s, 0, s.window[s.strstart - 1]);
+
+    s.match_available = 0;
+  }
+  s.insert = s.strstart < MIN_MATCH - 1 ? s.strstart : MIN_MATCH - 1;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+
+  return BS_BLOCK_DONE;
+}
+
+
+/* ===========================================================================
+ * For Z_RLE, simply look for runs of bytes, generate matches only of distance
+ * one.  Do not maintain a hash table.  (It will be regenerated if this run of
+ * deflate switches away from Z_RLE.)
+ */
+function deflate_rle(s, flush) {
+  var bflush;            /* set if current block must be flushed */
+  var prev;              /* byte at distance one to match */
+  var scan, strend;      /* scan goes up to strend for length of run */
+
+  var _win = s.window;
+
+  for (;;) {
+    /* Make sure that we always have enough lookahead, except
+     * at the end of the input file. We need MAX_MATCH bytes
+     * for the longest run, plus one for the unrolled loop.
+     */
+    if (s.lookahead <= MAX_MATCH) {
+      fill_window(s);
+      if (s.lookahead <= MAX_MATCH && flush === Z_NO_FLUSH) {
+        return BS_NEED_MORE;
+      }
+      if (s.lookahead === 0) { break; } /* flush the current block */
+    }
+
+    /* See how many times the previous byte repeats */
+    s.match_length = 0;
+    if (s.lookahead >= MIN_MATCH && s.strstart > 0) {
+      scan = s.strstart - 1;
+      prev = _win[scan];
+      if (prev === _win[++scan] && prev === _win[++scan] && prev === _win[++scan]) {
+        strend = s.strstart + MAX_MATCH;
+        do {
+          /*jshint noempty:false*/
+        } while (prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 prev === _win[++scan] && prev === _win[++scan] &&
+                 scan < strend);
+        s.match_length = MAX_MATCH - (strend - scan);
+        if (s.match_length > s.lookahead) {
+          s.match_length = s.lookahead;
+        }
+      }
+      //Assert(scan <= s->window+(uInt)(s->window_size-1), "wild scan");
+    }
+
+    /* Emit match if have run of MIN_MATCH or longer, else emit literal */
+    if (s.match_length >= MIN_MATCH) {
+      //check_match(s, s.strstart, s.strstart - 1, s.match_length);
+
+      /*** _tr_tally_dist(s, 1, s.match_length - MIN_MATCH, bflush); ***/
+      bflush = trees._tr_tally(s, 1, s.match_length - MIN_MATCH);
+
+      s.lookahead -= s.match_length;
+      s.strstart += s.match_length;
+      s.match_length = 0;
+    } else {
+      /* No match, output a literal byte */
+      //Tracevv((stderr,"%c", s->window[s->strstart]));
+      /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+      bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+
+      s.lookahead--;
+      s.strstart++;
+    }
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = 0;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* ===========================================================================
+ * For Z_HUFFMAN_ONLY, do not look for matches.  Do not maintain a hash table.
+ * (It will be regenerated if this run of deflate switches away from Huffman.)
+ */
+function deflate_huff(s, flush) {
+  var bflush;             /* set if current block must be flushed */
+
+  for (;;) {
+    /* Make sure that we have a literal to write. */
+    if (s.lookahead === 0) {
+      fill_window(s);
+      if (s.lookahead === 0) {
+        if (flush === Z_NO_FLUSH) {
+          return BS_NEED_MORE;
+        }
+        break;      /* flush the current block */
+      }
+    }
+
+    /* Output a literal byte */
+    s.match_length = 0;
+    //Tracevv((stderr,"%c", s->window[s->strstart]));
+    /*** _tr_tally_lit(s, s.window[s.strstart], bflush); ***/
+    bflush = trees._tr_tally(s, 0, s.window[s.strstart]);
+    s.lookahead--;
+    s.strstart++;
+    if (bflush) {
+      /*** FLUSH_BLOCK(s, 0); ***/
+      flush_block_only(s, false);
+      if (s.strm.avail_out === 0) {
+        return BS_NEED_MORE;
+      }
+      /***/
+    }
+  }
+  s.insert = 0;
+  if (flush === Z_FINISH) {
+    /*** FLUSH_BLOCK(s, 1); ***/
+    flush_block_only(s, true);
+    if (s.strm.avail_out === 0) {
+      return BS_FINISH_STARTED;
+    }
+    /***/
+    return BS_FINISH_DONE;
+  }
+  if (s.last_lit) {
+    /*** FLUSH_BLOCK(s, 0); ***/
+    flush_block_only(s, false);
+    if (s.strm.avail_out === 0) {
+      return BS_NEED_MORE;
+    }
+    /***/
+  }
+  return BS_BLOCK_DONE;
+}
+
+/* Values for max_lazy_match, good_match and max_chain_length, depending on
+ * the desired pack level (0..9). The values given below have been tuned to
+ * exclude worst case performance for pathological files. Better values may be
+ * found for specific files.
+ */
+function Config(good_length, max_lazy, nice_length, max_chain, func) {
+  this.good_length = good_length;
+  this.max_lazy = max_lazy;
+  this.nice_length = nice_length;
+  this.max_chain = max_chain;
+  this.func = func;
+}
+
+var configuration_table;
+
+configuration_table = [
+  /*      good lazy nice chain */
+  new Config(0, 0, 0, 0, deflate_stored),          /* 0 store only */
+  new Config(4, 4, 8, 4, deflate_fast),            /* 1 max speed, no lazy matches */
+  new Config(4, 5, 16, 8, deflate_fast),           /* 2 */
+  new Config(4, 6, 32, 32, deflate_fast),          /* 3 */
+
+  new Config(4, 4, 16, 16, deflate_slow),          /* 4 lazy matches */
+  new Config(8, 16, 32, 32, deflate_slow),         /* 5 */
+  new Config(8, 16, 128, 128, deflate_slow),       /* 6 */
+  new Config(8, 32, 128, 256, deflate_slow),       /* 7 */
+  new Config(32, 128, 258, 1024, deflate_slow),    /* 8 */
+  new Config(32, 258, 258, 4096, deflate_slow)     /* 9 max compression */
+];
+
+
+/* ===========================================================================
+ * Initialize the "longest match" routines for a new zlib stream
+ */
+function lm_init(s) {
+  s.window_size = 2 * s.w_size;
+
+  /*** CLEAR_HASH(s); ***/
+  zero(s.head); // Fill with NIL (= 0);
+
+  /* Set the default configuration parameters:
+   */
+  s.max_lazy_match = configuration_table[s.level].max_lazy;
+  s.good_match = configuration_table[s.level].good_length;
+  s.nice_match = configuration_table[s.level].nice_length;
+  s.max_chain_length = configuration_table[s.level].max_chain;
+
+  s.strstart = 0;
+  s.block_start = 0;
+  s.lookahead = 0;
+  s.insert = 0;
+  s.match_length = s.prev_length = MIN_MATCH - 1;
+  s.match_available = 0;
+  s.ins_h = 0;
+}
+
+
+function DeflateState() {
+  this.strm = null;            /* pointer back to this zlib stream */
+  this.status = 0;            /* as the name implies */
+  this.pending_buf = null;      /* output still pending */
+  this.pending_buf_size = 0;  /* size of pending_buf */
+  this.pending_out = 0;       /* next pending byte to output to the stream */
+  this.pending = 0;           /* nb of bytes in the pending buffer */
+  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip */
+  this.gzhead = null;         /* gzip header information to write */
+  this.gzindex = 0;           /* where in extra, name, or comment */
+  this.method = Z_DEFLATED; /* can only be DEFLATED */
+  this.last_flush = -1;   /* value of flush param for previous deflate call */
+
+  this.w_size = 0;  /* LZ77 window size (32K by default) */
+  this.w_bits = 0;  /* log2(w_size)  (8..16) */
+  this.w_mask = 0;  /* w_size - 1 */
+
+  this.window = null;
+  /* Sliding window. Input bytes are read into the second half of the window,
+   * and move to the first half later to keep a dictionary of at least wSize
+   * bytes. With this organization, matches are limited to a distance of
+   * wSize-MAX_MATCH bytes, but this ensures that IO is always
+   * performed with a length multiple of the block size.
+   */
+
+  this.window_size = 0;
+  /* Actual size of window: 2*wSize, except when the user input buffer
+   * is directly used as sliding window.
+   */
+
+  this.prev = null;
+  /* Link to older string with same hash index. To limit the size of this
+   * array to 64K, this link is maintained only for the last 32K strings.
+   * An index in this array is thus a window index modulo 32K.
+   */
+
+  this.head = null;   /* Heads of the hash chains or NIL. */
+
+  this.ins_h = 0;       /* hash index of string to be inserted */
+  this.hash_size = 0;   /* number of elements in hash table */
+  this.hash_bits = 0;   /* log2(hash_size) */
+  this.hash_mask = 0;   /* hash_size-1 */
+
+  this.hash_shift = 0;
+  /* Number of bits by which ins_h must be shifted at each input
+   * step. It must be such that after MIN_MATCH steps, the oldest
+   * byte no longer takes part in the hash key, that is:
+   *   hash_shift * MIN_MATCH >= hash_bits
+   */
+
+  this.block_start = 0;
+  /* Window position at the beginning of the current output block. Gets
+   * negative when the window is moved backwards.
+   */
+
+  this.match_length = 0;      /* length of best match */
+  this.prev_match = 0;        /* previous match */
+  this.match_available = 0;   /* set if previous match exists */
+  this.strstart = 0;          /* start of string to insert */
+  this.match_start = 0;       /* start of matching string */
+  this.lookahead = 0;         /* number of valid bytes ahead in window */
+
+  this.prev_length = 0;
+  /* Length of the best match at previous step. Matches not greater than this
+   * are discarded. This is used in the lazy match evaluation.
+   */
+
+  this.max_chain_length = 0;
+  /* To speed up deflation, hash chains are never searched beyond this
+   * length.  A higher limit improves compression ratio but degrades the
+   * speed.
+   */
+
+  this.max_lazy_match = 0;
+  /* Attempt to find a better match only when the current match is strictly
+   * smaller than this value. This mechanism is used only for compression
+   * levels >= 4.
+   */
+  // That's alias to max_lazy_match, don't use directly
+  //this.max_insert_length = 0;
+  /* Insert new strings in the hash table only if the match length is not
+   * greater than this length. This saves time but degrades compression.
+   * max_insert_length is used only for compression levels <= 3.
+   */
+
+  this.level = 0;     /* compression level (1..9) */
+  this.strategy = 0;  /* favor or force Huffman coding*/
+
+  this.good_match = 0;
+  /* Use a faster search when the previous match is longer than this */
+
+  this.nice_match = 0; /* Stop searching when current match exceeds this */
+
+              /* used by trees.c: */
+
+  /* Didn't use ct_data typedef below to suppress compiler warning */
+
+  // struct ct_data_s dyn_ltree[HEAP_SIZE];   /* literal and length tree */
+  // struct ct_data_s dyn_dtree[2*D_CODES+1]; /* distance tree */
+  // struct ct_data_s bl_tree[2*BL_CODES+1];  /* Huffman tree for bit lengths */
+
+  // Use flat array of DOUBLE size, with interleaved fata,
+  // because JS does not support effective
+  this.dyn_ltree  = new utils.Buf16(HEAP_SIZE * 2);
+  this.dyn_dtree  = new utils.Buf16((2 * D_CODES + 1) * 2);
+  this.bl_tree    = new utils.Buf16((2 * BL_CODES + 1) * 2);
+  zero(this.dyn_ltree);
+  zero(this.dyn_dtree);
+  zero(this.bl_tree);
+
+  this.l_desc   = null;         /* desc. for literal tree */
+  this.d_desc   = null;         /* desc. for distance tree */
+  this.bl_desc  = null;         /* desc. for bit length tree */
+
+  //ush bl_count[MAX_BITS+1];
+  this.bl_count = new utils.Buf16(MAX_BITS + 1);
+  /* number of codes at each bit length for an optimal tree */
+
+  //int heap[2*L_CODES+1];      /* heap used to build the Huffman trees */
+  this.heap = new utils.Buf16(2 * L_CODES + 1);  /* heap used to build the Huffman trees */
+  zero(this.heap);
+
+  this.heap_len = 0;               /* number of elements in the heap */
+  this.heap_max = 0;               /* element of largest frequency */
+  /* The sons of heap[n] are heap[2*n] and heap[2*n+1]. heap[0] is not used.
+   * The same heap array is used to build all trees.
+   */
+
+  this.depth = new utils.Buf16(2 * L_CODES + 1); //uch depth[2*L_CODES+1];
+  zero(this.depth);
+  /* Depth of each subtree used as tie breaker for trees of equal frequency
+   */
+
+  this.l_buf = 0;          /* buffer index for literals or lengths */
+
+  this.lit_bufsize = 0;
+  /* Size of match buffer for literals/lengths.  There are 4 reasons for
+   * limiting lit_bufsize to 64K:
+   *   - frequencies can be kept in 16 bit counters
+   *   - if compression is not successful for the first block, all input
+   *     data is still in the window so we can still emit a stored block even
+   *     when input comes from standard input.  (This can also be done for
+   *     all blocks if lit_bufsize is not greater than 32K.)
+   *   - if compression is not successful for a file smaller than 64K, we can
+   *     even emit a stored file instead of a stored block (saving 5 bytes).
+   *     This is applicable only for zip (not gzip or zlib).
+   *   - creating new Huffman trees less frequently may not provide fast
+   *     adaptation to changes in the input data statistics. (Take for
+   *     example a binary file with poorly compressible code followed by
+   *     a highly compressible string table.) Smaller buffer sizes give
+   *     fast adaptation but have of course the overhead of transmitting
+   *     trees more frequently.
+   *   - I can't count above 4
+   */
+
+  this.last_lit = 0;      /* running index in l_buf */
+
+  this.d_buf = 0;
+  /* Buffer index for distances. To simplify the code, d_buf and l_buf have
+   * the same number of elements. To use different lengths, an extra flag
+   * array would be necessary.
+   */
+
+  this.opt_len = 0;       /* bit length of current block with optimal trees */
+  this.static_len = 0;    /* bit length of current block with static trees */
+  this.matches = 0;       /* number of string matches in current block */
+  this.insert = 0;        /* bytes at end of window left to insert */
+
+
+  this.bi_buf = 0;
+  /* Output buffer. bits are inserted starting at the bottom (least
+   * significant bits).
+   */
+  this.bi_valid = 0;
+  /* Number of valid bits in bi_buf.  All bits above the last valid bit
+   * are always zero.
+   */
+
+  // Used for window memory init. We safely ignore it for JS. That makes
+  // sense only for pointers and memory check tools.
+  //this.high_water = 0;
+  /* High water mark offset in window for initialized bytes -- bytes above
+   * this are set to zero in order to avoid memory check warnings when
+   * longest match routines access bytes past the input.  This is then
+   * updated to the new high water mark.
+   */
+}
+
+
+function deflateResetKeep(strm) {
+  var s;
+
+  if (!strm || !strm.state) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+  strm.total_in = strm.total_out = 0;
+  strm.data_type = Z_UNKNOWN;
+
+  s = strm.state;
+  s.pending = 0;
+  s.pending_out = 0;
+
+  if (s.wrap < 0) {
+    s.wrap = -s.wrap;
+    /* was made negative by deflate(..., Z_FINISH); */
+  }
+  s.status = (s.wrap ? INIT_STATE : BUSY_STATE);
+  strm.adler = (s.wrap === 2) ?
+    0  // crc32(0, Z_NULL, 0)
+  :
+    1; // adler32(0, Z_NULL, 0)
+  s.last_flush = Z_NO_FLUSH;
+  trees._tr_init(s);
+  return Z_OK;
+}
+
+
+function deflateReset(strm) {
+  var ret = deflateResetKeep(strm);
+  if (ret === Z_OK) {
+    lm_init(strm.state);
+  }
+  return ret;
+}
+
+
+function deflateSetHeader(strm, head) {
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  if (strm.state.wrap !== 2) { return Z_STREAM_ERROR; }
+  strm.state.gzhead = head;
+  return Z_OK;
+}
+
+
+function deflateInit2(strm, level, method, windowBits, memLevel, strategy) {
+  if (!strm) { // === Z_NULL
+    return Z_STREAM_ERROR;
+  }
+  var wrap = 1;
+
+  if (level === Z_DEFAULT_COMPRESSION) {
+    level = 6;
+  }
+
+  if (windowBits < 0) { /* suppress zlib wrapper */
+    wrap = 0;
+    windowBits = -windowBits;
+  }
+
+  else if (windowBits > 15) {
+    wrap = 2;           /* write gzip wrapper instead */
+    windowBits -= 16;
+  }
+
+
+  if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method !== Z_DEFLATED ||
+    windowBits < 8 || windowBits > 15 || level < 0 || level > 9 ||
+    strategy < 0 || strategy > Z_FIXED) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+
+  if (windowBits === 8) {
+    windowBits = 9;
+  }
+  /* until 256-byte window bug fixed */
+
+  var s = new DeflateState();
+
+  strm.state = s;
+  s.strm = strm;
+
+  s.wrap = wrap;
+  s.gzhead = null;
+  s.w_bits = windowBits;
+  s.w_size = 1 << s.w_bits;
+  s.w_mask = s.w_size - 1;
+
+  s.hash_bits = memLevel + 7;
+  s.hash_size = 1 << s.hash_bits;
+  s.hash_mask = s.hash_size - 1;
+  s.hash_shift = ~~((s.hash_bits + MIN_MATCH - 1) / MIN_MATCH);
+
+  s.window = new utils.Buf8(s.w_size * 2);
+  s.head = new utils.Buf16(s.hash_size);
+  s.prev = new utils.Buf16(s.w_size);
+
+  // Don't need mem init magic for JS.
+  //s.high_water = 0;  /* nothing written to s->window yet */
+
+  s.lit_bufsize = 1 << (memLevel + 6); /* 16K elements by default */
+
+  s.pending_buf_size = s.lit_bufsize * 4;
+
+  //overlay = (ushf *) ZALLOC(strm, s->lit_bufsize, sizeof(ush)+2);
+  //s->pending_buf = (uchf *) overlay;
+  s.pending_buf = new utils.Buf8(s.pending_buf_size);
+
+  // It is offset from `s.pending_buf` (size is `s.lit_bufsize * 2`)
+  //s->d_buf = overlay + s->lit_bufsize/sizeof(ush);
+  s.d_buf = 1 * s.lit_bufsize;
+
+  //s->l_buf = s->pending_buf + (1+sizeof(ush))*s->lit_bufsize;
+  s.l_buf = (1 + 2) * s.lit_bufsize;
+
+  s.level = level;
+  s.strategy = strategy;
+  s.method = method;
+
+  return deflateReset(strm);
+}
+
+function deflateInit(strm, level) {
+  return deflateInit2(strm, level, Z_DEFLATED, MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+}
+
+
+function deflate(strm, flush) {
+  var old_flush, s;
+  var beg, val; // for gzip header write only
+
+  if (!strm || !strm.state ||
+    flush > Z_BLOCK || flush < 0) {
+    return strm ? err(strm, Z_STREAM_ERROR) : Z_STREAM_ERROR;
+  }
+
+  s = strm.state;
+
+  if (!strm.output ||
+      (!strm.input && strm.avail_in !== 0) ||
+      (s.status === FINISH_STATE && flush !== Z_FINISH)) {
+    return err(strm, (strm.avail_out === 0) ? Z_BUF_ERROR : Z_STREAM_ERROR);
+  }
+
+  s.strm = strm; /* just in case */
+  old_flush = s.last_flush;
+  s.last_flush = flush;
+
+  /* Write the header */
+  if (s.status === INIT_STATE) {
+
+    if (s.wrap === 2) { // GZIP header
+      strm.adler = 0;  //crc32(0L, Z_NULL, 0);
+      put_byte(s, 31);
+      put_byte(s, 139);
+      put_byte(s, 8);
+      if (!s.gzhead) { // s->gzhead == Z_NULL
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, 0);
+        put_byte(s, s.level === 9 ? 2 :
+                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                     4 : 0));
+        put_byte(s, OS_CODE);
+        s.status = BUSY_STATE;
+      }
+      else {
+        put_byte(s, (s.gzhead.text ? 1 : 0) +
+                    (s.gzhead.hcrc ? 2 : 0) +
+                    (!s.gzhead.extra ? 0 : 4) +
+                    (!s.gzhead.name ? 0 : 8) +
+                    (!s.gzhead.comment ? 0 : 16)
+                );
+        put_byte(s, s.gzhead.time & 0xff);
+        put_byte(s, (s.gzhead.time >> 8) & 0xff);
+        put_byte(s, (s.gzhead.time >> 16) & 0xff);
+        put_byte(s, (s.gzhead.time >> 24) & 0xff);
+        put_byte(s, s.level === 9 ? 2 :
+                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                     4 : 0));
+        put_byte(s, s.gzhead.os & 0xff);
+        if (s.gzhead.extra && s.gzhead.extra.length) {
+          put_byte(s, s.gzhead.extra.length & 0xff);
+          put_byte(s, (s.gzhead.extra.length >> 8) & 0xff);
+        }
+        if (s.gzhead.hcrc) {
+          strm.adler = crc32(strm.adler, s.pending_buf, s.pending, 0);
+        }
+        s.gzindex = 0;
+        s.status = EXTRA_STATE;
+      }
+    }
+    else // DEFLATE header
+    {
+      var header = (Z_DEFLATED + ((s.w_bits - 8) << 4)) << 8;
+      var level_flags = -1;
+
+      if (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2) {
+        level_flags = 0;
+      } else if (s.level < 6) {
+        level_flags = 1;
+      } else if (s.level === 6) {
+        level_flags = 2;
+      } else {
+        level_flags = 3;
+      }
+      header |= (level_flags << 6);
+      if (s.strstart !== 0) { header |= PRESET_DICT; }
+      header += 31 - (header % 31);
+
+      s.status = BUSY_STATE;
+      putShortMSB(s, header);
+
+      /* Save the adler32 of the preset dictionary: */
+      if (s.strstart !== 0) {
+        putShortMSB(s, strm.adler >>> 16);
+        putShortMSB(s, strm.adler & 0xffff);
+      }
+      strm.adler = 1; // adler32(0L, Z_NULL, 0);
+    }
+  }
+
+//#ifdef GZIP
+  if (s.status === EXTRA_STATE) {
+    if (s.gzhead.extra/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+
+      while (s.gzindex < (s.gzhead.extra.length & 0xffff)) {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            break;
+          }
+        }
+        put_byte(s, s.gzhead.extra[s.gzindex] & 0xff);
+        s.gzindex++;
+      }
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (s.gzindex === s.gzhead.extra.length) {
+        s.gzindex = 0;
+        s.status = NAME_STATE;
+      }
+    }
+    else {
+      s.status = NAME_STATE;
+    }
+  }
+  if (s.status === NAME_STATE) {
+    if (s.gzhead.name/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+      //int val;
+
+      do {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            val = 1;
+            break;
+          }
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.name.length) {
+          val = s.gzhead.name.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (val === 0) {
+        s.gzindex = 0;
+        s.status = COMMENT_STATE;
+      }
+    }
+    else {
+      s.status = COMMENT_STATE;
+    }
+  }
+  if (s.status === COMMENT_STATE) {
+    if (s.gzhead.comment/* != Z_NULL*/) {
+      beg = s.pending;  /* start of bytes to update crc */
+      //int val;
+
+      do {
+        if (s.pending === s.pending_buf_size) {
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          flush_pending(strm);
+          beg = s.pending;
+          if (s.pending === s.pending_buf_size) {
+            val = 1;
+            break;
+          }
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.comment.length) {
+          val = s.gzhead.comment.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      if (val === 0) {
+        s.status = HCRC_STATE;
+      }
+    }
+    else {
+      s.status = HCRC_STATE;
+    }
+  }
+  if (s.status === HCRC_STATE) {
+    if (s.gzhead.hcrc) {
+      if (s.pending + 2 > s.pending_buf_size) {
+        flush_pending(strm);
+      }
+      if (s.pending + 2 <= s.pending_buf_size) {
+        put_byte(s, strm.adler & 0xff);
+        put_byte(s, (strm.adler >> 8) & 0xff);
+        strm.adler = 0; //crc32(0L, Z_NULL, 0);
+        s.status = BUSY_STATE;
+      }
+    }
+    else {
+      s.status = BUSY_STATE;
+    }
+  }
+//#endif
+
+  /* Flush as much pending output as possible */
+  if (s.pending !== 0) {
+    flush_pending(strm);
+    if (strm.avail_out === 0) {
+      /* Since avail_out is 0, deflate will be called again with
+       * more output space, but possibly with both pending and
+       * avail_in equal to zero. There won't be anything to do,
+       * but this is not an error situation so make sure we
+       * return OK instead of BUF_ERROR at next call of deflate:
+       */
+      s.last_flush = -1;
+      return Z_OK;
+    }
+
+    /* Make sure there is something to do and avoid duplicate consecutive
+     * flushes. For repeated and useless calls with Z_FINISH, we keep
+     * returning Z_STREAM_END instead of Z_BUF_ERROR.
+     */
+  } else if (strm.avail_in === 0 && rank(flush) <= rank(old_flush) &&
+    flush !== Z_FINISH) {
+    return err(strm, Z_BUF_ERROR);
+  }
+
+  /* User must not provide more input after the first FINISH: */
+  if (s.status === FINISH_STATE && strm.avail_in !== 0) {
+    return err(strm, Z_BUF_ERROR);
+  }
+
+  /* Start a new block or continue the current one.
+   */
+  if (strm.avail_in !== 0 || s.lookahead !== 0 ||
+    (flush !== Z_NO_FLUSH && s.status !== FINISH_STATE)) {
+    var bstate = (s.strategy === Z_HUFFMAN_ONLY) ? deflate_huff(s, flush) :
+      (s.strategy === Z_RLE ? deflate_rle(s, flush) :
+        configuration_table[s.level].func(s, flush));
+
+    if (bstate === BS_FINISH_STARTED || bstate === BS_FINISH_DONE) {
+      s.status = FINISH_STATE;
+    }
+    if (bstate === BS_NEED_MORE || bstate === BS_FINISH_STARTED) {
+      if (strm.avail_out === 0) {
+        s.last_flush = -1;
+        /* avoid BUF_ERROR next call, see above */
+      }
+      return Z_OK;
+      /* If flush != Z_NO_FLUSH && avail_out == 0, the next call
+       * of deflate should use the same flush parameter to make sure
+       * that the flush is complete. So we don't have to output an
+       * empty block here, this will be done at next call. This also
+       * ensures that for a very small output buffer, we emit at most
+       * one empty block.
+       */
+    }
+    if (bstate === BS_BLOCK_DONE) {
+      if (flush === Z_PARTIAL_FLUSH) {
+        trees._tr_align(s);
+      }
+      else if (flush !== Z_BLOCK) { /* FULL_FLUSH or SYNC_FLUSH */
+
+        trees._tr_stored_block(s, 0, 0, false);
+        /* For a full flush, this empty block will be recognized
+         * as a special marker by inflate_sync().
+         */
+        if (flush === Z_FULL_FLUSH) {
+          /*** CLEAR_HASH(s); ***/             /* forget history */
+          zero(s.head); // Fill with NIL (= 0);
+
+          if (s.lookahead === 0) {
+            s.strstart = 0;
+            s.block_start = 0;
+            s.insert = 0;
+          }
+        }
+      }
+      flush_pending(strm);
+      if (strm.avail_out === 0) {
+        s.last_flush = -1; /* avoid BUF_ERROR at next call, see above */
+        return Z_OK;
+      }
+    }
+  }
+  //Assert(strm->avail_out > 0, "bug2");
+  //if (strm.avail_out <= 0) { throw new Error("bug2");}
+
+  if (flush !== Z_FINISH) { return Z_OK; }
+  if (s.wrap <= 0) { return Z_STREAM_END; }
+
+  /* Write the trailer */
+  if (s.wrap === 2) {
+    put_byte(s, strm.adler & 0xff);
+    put_byte(s, (strm.adler >> 8) & 0xff);
+    put_byte(s, (strm.adler >> 16) & 0xff);
+    put_byte(s, (strm.adler >> 24) & 0xff);
+    put_byte(s, strm.total_in & 0xff);
+    put_byte(s, (strm.total_in >> 8) & 0xff);
+    put_byte(s, (strm.total_in >> 16) & 0xff);
+    put_byte(s, (strm.total_in >> 24) & 0xff);
+  }
+  else
+  {
+    putShortMSB(s, strm.adler >>> 16);
+    putShortMSB(s, strm.adler & 0xffff);
+  }
+
+  flush_pending(strm);
+  /* If avail_out is zero, the application will call deflate again
+   * to flush the rest.
+   */
+  if (s.wrap > 0) { s.wrap = -s.wrap; }
+  /* write the trailer only once! */
+  return s.pending !== 0 ? Z_OK : Z_STREAM_END;
+}
+
+function deflateEnd(strm) {
+  var status;
+
+  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+    return Z_STREAM_ERROR;
+  }
+
+  status = strm.state.status;
+  if (status !== INIT_STATE &&
+    status !== EXTRA_STATE &&
+    status !== NAME_STATE &&
+    status !== COMMENT_STATE &&
+    status !== HCRC_STATE &&
+    status !== BUSY_STATE &&
+    status !== FINISH_STATE
+  ) {
+    return err(strm, Z_STREAM_ERROR);
+  }
+
+  strm.state = null;
+
+  return status === BUSY_STATE ? err(strm, Z_DATA_ERROR) : Z_OK;
+}
+
+
+/* =========================================================================
+ * Initializes the compression dictionary from the given byte
+ * sequence without producing any compressed output.
+ */
+function deflateSetDictionary(strm, dictionary) {
+  var dictLength = dictionary.length;
+
+  var s;
+  var str, n;
+  var wrap;
+  var avail;
+  var next;
+  var input;
+  var tmpDict;
+
+  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+    return Z_STREAM_ERROR;
+  }
+
+  s = strm.state;
+  wrap = s.wrap;
+
+  if (wrap === 2 || (wrap === 1 && s.status !== INIT_STATE) || s.lookahead) {
+    return Z_STREAM_ERROR;
+  }
+
+  /* when using zlib wrappers, compute Adler-32 for provided dictionary */
+  if (wrap === 1) {
+    /* adler32(strm->adler, dictionary, dictLength); */
+    strm.adler = adler32(strm.adler, dictionary, dictLength, 0);
+  }
+
+  s.wrap = 0;   /* avoid computing Adler-32 in read_buf */
+
+  /* if dictionary would fill window, just replace the history */
+  if (dictLength >= s.w_size) {
+    if (wrap === 0) {            /* already empty otherwise */
+      /*** CLEAR_HASH(s); ***/
+      zero(s.head); // Fill with NIL (= 0);
+      s.strstart = 0;
+      s.block_start = 0;
+      s.insert = 0;
+    }
+    /* use the tail */
+    // dictionary = dictionary.slice(dictLength - s.w_size);
+    tmpDict = new utils.Buf8(s.w_size);
+    utils.arraySet(tmpDict, dictionary, dictLength - s.w_size, s.w_size, 0);
+    dictionary = tmpDict;
+    dictLength = s.w_size;
+  }
+  /* insert dictionary into window and hash */
+  avail = strm.avail_in;
+  next = strm.next_in;
+  input = strm.input;
+  strm.avail_in = dictLength;
+  strm.next_in = 0;
+  strm.input = dictionary;
+  fill_window(s);
+  while (s.lookahead >= MIN_MATCH) {
+    str = s.strstart;
+    n = s.lookahead - (MIN_MATCH - 1);
+    do {
+      /* UPDATE_HASH(s, s->ins_h, s->window[str + MIN_MATCH-1]); */
+      s.ins_h = ((s.ins_h << s.hash_shift) ^ s.window[str + MIN_MATCH - 1]) & s.hash_mask;
+
+      s.prev[str & s.w_mask] = s.head[s.ins_h];
+
+      s.head[s.ins_h] = str;
+      str++;
+    } while (--n);
+    s.strstart = str;
+    s.lookahead = MIN_MATCH - 1;
+    fill_window(s);
+  }
+  s.strstart += s.lookahead;
+  s.block_start = s.strstart;
+  s.insert = s.lookahead;
+  s.lookahead = 0;
+  s.match_length = s.prev_length = MIN_MATCH - 1;
+  s.match_available = 0;
+  strm.next_in = next;
+  strm.input = input;
+  strm.avail_in = avail;
+  s.wrap = wrap;
+  return Z_OK;
+}
+
+
+exports.deflateInit = deflateInit;
+exports.deflateInit2 = deflateInit2;
+exports.deflateReset = deflateReset;
+exports.deflateResetKeep = deflateResetKeep;
+exports.deflateSetHeader = deflateSetHeader;
+exports.deflate = deflate;
+exports.deflateEnd = deflateEnd;
+exports.deflateSetDictionary = deflateSetDictionary;
+exports.deflateInfo = 'pako deflate (from Nodeca project)';
+
+/* Not implemented
+exports.deflateBound = deflateBound;
+exports.deflateCopy = deflateCopy;
+exports.deflateParams = deflateParams;
+exports.deflatePending = deflatePending;
+exports.deflatePrime = deflatePrime;
+exports.deflateTune = deflateTune;
+*/
+
+},{"../utils/common":41,"./adler32":43,"./crc32":45,"./messages":51,"./trees":52}],47:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+function GZheader() {
+  /* true if compressed data believed to be text */
+  this.text       = 0;
+  /* modification time */
+  this.time       = 0;
+  /* extra flags (not used when writing a gzip file) */
+  this.xflags     = 0;
+  /* operating system */
+  this.os         = 0;
+  /* pointer to extra field or Z_NULL if none */
+  this.extra      = null;
+  /* extra field length (valid if extra != Z_NULL) */
+  this.extra_len  = 0; // Actually, we don't need it in JS,
+                       // but leave for few code modifications
+
+  //
+  // Setup limits is not necessary because in js we should not preallocate memory
+  // for inflate use constant limit in 65536 bytes
+  //
+
+  /* space at extra (only when reading header) */
+  // this.extra_max  = 0;
+  /* pointer to zero-terminated file name or Z_NULL */
+  this.name       = '';
+  /* space at name (only when reading header) */
+  // this.name_max   = 0;
+  /* pointer to zero-terminated comment or Z_NULL */
+  this.comment    = '';
+  /* space at comment (only when reading header) */
+  // this.comm_max   = 0;
+  /* true if there was or will be a header crc */
+  this.hcrc       = 0;
+  /* true when done reading gzip header (not used when writing a gzip file) */
+  this.done       = false;
+}
+
+module.exports = GZheader;
+
+},{}],48:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+// See state defs from inflate.js
+var BAD = 30;       /* got a data error -- remain here until reset */
+var TYPE = 12;      /* i: waiting for type bits, including last-flag bit */
+
+/*
+   Decode literal, length, and distance codes and write out the resulting
+   literal and match bytes until either not enough input or output is
+   available, an end-of-block is encountered, or a data error is encountered.
+   When large enough input and output buffers are supplied to inflate(), for
+   example, a 16K input buffer and a 64K output buffer, more than 95% of the
+   inflate execution time is spent in this routine.
+
+   Entry assumptions:
+
+        state.mode === LEN
+        strm.avail_in >= 6
+        strm.avail_out >= 258
+        start >= strm.avail_out
+        state.bits < 8
+
+   On return, state.mode is one of:
+
+        LEN -- ran out of enough output space or enough available input
+        TYPE -- reached end of block code, inflate() to interpret next block
+        BAD -- error in block data
+
+   Notes:
+
+    - The maximum input bits used by a length/distance pair is 15 bits for the
+      length code, 5 bits for the length extra, 15 bits for the distance code,
+      and 13 bits for the distance extra.  This totals 48 bits, or six bytes.
+      Therefore if strm.avail_in >= 6, then there is enough input to avoid
+      checking for available input while decoding.
+
+    - The maximum bytes that a single length/distance pair can output is 258
+      bytes, which is the maximum length that can be coded.  inflate_fast()
+      requires strm.avail_out >= 258 for each loop to avoid checking for
+      output space.
+ */
+module.exports = function inflate_fast(strm, start) {
+  var state;
+  var _in;                    /* local strm.input */
+  var last;                   /* have enough input while in < last */
+  var _out;                   /* local strm.output */
+  var beg;                    /* inflate()'s initial strm.output */
+  var end;                    /* while out < end, enough space available */
+//#ifdef INFLATE_STRICT
+  var dmax;                   /* maximum distance from zlib header */
+//#endif
+  var wsize;                  /* window size or zero if not using window */
+  var whave;                  /* valid bytes in the window */
+  var wnext;                  /* window write index */
+  // Use `s_window` instead `window`, avoid conflict with instrumentation tools
+  var s_window;               /* allocated sliding window, if wsize != 0 */
+  var hold;                   /* local strm.hold */
+  var bits;                   /* local strm.bits */
+  var lcode;                  /* local strm.lencode */
+  var dcode;                  /* local strm.distcode */
+  var lmask;                  /* mask for first level of length codes */
+  var dmask;                  /* mask for first level of distance codes */
+  var here;                   /* retrieved table entry */
+  var op;                     /* code bits, operation, extra bits, or */
+                              /*  window position, window bytes to copy */
+  var len;                    /* match length, unused bytes */
+  var dist;                   /* match distance */
+  var from;                   /* where to copy match from */
+  var from_source;
+
+
+  var input, output; // JS specific, because we have no pointers
+
+  /* copy state to local variables */
+  state = strm.state;
+  //here = state.here;
+  _in = strm.next_in;
+  input = strm.input;
+  last = _in + (strm.avail_in - 5);
+  _out = strm.next_out;
+  output = strm.output;
+  beg = _out - (start - strm.avail_out);
+  end = _out + (strm.avail_out - 257);
+//#ifdef INFLATE_STRICT
+  dmax = state.dmax;
+//#endif
+  wsize = state.wsize;
+  whave = state.whave;
+  wnext = state.wnext;
+  s_window = state.window;
+  hold = state.hold;
+  bits = state.bits;
+  lcode = state.lencode;
+  dcode = state.distcode;
+  lmask = (1 << state.lenbits) - 1;
+  dmask = (1 << state.distbits) - 1;
+
+
+  /* decode literals and length/distances until end-of-block or not enough
+     input data or output space */
+
+  top:
+  do {
+    if (bits < 15) {
+      hold += input[_in++] << bits;
+      bits += 8;
+      hold += input[_in++] << bits;
+      bits += 8;
+    }
+
+    here = lcode[hold & lmask];
+
+    dolen:
+    for (;;) { // Goto emulation
+      op = here >>> 24/*here.bits*/;
+      hold >>>= op;
+      bits -= op;
+      op = (here >>> 16) & 0xff/*here.op*/;
+      if (op === 0) {                          /* literal */
+        //Tracevv((stderr, here.val >= 0x20 && here.val < 0x7f ?
+        //        "inflate:         literal '%c'\n" :
+        //        "inflate:         literal 0x%02x\n", here.val));
+        output[_out++] = here & 0xffff/*here.val*/;
+      }
+      else if (op & 16) {                     /* length base */
+        len = here & 0xffff/*here.val*/;
+        op &= 15;                           /* number of extra bits */
+        if (op) {
+          if (bits < op) {
+            hold += input[_in++] << bits;
+            bits += 8;
+          }
+          len += hold & ((1 << op) - 1);
+          hold >>>= op;
+          bits -= op;
+        }
+        //Tracevv((stderr, "inflate:         length %u\n", len));
+        if (bits < 15) {
+          hold += input[_in++] << bits;
+          bits += 8;
+          hold += input[_in++] << bits;
+          bits += 8;
+        }
+        here = dcode[hold & dmask];
+
+        dodist:
+        for (;;) { // goto emulation
+          op = here >>> 24/*here.bits*/;
+          hold >>>= op;
+          bits -= op;
+          op = (here >>> 16) & 0xff/*here.op*/;
+
+          if (op & 16) {                      /* distance base */
+            dist = here & 0xffff/*here.val*/;
+            op &= 15;                       /* number of extra bits */
+            if (bits < op) {
+              hold += input[_in++] << bits;
+              bits += 8;
+              if (bits < op) {
+                hold += input[_in++] << bits;
+                bits += 8;
+              }
+            }
+            dist += hold & ((1 << op) - 1);
+//#ifdef INFLATE_STRICT
+            if (dist > dmax) {
+              strm.msg = 'invalid distance too far back';
+              state.mode = BAD;
+              break top;
+            }
+//#endif
+            hold >>>= op;
+            bits -= op;
+            //Tracevv((stderr, "inflate:         distance %u\n", dist));
+            op = _out - beg;                /* max distance in output */
+            if (dist > op) {                /* see if copy from window */
+              op = dist - op;               /* distance back in window */
+              if (op > whave) {
+                if (state.sane) {
+                  strm.msg = 'invalid distance too far back';
+                  state.mode = BAD;
+                  break top;
                 }
 
-                _this.ctx.drawImage(img, -options.x * options.scale, -options.y * options.scale);
-                return _this.canvas;
-            });
+// (!) This block is disabled in zlib defailts,
+// don't enable it for binary compatibility
+//#ifdef INFLATE_ALLOW_INVALID_DISTANCE_TOOFAR_ARRR
+//                if (len <= op - whave) {
+//                  do {
+//                    output[_out++] = 0;
+//                  } while (--len);
+//                  continue top;
+//                }
+//                len -= op - whave;
+//                do {
+//                  output[_out++] = 0;
+//                } while (--op > whave);
+//                if (op === 0) {
+//                  from = _out - dist;
+//                  do {
+//                    output[_out++] = output[from++];
+//                  } while (--len);
+//                  continue top;
+//                }
+//#endif
+              }
+              from = 0; // window index
+              from_source = s_window;
+              if (wnext === 0) {           /* very common case */
+                from += wsize - op;
+                if (op < len) {         /* some from window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = _out - dist;  /* rest from output */
+                  from_source = output;
+                }
+              }
+              else if (wnext < op) {      /* wrap around window */
+                from += wsize + wnext - op;
+                op -= wnext;
+                if (op < len) {         /* some from end of window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = 0;
+                  if (wnext < len) {  /* some from start of window */
+                    op = wnext;
+                    len -= op;
+                    do {
+                      output[_out++] = s_window[from++];
+                    } while (--op);
+                    from = _out - dist;      /* rest from output */
+                    from_source = output;
+                  }
+                }
+              }
+              else {                      /* contiguous in window */
+                from += wnext - op;
+                if (op < len) {         /* some from window */
+                  len -= op;
+                  do {
+                    output[_out++] = s_window[from++];
+                  } while (--op);
+                  from = _out - dist;  /* rest from output */
+                  from_source = output;
+                }
+              }
+              while (len > 2) {
+                output[_out++] = from_source[from++];
+                output[_out++] = from_source[from++];
+                output[_out++] = from_source[from++];
+                len -= 3;
+              }
+              if (len) {
+                output[_out++] = from_source[from++];
+                if (len > 1) {
+                  output[_out++] = from_source[from++];
+                }
+              }
+            }
+            else {
+              from = _out - dist;          /* copy direct from output */
+              do {                        /* minimum length is three */
+                output[_out++] = output[from++];
+                output[_out++] = output[from++];
+                output[_out++] = output[from++];
+                len -= 3;
+              } while (len > 2);
+              if (len) {
+                output[_out++] = output[from++];
+                if (len > 1) {
+                  output[_out++] = output[from++];
+                }
+              }
+            }
+          }
+          else if ((op & 64) === 0) {          /* 2nd level distance code */
+            here = dcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
+            continue dodist;
+          }
+          else {
+            strm.msg = 'invalid distance code';
+            state.mode = BAD;
+            break top;
+          }
+
+          break; // need to emulate goto via "continue"
         }
-    }]);
+      }
+      else if ((op & 64) === 0) {              /* 2nd level length code */
+        here = lcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
+        continue dolen;
+      }
+      else if (op & 32) {                     /* end-of-block */
+        //Tracevv((stderr, "inflate:         end of block\n"));
+        state.mode = TYPE;
+        break top;
+      }
+      else {
+        strm.msg = 'invalid literal/length code';
+        state.mode = BAD;
+        break top;
+      }
 
-    return ForeignObjectRenderer;
-}();
+      break; // need to emulate goto via "continue"
+    }
+  } while (_in < last && _out < end);
 
-exports.default = ForeignObjectRenderer;
-var createForeignObjectSVG = exports.createForeignObjectSVG = function createForeignObjectSVG(width, height, x, y, node) {
-    var xmlns = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(xmlns, 'svg');
-    var foreignObject = document.createElementNS(xmlns, 'foreignObject');
-    svg.setAttributeNS(null, 'width', width);
-    svg.setAttributeNS(null, 'height', height);
+  /* return unused bytes (on entry, bits < 8, so in won't go too far back) */
+  len = bits >> 3;
+  _in -= len;
+  bits -= len << 3;
+  hold &= (1 << bits) - 1;
 
-    foreignObject.setAttributeNS(null, 'width', '100%');
-    foreignObject.setAttributeNS(null, 'height', '100%');
-    foreignObject.setAttributeNS(null, 'x', x);
-    foreignObject.setAttributeNS(null, 'y', y);
-    foreignObject.setAttributeNS(null, 'externalResourcesRequired', 'true');
-    svg.appendChild(foreignObject);
-
-    foreignObject.appendChild(node);
-
-    return svg;
+  /* update state and return */
+  strm.next_in = _in;
+  strm.next_out = _out;
+  strm.avail_in = (_in < last ? 5 + (last - _in) : 5 - (_in - last));
+  strm.avail_out = (_out < end ? 257 + (end - _out) : 257 - (_out - end));
+  state.hold = hold;
+  state.bits = bits;
+  return;
 };
 
-var loadSerializedSVG = exports.loadSerializedSVG = function loadSerializedSVG(svg) {
-    return new Promise(function (resolve, reject) {
-        var img = new Image();
-        img.onload = function () {
-            return resolve(img);
-        };
-        img.onerror = reject;
+},{}],49:[function(require,module,exports){
+'use strict';
 
-        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg));
-    });
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils         = require('../utils/common');
+var adler32       = require('./adler32');
+var crc32         = require('./crc32');
+var inflate_fast  = require('./inffast');
+var inflate_table = require('./inftrees');
+
+var CODES = 0;
+var LENS = 1;
+var DISTS = 2;
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+
+/* Allowed flush values; see deflate() and inflate() below for details */
+//var Z_NO_FLUSH      = 0;
+//var Z_PARTIAL_FLUSH = 1;
+//var Z_SYNC_FLUSH    = 2;
+//var Z_FULL_FLUSH    = 3;
+var Z_FINISH        = 4;
+var Z_BLOCK         = 5;
+var Z_TREES         = 6;
+
+
+/* Return codes for the compression/decompression functions. Negative values
+ * are errors, positive values are used for special but normal events.
+ */
+var Z_OK            = 0;
+var Z_STREAM_END    = 1;
+var Z_NEED_DICT     = 2;
+//var Z_ERRNO         = -1;
+var Z_STREAM_ERROR  = -2;
+var Z_DATA_ERROR    = -3;
+var Z_MEM_ERROR     = -4;
+var Z_BUF_ERROR     = -5;
+//var Z_VERSION_ERROR = -6;
+
+/* The deflate compression method */
+var Z_DEFLATED  = 8;
+
+
+/* STATES ====================================================================*/
+/* ===========================================================================*/
+
+
+var    HEAD = 1;       /* i: waiting for magic header */
+var    FLAGS = 2;      /* i: waiting for method and flags (gzip) */
+var    TIME = 3;       /* i: waiting for modification time (gzip) */
+var    OS = 4;         /* i: waiting for extra flags and operating system (gzip) */
+var    EXLEN = 5;      /* i: waiting for extra length (gzip) */
+var    EXTRA = 6;      /* i: waiting for extra bytes (gzip) */
+var    NAME = 7;       /* i: waiting for end of file name (gzip) */
+var    COMMENT = 8;    /* i: waiting for end of comment (gzip) */
+var    HCRC = 9;       /* i: waiting for header crc (gzip) */
+var    DICTID = 10;    /* i: waiting for dictionary check value */
+var    DICT = 11;      /* waiting for inflateSetDictionary() call */
+var        TYPE = 12;      /* i: waiting for type bits, including last-flag bit */
+var        TYPEDO = 13;    /* i: same, but skip check to exit inflate on new block */
+var        STORED = 14;    /* i: waiting for stored size (length and complement) */
+var        COPY_ = 15;     /* i/o: same as COPY below, but only first time in */
+var        COPY = 16;      /* i/o: waiting for input or output to copy stored block */
+var        TABLE = 17;     /* i: waiting for dynamic block table lengths */
+var        LENLENS = 18;   /* i: waiting for code length code lengths */
+var        CODELENS = 19;  /* i: waiting for length/lit and distance code lengths */
+var            LEN_ = 20;      /* i: same as LEN below, but only first time in */
+var            LEN = 21;       /* i: waiting for length/lit/eob code */
+var            LENEXT = 22;    /* i: waiting for length extra bits */
+var            DIST = 23;      /* i: waiting for distance code */
+var            DISTEXT = 24;   /* i: waiting for distance extra bits */
+var            MATCH = 25;     /* o: waiting for output space to copy string */
+var            LIT = 26;       /* o: waiting for output space to write literal */
+var    CHECK = 27;     /* i: waiting for 32-bit check value */
+var    LENGTH = 28;    /* i: waiting for 32-bit length (gzip) */
+var    DONE = 29;      /* finished check, done -- remain here until reset */
+var    BAD = 30;       /* got a data error -- remain here until reset */
+var    MEM = 31;       /* got an inflate() memory error -- remain here until reset */
+var    SYNC = 32;      /* looking for synchronization bytes to restart inflate() */
+
+/* ===========================================================================*/
+
+
+
+var ENOUGH_LENS = 852;
+var ENOUGH_DISTS = 592;
+//var ENOUGH =  (ENOUGH_LENS+ENOUGH_DISTS);
+
+var MAX_WBITS = 15;
+/* 32K LZ77 window */
+var DEF_WBITS = MAX_WBITS;
+
+
+function zswap32(q) {
+  return  (((q >>> 24) & 0xff) +
+          ((q >>> 8) & 0xff00) +
+          ((q & 0xff00) << 8) +
+          ((q & 0xff) << 24));
+}
+
+
+function InflateState() {
+  this.mode = 0;             /* current inflate mode */
+  this.last = false;          /* true if processing last block */
+  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip */
+  this.havedict = false;      /* true if dictionary provided */
+  this.flags = 0;             /* gzip header method and flags (0 if zlib) */
+  this.dmax = 0;              /* zlib header max distance (INFLATE_STRICT) */
+  this.check = 0;             /* protected copy of check value */
+  this.total = 0;             /* protected copy of output count */
+  // TODO: may be {}
+  this.head = null;           /* where to save gzip header information */
+
+  /* sliding window */
+  this.wbits = 0;             /* log base 2 of requested window size */
+  this.wsize = 0;             /* window size or zero if not using window */
+  this.whave = 0;             /* valid bytes in the window */
+  this.wnext = 0;             /* window write index */
+  this.window = null;         /* allocated sliding window, if needed */
+
+  /* bit accumulator */
+  this.hold = 0;              /* input bit accumulator */
+  this.bits = 0;              /* number of bits in "in" */
+
+  /* for string and stored block copying */
+  this.length = 0;            /* literal or length of data to copy */
+  this.offset = 0;            /* distance back to copy string from */
+
+  /* for table and code decoding */
+  this.extra = 0;             /* extra bits needed */
+
+  /* fixed and dynamic code tables */
+  this.lencode = null;          /* starting table for length/literal codes */
+  this.distcode = null;         /* starting table for distance codes */
+  this.lenbits = 0;           /* index bits for lencode */
+  this.distbits = 0;          /* index bits for distcode */
+
+  /* dynamic table building */
+  this.ncode = 0;             /* number of code length code lengths */
+  this.nlen = 0;              /* number of length code lengths */
+  this.ndist = 0;             /* number of distance code lengths */
+  this.have = 0;              /* number of code lengths in lens[] */
+  this.next = null;              /* next available space in codes[] */
+
+  this.lens = new utils.Buf16(320); /* temporary storage for code lengths */
+  this.work = new utils.Buf16(288); /* work area for code table building */
+
+  /*
+   because we don't have pointers in js, we use lencode and distcode directly
+   as buffers so we don't need codes
+  */
+  //this.codes = new utils.Buf32(ENOUGH);       /* space for code tables */
+  this.lendyn = null;              /* dynamic table for length/literal codes (JS specific) */
+  this.distdyn = null;             /* dynamic table for distance codes (JS specific) */
+  this.sane = 0;                   /* if false, allow invalid distance too far */
+  this.back = 0;                   /* bits back of last unprocessed length/lit */
+  this.was = 0;                    /* initial length of match */
+}
+
+function inflateResetKeep(strm) {
+  var state;
+
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+  strm.total_in = strm.total_out = state.total = 0;
+  strm.msg = ''; /*Z_NULL*/
+  if (state.wrap) {       /* to support ill-conceived Java test suite */
+    strm.adler = state.wrap & 1;
+  }
+  state.mode = HEAD;
+  state.last = 0;
+  state.havedict = 0;
+  state.dmax = 32768;
+  state.head = null/*Z_NULL*/;
+  state.hold = 0;
+  state.bits = 0;
+  //state.lencode = state.distcode = state.next = state.codes;
+  state.lencode = state.lendyn = new utils.Buf32(ENOUGH_LENS);
+  state.distcode = state.distdyn = new utils.Buf32(ENOUGH_DISTS);
+
+  state.sane = 1;
+  state.back = -1;
+  //Tracev((stderr, "inflate: reset\n"));
+  return Z_OK;
+}
+
+function inflateReset(strm) {
+  var state;
+
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+  state.wsize = 0;
+  state.whave = 0;
+  state.wnext = 0;
+  return inflateResetKeep(strm);
+
+}
+
+function inflateReset2(strm, windowBits) {
+  var wrap;
+  var state;
+
+  /* get the state */
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+
+  /* extract wrap request from windowBits parameter */
+  if (windowBits < 0) {
+    wrap = 0;
+    windowBits = -windowBits;
+  }
+  else {
+    wrap = (windowBits >> 4) + 1;
+    if (windowBits < 48) {
+      windowBits &= 15;
+    }
+  }
+
+  /* set number of window bits, free window if different */
+  if (windowBits && (windowBits < 8 || windowBits > 15)) {
+    return Z_STREAM_ERROR;
+  }
+  if (state.window !== null && state.wbits !== windowBits) {
+    state.window = null;
+  }
+
+  /* update state and reset the rest of it */
+  state.wrap = wrap;
+  state.wbits = windowBits;
+  return inflateReset(strm);
+}
+
+function inflateInit2(strm, windowBits) {
+  var ret;
+  var state;
+
+  if (!strm) { return Z_STREAM_ERROR; }
+  //strm.msg = Z_NULL;                 /* in case we return an error */
+
+  state = new InflateState();
+
+  //if (state === Z_NULL) return Z_MEM_ERROR;
+  //Tracev((stderr, "inflate: allocated\n"));
+  strm.state = state;
+  state.window = null/*Z_NULL*/;
+  ret = inflateReset2(strm, windowBits);
+  if (ret !== Z_OK) {
+    strm.state = null/*Z_NULL*/;
+  }
+  return ret;
+}
+
+function inflateInit(strm) {
+  return inflateInit2(strm, DEF_WBITS);
+}
+
+
+/*
+ Return state with length and distance decoding tables and index sizes set to
+ fixed code decoding.  Normally this returns fixed tables from inffixed.h.
+ If BUILDFIXED is defined, then instead this routine builds the tables the
+ first time it's called, and returns those tables the first time and
+ thereafter.  This reduces the size of the code by about 2K bytes, in
+ exchange for a little execution time.  However, BUILDFIXED should not be
+ used for threaded applications, since the rewriting of the tables and virgin
+ may not be thread-safe.
+ */
+var virgin = true;
+
+var lenfix, distfix; // We have no pointers in JS, so keep tables separate
+
+function fixedtables(state) {
+  /* build fixed huffman tables if first call (may not be thread safe) */
+  if (virgin) {
+    var sym;
+
+    lenfix = new utils.Buf32(512);
+    distfix = new utils.Buf32(32);
+
+    /* literal/length table */
+    sym = 0;
+    while (sym < 144) { state.lens[sym++] = 8; }
+    while (sym < 256) { state.lens[sym++] = 9; }
+    while (sym < 280) { state.lens[sym++] = 7; }
+    while (sym < 288) { state.lens[sym++] = 8; }
+
+    inflate_table(LENS,  state.lens, 0, 288, lenfix,   0, state.work, { bits: 9 });
+
+    /* distance table */
+    sym = 0;
+    while (sym < 32) { state.lens[sym++] = 5; }
+
+    inflate_table(DISTS, state.lens, 0, 32,   distfix, 0, state.work, { bits: 5 });
+
+    /* do this just once */
+    virgin = false;
+  }
+
+  state.lencode = lenfix;
+  state.lenbits = 9;
+  state.distcode = distfix;
+  state.distbits = 5;
+}
+
+
+/*
+ Update the window with the last wsize (normally 32K) bytes written before
+ returning.  If window does not exist yet, create it.  This is only called
+ when a window is already in use, or when output has been written during this
+ inflate call, but the end of the deflate stream has not been reached yet.
+ It is also called to create a window for dictionary data when a dictionary
+ is loaded.
+
+ Providing output buffers larger than 32K to inflate() should provide a speed
+ advantage, since only the last 32K of output is copied to the sliding window
+ upon return from inflate(), and since all distances after the first 32K of
+ output will fall in the output data, making match copies simpler and faster.
+ The advantage may be dependent on the size of the processor's data caches.
+ */
+function updatewindow(strm, src, end, copy) {
+  var dist;
+  var state = strm.state;
+
+  /* if it hasn't been done already, allocate space for the window */
+  if (state.window === null) {
+    state.wsize = 1 << state.wbits;
+    state.wnext = 0;
+    state.whave = 0;
+
+    state.window = new utils.Buf8(state.wsize);
+  }
+
+  /* copy state->wsize or less output bytes into the circular window */
+  if (copy >= state.wsize) {
+    utils.arraySet(state.window, src, end - state.wsize, state.wsize, 0);
+    state.wnext = 0;
+    state.whave = state.wsize;
+  }
+  else {
+    dist = state.wsize - state.wnext;
+    if (dist > copy) {
+      dist = copy;
+    }
+    //zmemcpy(state->window + state->wnext, end - copy, dist);
+    utils.arraySet(state.window, src, end - copy, dist, state.wnext);
+    copy -= dist;
+    if (copy) {
+      //zmemcpy(state->window, end - copy, copy);
+      utils.arraySet(state.window, src, end - copy, copy, 0);
+      state.wnext = copy;
+      state.whave = state.wsize;
+    }
+    else {
+      state.wnext += dist;
+      if (state.wnext === state.wsize) { state.wnext = 0; }
+      if (state.whave < state.wsize) { state.whave += dist; }
+    }
+  }
+  return 0;
+}
+
+function inflate(strm, flush) {
+  var state;
+  var input, output;          // input/output buffers
+  var next;                   /* next input INDEX */
+  var put;                    /* next output INDEX */
+  var have, left;             /* available input and output */
+  var hold;                   /* bit buffer */
+  var bits;                   /* bits in bit buffer */
+  var _in, _out;              /* save starting available input and output */
+  var copy;                   /* number of stored or match bytes to copy */
+  var from;                   /* where to copy match bytes from */
+  var from_source;
+  var here = 0;               /* current decoding table entry */
+  var here_bits, here_op, here_val; // paked "here" denormalized (JS specific)
+  //var last;                   /* parent table entry */
+  var last_bits, last_op, last_val; // paked "last" denormalized (JS specific)
+  var len;                    /* length to copy for repeats, bits to drop */
+  var ret;                    /* return code */
+  var hbuf = new utils.Buf8(4);    /* buffer for gzip header crc calculation */
+  var opts;
+
+  var n; // temporary var for NEED_BITS
+
+  var order = /* permutation of code lengths */
+    [ 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 ];
+
+
+  if (!strm || !strm.state || !strm.output ||
+      (!strm.input && strm.avail_in !== 0)) {
+    return Z_STREAM_ERROR;
+  }
+
+  state = strm.state;
+  if (state.mode === TYPE) { state.mode = TYPEDO; }    /* skip check */
+
+
+  //--- LOAD() ---
+  put = strm.next_out;
+  output = strm.output;
+  left = strm.avail_out;
+  next = strm.next_in;
+  input = strm.input;
+  have = strm.avail_in;
+  hold = state.hold;
+  bits = state.bits;
+  //---
+
+  _in = have;
+  _out = left;
+  ret = Z_OK;
+
+  inf_leave: // goto emulation
+  for (;;) {
+    switch (state.mode) {
+    case HEAD:
+      if (state.wrap === 0) {
+        state.mode = TYPEDO;
+        break;
+      }
+      //=== NEEDBITS(16);
+      while (bits < 16) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      if ((state.wrap & 2) && hold === 0x8b1f) {  /* gzip header */
+        state.check = 0/*crc32(0L, Z_NULL, 0)*/;
+        //=== CRC2(state.check, hold);
+        hbuf[0] = hold & 0xff;
+        hbuf[1] = (hold >>> 8) & 0xff;
+        state.check = crc32(state.check, hbuf, 2, 0);
+        //===//
+
+        //=== INITBITS();
+        hold = 0;
+        bits = 0;
+        //===//
+        state.mode = FLAGS;
+        break;
+      }
+      state.flags = 0;           /* expect zlib header */
+      if (state.head) {
+        state.head.done = false;
+      }
+      if (!(state.wrap & 1) ||   /* check if zlib header allowed */
+        (((hold & 0xff)/*BITS(8)*/ << 8) + (hold >> 8)) % 31) {
+        strm.msg = 'incorrect header check';
+        state.mode = BAD;
+        break;
+      }
+      if ((hold & 0x0f)/*BITS(4)*/ !== Z_DEFLATED) {
+        strm.msg = 'unknown compression method';
+        state.mode = BAD;
+        break;
+      }
+      //--- DROPBITS(4) ---//
+      hold >>>= 4;
+      bits -= 4;
+      //---//
+      len = (hold & 0x0f)/*BITS(4)*/ + 8;
+      if (state.wbits === 0) {
+        state.wbits = len;
+      }
+      else if (len > state.wbits) {
+        strm.msg = 'invalid window size';
+        state.mode = BAD;
+        break;
+      }
+      state.dmax = 1 << len;
+      //Tracev((stderr, "inflate:   zlib header ok\n"));
+      strm.adler = state.check = 1/*adler32(0L, Z_NULL, 0)*/;
+      state.mode = hold & 0x200 ? DICTID : TYPE;
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      break;
+    case FLAGS:
+      //=== NEEDBITS(16); */
+      while (bits < 16) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      state.flags = hold;
+      if ((state.flags & 0xff) !== Z_DEFLATED) {
+        strm.msg = 'unknown compression method';
+        state.mode = BAD;
+        break;
+      }
+      if (state.flags & 0xe000) {
+        strm.msg = 'unknown header flags set';
+        state.mode = BAD;
+        break;
+      }
+      if (state.head) {
+        state.head.text = ((hold >> 8) & 1);
+      }
+      if (state.flags & 0x0200) {
+        //=== CRC2(state.check, hold);
+        hbuf[0] = hold & 0xff;
+        hbuf[1] = (hold >>> 8) & 0xff;
+        state.check = crc32(state.check, hbuf, 2, 0);
+        //===//
+      }
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      state.mode = TIME;
+      /* falls through */
+    case TIME:
+      //=== NEEDBITS(32); */
+      while (bits < 32) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      if (state.head) {
+        state.head.time = hold;
+      }
+      if (state.flags & 0x0200) {
+        //=== CRC4(state.check, hold)
+        hbuf[0] = hold & 0xff;
+        hbuf[1] = (hold >>> 8) & 0xff;
+        hbuf[2] = (hold >>> 16) & 0xff;
+        hbuf[3] = (hold >>> 24) & 0xff;
+        state.check = crc32(state.check, hbuf, 4, 0);
+        //===
+      }
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      state.mode = OS;
+      /* falls through */
+    case OS:
+      //=== NEEDBITS(16); */
+      while (bits < 16) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      if (state.head) {
+        state.head.xflags = (hold & 0xff);
+        state.head.os = (hold >> 8);
+      }
+      if (state.flags & 0x0200) {
+        //=== CRC2(state.check, hold);
+        hbuf[0] = hold & 0xff;
+        hbuf[1] = (hold >>> 8) & 0xff;
+        state.check = crc32(state.check, hbuf, 2, 0);
+        //===//
+      }
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      state.mode = EXLEN;
+      /* falls through */
+    case EXLEN:
+      if (state.flags & 0x0400) {
+        //=== NEEDBITS(16); */
+        while (bits < 16) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        state.length = hold;
+        if (state.head) {
+          state.head.extra_len = hold;
+        }
+        if (state.flags & 0x0200) {
+          //=== CRC2(state.check, hold);
+          hbuf[0] = hold & 0xff;
+          hbuf[1] = (hold >>> 8) & 0xff;
+          state.check = crc32(state.check, hbuf, 2, 0);
+          //===//
+        }
+        //=== INITBITS();
+        hold = 0;
+        bits = 0;
+        //===//
+      }
+      else if (state.head) {
+        state.head.extra = null/*Z_NULL*/;
+      }
+      state.mode = EXTRA;
+      /* falls through */
+    case EXTRA:
+      if (state.flags & 0x0400) {
+        copy = state.length;
+        if (copy > have) { copy = have; }
+        if (copy) {
+          if (state.head) {
+            len = state.head.extra_len - state.length;
+            if (!state.head.extra) {
+              // Use untyped array for more conveniend processing later
+              state.head.extra = new Array(state.head.extra_len);
+            }
+            utils.arraySet(
+              state.head.extra,
+              input,
+              next,
+              // extra field is limited to 65536 bytes
+              // - no need for additional size check
+              copy,
+              /*len + copy > state.head.extra_max - len ? state.head.extra_max : copy,*/
+              len
+            );
+            //zmemcpy(state.head.extra + len, next,
+            //        len + copy > state.head.extra_max ?
+            //        state.head.extra_max - len : copy);
+          }
+          if (state.flags & 0x0200) {
+            state.check = crc32(state.check, input, copy, next);
+          }
+          have -= copy;
+          next += copy;
+          state.length -= copy;
+        }
+        if (state.length) { break inf_leave; }
+      }
+      state.length = 0;
+      state.mode = NAME;
+      /* falls through */
+    case NAME:
+      if (state.flags & 0x0800) {
+        if (have === 0) { break inf_leave; }
+        copy = 0;
+        do {
+          // TODO: 2 or 1 bytes?
+          len = input[next + copy++];
+          /* use constant limit because in js we should not preallocate memory */
+          if (state.head && len &&
+              (state.length < 65536 /*state.head.name_max*/)) {
+            state.head.name += String.fromCharCode(len);
+          }
+        } while (len && copy < have);
+
+        if (state.flags & 0x0200) {
+          state.check = crc32(state.check, input, copy, next);
+        }
+        have -= copy;
+        next += copy;
+        if (len) { break inf_leave; }
+      }
+      else if (state.head) {
+        state.head.name = null;
+      }
+      state.length = 0;
+      state.mode = COMMENT;
+      /* falls through */
+    case COMMENT:
+      if (state.flags & 0x1000) {
+        if (have === 0) { break inf_leave; }
+        copy = 0;
+        do {
+          len = input[next + copy++];
+          /* use constant limit because in js we should not preallocate memory */
+          if (state.head && len &&
+              (state.length < 65536 /*state.head.comm_max*/)) {
+            state.head.comment += String.fromCharCode(len);
+          }
+        } while (len && copy < have);
+        if (state.flags & 0x0200) {
+          state.check = crc32(state.check, input, copy, next);
+        }
+        have -= copy;
+        next += copy;
+        if (len) { break inf_leave; }
+      }
+      else if (state.head) {
+        state.head.comment = null;
+      }
+      state.mode = HCRC;
+      /* falls through */
+    case HCRC:
+      if (state.flags & 0x0200) {
+        //=== NEEDBITS(16); */
+        while (bits < 16) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        if (hold !== (state.check & 0xffff)) {
+          strm.msg = 'header crc mismatch';
+          state.mode = BAD;
+          break;
+        }
+        //=== INITBITS();
+        hold = 0;
+        bits = 0;
+        //===//
+      }
+      if (state.head) {
+        state.head.hcrc = ((state.flags >> 9) & 1);
+        state.head.done = true;
+      }
+      strm.adler = state.check = 0;
+      state.mode = TYPE;
+      break;
+    case DICTID:
+      //=== NEEDBITS(32); */
+      while (bits < 32) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      strm.adler = state.check = zswap32(hold);
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      state.mode = DICT;
+      /* falls through */
+    case DICT:
+      if (state.havedict === 0) {
+        //--- RESTORE() ---
+        strm.next_out = put;
+        strm.avail_out = left;
+        strm.next_in = next;
+        strm.avail_in = have;
+        state.hold = hold;
+        state.bits = bits;
+        //---
+        return Z_NEED_DICT;
+      }
+      strm.adler = state.check = 1/*adler32(0L, Z_NULL, 0)*/;
+      state.mode = TYPE;
+      /* falls through */
+    case TYPE:
+      if (flush === Z_BLOCK || flush === Z_TREES) { break inf_leave; }
+      /* falls through */
+    case TYPEDO:
+      if (state.last) {
+        //--- BYTEBITS() ---//
+        hold >>>= bits & 7;
+        bits -= bits & 7;
+        //---//
+        state.mode = CHECK;
+        break;
+      }
+      //=== NEEDBITS(3); */
+      while (bits < 3) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      state.last = (hold & 0x01)/*BITS(1)*/;
+      //--- DROPBITS(1) ---//
+      hold >>>= 1;
+      bits -= 1;
+      //---//
+
+      switch ((hold & 0x03)/*BITS(2)*/) {
+      case 0:                             /* stored block */
+        //Tracev((stderr, "inflate:     stored block%s\n",
+        //        state.last ? " (last)" : ""));
+        state.mode = STORED;
+        break;
+      case 1:                             /* fixed block */
+        fixedtables(state);
+        //Tracev((stderr, "inflate:     fixed codes block%s\n",
+        //        state.last ? " (last)" : ""));
+        state.mode = LEN_;             /* decode codes */
+        if (flush === Z_TREES) {
+          //--- DROPBITS(2) ---//
+          hold >>>= 2;
+          bits -= 2;
+          //---//
+          break inf_leave;
+        }
+        break;
+      case 2:                             /* dynamic block */
+        //Tracev((stderr, "inflate:     dynamic codes block%s\n",
+        //        state.last ? " (last)" : ""));
+        state.mode = TABLE;
+        break;
+      case 3:
+        strm.msg = 'invalid block type';
+        state.mode = BAD;
+      }
+      //--- DROPBITS(2) ---//
+      hold >>>= 2;
+      bits -= 2;
+      //---//
+      break;
+    case STORED:
+      //--- BYTEBITS() ---// /* go to byte boundary */
+      hold >>>= bits & 7;
+      bits -= bits & 7;
+      //---//
+      //=== NEEDBITS(32); */
+      while (bits < 32) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      if ((hold & 0xffff) !== ((hold >>> 16) ^ 0xffff)) {
+        strm.msg = 'invalid stored block lengths';
+        state.mode = BAD;
+        break;
+      }
+      state.length = hold & 0xffff;
+      //Tracev((stderr, "inflate:       stored length %u\n",
+      //        state.length));
+      //=== INITBITS();
+      hold = 0;
+      bits = 0;
+      //===//
+      state.mode = COPY_;
+      if (flush === Z_TREES) { break inf_leave; }
+      /* falls through */
+    case COPY_:
+      state.mode = COPY;
+      /* falls through */
+    case COPY:
+      copy = state.length;
+      if (copy) {
+        if (copy > have) { copy = have; }
+        if (copy > left) { copy = left; }
+        if (copy === 0) { break inf_leave; }
+        //--- zmemcpy(put, next, copy); ---
+        utils.arraySet(output, input, next, copy, put);
+        //---//
+        have -= copy;
+        next += copy;
+        left -= copy;
+        put += copy;
+        state.length -= copy;
+        break;
+      }
+      //Tracev((stderr, "inflate:       stored end\n"));
+      state.mode = TYPE;
+      break;
+    case TABLE:
+      //=== NEEDBITS(14); */
+      while (bits < 14) {
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+      }
+      //===//
+      state.nlen = (hold & 0x1f)/*BITS(5)*/ + 257;
+      //--- DROPBITS(5) ---//
+      hold >>>= 5;
+      bits -= 5;
+      //---//
+      state.ndist = (hold & 0x1f)/*BITS(5)*/ + 1;
+      //--- DROPBITS(5) ---//
+      hold >>>= 5;
+      bits -= 5;
+      //---//
+      state.ncode = (hold & 0x0f)/*BITS(4)*/ + 4;
+      //--- DROPBITS(4) ---//
+      hold >>>= 4;
+      bits -= 4;
+      //---//
+//#ifndef PKZIP_BUG_WORKAROUND
+      if (state.nlen > 286 || state.ndist > 30) {
+        strm.msg = 'too many length or distance symbols';
+        state.mode = BAD;
+        break;
+      }
+//#endif
+      //Tracev((stderr, "inflate:       table sizes ok\n"));
+      state.have = 0;
+      state.mode = LENLENS;
+      /* falls through */
+    case LENLENS:
+      while (state.have < state.ncode) {
+        //=== NEEDBITS(3);
+        while (bits < 3) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        state.lens[order[state.have++]] = (hold & 0x07);//BITS(3);
+        //--- DROPBITS(3) ---//
+        hold >>>= 3;
+        bits -= 3;
+        //---//
+      }
+      while (state.have < 19) {
+        state.lens[order[state.have++]] = 0;
+      }
+      // We have separate tables & no pointers. 2 commented lines below not needed.
+      //state.next = state.codes;
+      //state.lencode = state.next;
+      // Switch to use dynamic table
+      state.lencode = state.lendyn;
+      state.lenbits = 7;
+
+      opts = { bits: state.lenbits };
+      ret = inflate_table(CODES, state.lens, 0, 19, state.lencode, 0, state.work, opts);
+      state.lenbits = opts.bits;
+
+      if (ret) {
+        strm.msg = 'invalid code lengths set';
+        state.mode = BAD;
+        break;
+      }
+      //Tracev((stderr, "inflate:       code lengths ok\n"));
+      state.have = 0;
+      state.mode = CODELENS;
+      /* falls through */
+    case CODELENS:
+      while (state.have < state.nlen + state.ndist) {
+        for (;;) {
+          here = state.lencode[hold & ((1 << state.lenbits) - 1)];/*BITS(state.lenbits)*/
+          here_bits = here >>> 24;
+          here_op = (here >>> 16) & 0xff;
+          here_val = here & 0xffff;
+
+          if ((here_bits) <= bits) { break; }
+          //--- PULLBYTE() ---//
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+          //---//
+        }
+        if (here_val < 16) {
+          //--- DROPBITS(here.bits) ---//
+          hold >>>= here_bits;
+          bits -= here_bits;
+          //---//
+          state.lens[state.have++] = here_val;
+        }
+        else {
+          if (here_val === 16) {
+            //=== NEEDBITS(here.bits + 2);
+            n = here_bits + 2;
+            while (bits < n) {
+              if (have === 0) { break inf_leave; }
+              have--;
+              hold += input[next++] << bits;
+              bits += 8;
+            }
+            //===//
+            //--- DROPBITS(here.bits) ---//
+            hold >>>= here_bits;
+            bits -= here_bits;
+            //---//
+            if (state.have === 0) {
+              strm.msg = 'invalid bit length repeat';
+              state.mode = BAD;
+              break;
+            }
+            len = state.lens[state.have - 1];
+            copy = 3 + (hold & 0x03);//BITS(2);
+            //--- DROPBITS(2) ---//
+            hold >>>= 2;
+            bits -= 2;
+            //---//
+          }
+          else if (here_val === 17) {
+            //=== NEEDBITS(here.bits + 3);
+            n = here_bits + 3;
+            while (bits < n) {
+              if (have === 0) { break inf_leave; }
+              have--;
+              hold += input[next++] << bits;
+              bits += 8;
+            }
+            //===//
+            //--- DROPBITS(here.bits) ---//
+            hold >>>= here_bits;
+            bits -= here_bits;
+            //---//
+            len = 0;
+            copy = 3 + (hold & 0x07);//BITS(3);
+            //--- DROPBITS(3) ---//
+            hold >>>= 3;
+            bits -= 3;
+            //---//
+          }
+          else {
+            //=== NEEDBITS(here.bits + 7);
+            n = here_bits + 7;
+            while (bits < n) {
+              if (have === 0) { break inf_leave; }
+              have--;
+              hold += input[next++] << bits;
+              bits += 8;
+            }
+            //===//
+            //--- DROPBITS(here.bits) ---//
+            hold >>>= here_bits;
+            bits -= here_bits;
+            //---//
+            len = 0;
+            copy = 11 + (hold & 0x7f);//BITS(7);
+            //--- DROPBITS(7) ---//
+            hold >>>= 7;
+            bits -= 7;
+            //---//
+          }
+          if (state.have + copy > state.nlen + state.ndist) {
+            strm.msg = 'invalid bit length repeat';
+            state.mode = BAD;
+            break;
+          }
+          while (copy--) {
+            state.lens[state.have++] = len;
+          }
+        }
+      }
+
+      /* handle error breaks in while */
+      if (state.mode === BAD) { break; }
+
+      /* check for end-of-block code (better have one) */
+      if (state.lens[256] === 0) {
+        strm.msg = 'invalid code -- missing end-of-block';
+        state.mode = BAD;
+        break;
+      }
+
+      /* build code tables -- note: do not change the lenbits or distbits
+         values here (9 and 6) without reading the comments in inftrees.h
+         concerning the ENOUGH constants, which depend on those values */
+      state.lenbits = 9;
+
+      opts = { bits: state.lenbits };
+      ret = inflate_table(LENS, state.lens, 0, state.nlen, state.lencode, 0, state.work, opts);
+      // We have separate tables & no pointers. 2 commented lines below not needed.
+      // state.next_index = opts.table_index;
+      state.lenbits = opts.bits;
+      // state.lencode = state.next;
+
+      if (ret) {
+        strm.msg = 'invalid literal/lengths set';
+        state.mode = BAD;
+        break;
+      }
+
+      state.distbits = 6;
+      //state.distcode.copy(state.codes);
+      // Switch to use dynamic table
+      state.distcode = state.distdyn;
+      opts = { bits: state.distbits };
+      ret = inflate_table(DISTS, state.lens, state.nlen, state.ndist, state.distcode, 0, state.work, opts);
+      // We have separate tables & no pointers. 2 commented lines below not needed.
+      // state.next_index = opts.table_index;
+      state.distbits = opts.bits;
+      // state.distcode = state.next;
+
+      if (ret) {
+        strm.msg = 'invalid distances set';
+        state.mode = BAD;
+        break;
+      }
+      //Tracev((stderr, 'inflate:       codes ok\n'));
+      state.mode = LEN_;
+      if (flush === Z_TREES) { break inf_leave; }
+      /* falls through */
+    case LEN_:
+      state.mode = LEN;
+      /* falls through */
+    case LEN:
+      if (have >= 6 && left >= 258) {
+        //--- RESTORE() ---
+        strm.next_out = put;
+        strm.avail_out = left;
+        strm.next_in = next;
+        strm.avail_in = have;
+        state.hold = hold;
+        state.bits = bits;
+        //---
+        inflate_fast(strm, _out);
+        //--- LOAD() ---
+        put = strm.next_out;
+        output = strm.output;
+        left = strm.avail_out;
+        next = strm.next_in;
+        input = strm.input;
+        have = strm.avail_in;
+        hold = state.hold;
+        bits = state.bits;
+        //---
+
+        if (state.mode === TYPE) {
+          state.back = -1;
+        }
+        break;
+      }
+      state.back = 0;
+      for (;;) {
+        here = state.lencode[hold & ((1 << state.lenbits) - 1)];  /*BITS(state.lenbits)*/
+        here_bits = here >>> 24;
+        here_op = (here >>> 16) & 0xff;
+        here_val = here & 0xffff;
+
+        if (here_bits <= bits) { break; }
+        //--- PULLBYTE() ---//
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+        //---//
+      }
+      if (here_op && (here_op & 0xf0) === 0) {
+        last_bits = here_bits;
+        last_op = here_op;
+        last_val = here_val;
+        for (;;) {
+          here = state.lencode[last_val +
+                  ((hold & ((1 << (last_bits + last_op)) - 1))/*BITS(last.bits + last.op)*/ >> last_bits)];
+          here_bits = here >>> 24;
+          here_op = (here >>> 16) & 0xff;
+          here_val = here & 0xffff;
+
+          if ((last_bits + here_bits) <= bits) { break; }
+          //--- PULLBYTE() ---//
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+          //---//
+        }
+        //--- DROPBITS(last.bits) ---//
+        hold >>>= last_bits;
+        bits -= last_bits;
+        //---//
+        state.back += last_bits;
+      }
+      //--- DROPBITS(here.bits) ---//
+      hold >>>= here_bits;
+      bits -= here_bits;
+      //---//
+      state.back += here_bits;
+      state.length = here_val;
+      if (here_op === 0) {
+        //Tracevv((stderr, here.val >= 0x20 && here.val < 0x7f ?
+        //        "inflate:         literal '%c'\n" :
+        //        "inflate:         literal 0x%02x\n", here.val));
+        state.mode = LIT;
+        break;
+      }
+      if (here_op & 32) {
+        //Tracevv((stderr, "inflate:         end of block\n"));
+        state.back = -1;
+        state.mode = TYPE;
+        break;
+      }
+      if (here_op & 64) {
+        strm.msg = 'invalid literal/length code';
+        state.mode = BAD;
+        break;
+      }
+      state.extra = here_op & 15;
+      state.mode = LENEXT;
+      /* falls through */
+    case LENEXT:
+      if (state.extra) {
+        //=== NEEDBITS(state.extra);
+        n = state.extra;
+        while (bits < n) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        state.length += hold & ((1 << state.extra) - 1)/*BITS(state.extra)*/;
+        //--- DROPBITS(state.extra) ---//
+        hold >>>= state.extra;
+        bits -= state.extra;
+        //---//
+        state.back += state.extra;
+      }
+      //Tracevv((stderr, "inflate:         length %u\n", state.length));
+      state.was = state.length;
+      state.mode = DIST;
+      /* falls through */
+    case DIST:
+      for (;;) {
+        here = state.distcode[hold & ((1 << state.distbits) - 1)];/*BITS(state.distbits)*/
+        here_bits = here >>> 24;
+        here_op = (here >>> 16) & 0xff;
+        here_val = here & 0xffff;
+
+        if ((here_bits) <= bits) { break; }
+        //--- PULLBYTE() ---//
+        if (have === 0) { break inf_leave; }
+        have--;
+        hold += input[next++] << bits;
+        bits += 8;
+        //---//
+      }
+      if ((here_op & 0xf0) === 0) {
+        last_bits = here_bits;
+        last_op = here_op;
+        last_val = here_val;
+        for (;;) {
+          here = state.distcode[last_val +
+                  ((hold & ((1 << (last_bits + last_op)) - 1))/*BITS(last.bits + last.op)*/ >> last_bits)];
+          here_bits = here >>> 24;
+          here_op = (here >>> 16) & 0xff;
+          here_val = here & 0xffff;
+
+          if ((last_bits + here_bits) <= bits) { break; }
+          //--- PULLBYTE() ---//
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+          //---//
+        }
+        //--- DROPBITS(last.bits) ---//
+        hold >>>= last_bits;
+        bits -= last_bits;
+        //---//
+        state.back += last_bits;
+      }
+      //--- DROPBITS(here.bits) ---//
+      hold >>>= here_bits;
+      bits -= here_bits;
+      //---//
+      state.back += here_bits;
+      if (here_op & 64) {
+        strm.msg = 'invalid distance code';
+        state.mode = BAD;
+        break;
+      }
+      state.offset = here_val;
+      state.extra = (here_op) & 15;
+      state.mode = DISTEXT;
+      /* falls through */
+    case DISTEXT:
+      if (state.extra) {
+        //=== NEEDBITS(state.extra);
+        n = state.extra;
+        while (bits < n) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        state.offset += hold & ((1 << state.extra) - 1)/*BITS(state.extra)*/;
+        //--- DROPBITS(state.extra) ---//
+        hold >>>= state.extra;
+        bits -= state.extra;
+        //---//
+        state.back += state.extra;
+      }
+//#ifdef INFLATE_STRICT
+      if (state.offset > state.dmax) {
+        strm.msg = 'invalid distance too far back';
+        state.mode = BAD;
+        break;
+      }
+//#endif
+      //Tracevv((stderr, "inflate:         distance %u\n", state.offset));
+      state.mode = MATCH;
+      /* falls through */
+    case MATCH:
+      if (left === 0) { break inf_leave; }
+      copy = _out - left;
+      if (state.offset > copy) {         /* copy from window */
+        copy = state.offset - copy;
+        if (copy > state.whave) {
+          if (state.sane) {
+            strm.msg = 'invalid distance too far back';
+            state.mode = BAD;
+            break;
+          }
+// (!) This block is disabled in zlib defailts,
+// don't enable it for binary compatibility
+//#ifdef INFLATE_ALLOW_INVALID_DISTANCE_TOOFAR_ARRR
+//          Trace((stderr, "inflate.c too far\n"));
+//          copy -= state.whave;
+//          if (copy > state.length) { copy = state.length; }
+//          if (copy > left) { copy = left; }
+//          left -= copy;
+//          state.length -= copy;
+//          do {
+//            output[put++] = 0;
+//          } while (--copy);
+//          if (state.length === 0) { state.mode = LEN; }
+//          break;
+//#endif
+        }
+        if (copy > state.wnext) {
+          copy -= state.wnext;
+          from = state.wsize - copy;
+        }
+        else {
+          from = state.wnext - copy;
+        }
+        if (copy > state.length) { copy = state.length; }
+        from_source = state.window;
+      }
+      else {                              /* copy from output */
+        from_source = output;
+        from = put - state.offset;
+        copy = state.length;
+      }
+      if (copy > left) { copy = left; }
+      left -= copy;
+      state.length -= copy;
+      do {
+        output[put++] = from_source[from++];
+      } while (--copy);
+      if (state.length === 0) { state.mode = LEN; }
+      break;
+    case LIT:
+      if (left === 0) { break inf_leave; }
+      output[put++] = state.length;
+      left--;
+      state.mode = LEN;
+      break;
+    case CHECK:
+      if (state.wrap) {
+        //=== NEEDBITS(32);
+        while (bits < 32) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          // Use '|' insdead of '+' to make sure that result is signed
+          hold |= input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        _out -= left;
+        strm.total_out += _out;
+        state.total += _out;
+        if (_out) {
+          strm.adler = state.check =
+              /*UPDATE(state.check, put - _out, _out);*/
+              (state.flags ? crc32(state.check, output, _out, put - _out) : adler32(state.check, output, _out, put - _out));
+
+        }
+        _out = left;
+        // NB: crc32 stored as signed 32-bit int, zswap32 returns signed too
+        if ((state.flags ? hold : zswap32(hold)) !== state.check) {
+          strm.msg = 'incorrect data check';
+          state.mode = BAD;
+          break;
+        }
+        //=== INITBITS();
+        hold = 0;
+        bits = 0;
+        //===//
+        //Tracev((stderr, "inflate:   check matches trailer\n"));
+      }
+      state.mode = LENGTH;
+      /* falls through */
+    case LENGTH:
+      if (state.wrap && state.flags) {
+        //=== NEEDBITS(32);
+        while (bits < 32) {
+          if (have === 0) { break inf_leave; }
+          have--;
+          hold += input[next++] << bits;
+          bits += 8;
+        }
+        //===//
+        if (hold !== (state.total & 0xffffffff)) {
+          strm.msg = 'incorrect length check';
+          state.mode = BAD;
+          break;
+        }
+        //=== INITBITS();
+        hold = 0;
+        bits = 0;
+        //===//
+        //Tracev((stderr, "inflate:   length matches trailer\n"));
+      }
+      state.mode = DONE;
+      /* falls through */
+    case DONE:
+      ret = Z_STREAM_END;
+      break inf_leave;
+    case BAD:
+      ret = Z_DATA_ERROR;
+      break inf_leave;
+    case MEM:
+      return Z_MEM_ERROR;
+    case SYNC:
+      /* falls through */
+    default:
+      return Z_STREAM_ERROR;
+    }
+  }
+
+  // inf_leave <- here is real place for "goto inf_leave", emulated via "break inf_leave"
+
+  /*
+     Return from inflate(), updating the total counts and the check value.
+     If there was no progress during the inflate() call, return a buffer
+     error.  Call updatewindow() to create and/or update the window state.
+     Note: a memory error from inflate() is non-recoverable.
+   */
+
+  //--- RESTORE() ---
+  strm.next_out = put;
+  strm.avail_out = left;
+  strm.next_in = next;
+  strm.avail_in = have;
+  state.hold = hold;
+  state.bits = bits;
+  //---
+
+  if (state.wsize || (_out !== strm.avail_out && state.mode < BAD &&
+                      (state.mode < CHECK || flush !== Z_FINISH))) {
+    if (updatewindow(strm, strm.output, strm.next_out, _out - strm.avail_out)) {
+      state.mode = MEM;
+      return Z_MEM_ERROR;
+    }
+  }
+  _in -= strm.avail_in;
+  _out -= strm.avail_out;
+  strm.total_in += _in;
+  strm.total_out += _out;
+  state.total += _out;
+  if (state.wrap && _out) {
+    strm.adler = state.check = /*UPDATE(state.check, strm.next_out - _out, _out);*/
+      (state.flags ? crc32(state.check, output, _out, strm.next_out - _out) : adler32(state.check, output, _out, strm.next_out - _out));
+  }
+  strm.data_type = state.bits + (state.last ? 64 : 0) +
+                    (state.mode === TYPE ? 128 : 0) +
+                    (state.mode === LEN_ || state.mode === COPY_ ? 256 : 0);
+  if (((_in === 0 && _out === 0) || flush === Z_FINISH) && ret === Z_OK) {
+    ret = Z_BUF_ERROR;
+  }
+  return ret;
+}
+
+function inflateEnd(strm) {
+
+  if (!strm || !strm.state /*|| strm->zfree == (free_func)0*/) {
+    return Z_STREAM_ERROR;
+  }
+
+  var state = strm.state;
+  if (state.window) {
+    state.window = null;
+  }
+  strm.state = null;
+  return Z_OK;
+}
+
+function inflateGetHeader(strm, head) {
+  var state;
+
+  /* check state */
+  if (!strm || !strm.state) { return Z_STREAM_ERROR; }
+  state = strm.state;
+  if ((state.wrap & 2) === 0) { return Z_STREAM_ERROR; }
+
+  /* save header structure */
+  state.head = head;
+  head.done = false;
+  return Z_OK;
+}
+
+function inflateSetDictionary(strm, dictionary) {
+  var dictLength = dictionary.length;
+
+  var state;
+  var dictid;
+  var ret;
+
+  /* check state */
+  if (!strm /* == Z_NULL */ || !strm.state /* == Z_NULL */) { return Z_STREAM_ERROR; }
+  state = strm.state;
+
+  if (state.wrap !== 0 && state.mode !== DICT) {
+    return Z_STREAM_ERROR;
+  }
+
+  /* check for correct dictionary identifier */
+  if (state.mode === DICT) {
+    dictid = 1; /* adler32(0, null, 0)*/
+    /* dictid = adler32(dictid, dictionary, dictLength); */
+    dictid = adler32(dictid, dictionary, dictLength, 0);
+    if (dictid !== state.check) {
+      return Z_DATA_ERROR;
+    }
+  }
+  /* copy dictionary to window using updatewindow(), which will amend the
+   existing dictionary if appropriate */
+  ret = updatewindow(strm, dictionary, dictLength, dictLength);
+  if (ret) {
+    state.mode = MEM;
+    return Z_MEM_ERROR;
+  }
+  state.havedict = 1;
+  // Tracev((stderr, "inflate:   dictionary set\n"));
+  return Z_OK;
+}
+
+exports.inflateReset = inflateReset;
+exports.inflateReset2 = inflateReset2;
+exports.inflateResetKeep = inflateResetKeep;
+exports.inflateInit = inflateInit;
+exports.inflateInit2 = inflateInit2;
+exports.inflate = inflate;
+exports.inflateEnd = inflateEnd;
+exports.inflateGetHeader = inflateGetHeader;
+exports.inflateSetDictionary = inflateSetDictionary;
+exports.inflateInfo = 'pako inflate (from Nodeca project)';
+
+/* Not implemented
+exports.inflateCopy = inflateCopy;
+exports.inflateGetDictionary = inflateGetDictionary;
+exports.inflateMark = inflateMark;
+exports.inflatePrime = inflatePrime;
+exports.inflateSync = inflateSync;
+exports.inflateSyncPoint = inflateSyncPoint;
+exports.inflateUndermine = inflateUndermine;
+*/
+
+},{"../utils/common":41,"./adler32":43,"./crc32":45,"./inffast":48,"./inftrees":50}],50:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils = require('../utils/common');
+
+var MAXBITS = 15;
+var ENOUGH_LENS = 852;
+var ENOUGH_DISTS = 592;
+//var ENOUGH = (ENOUGH_LENS+ENOUGH_DISTS);
+
+var CODES = 0;
+var LENS = 1;
+var DISTS = 2;
+
+var lbase = [ /* Length codes 257..285 base */
+  3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
+  35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258, 0, 0
+];
+
+var lext = [ /* Length codes 257..285 extra */
+  16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 18, 18, 18, 18,
+  19, 19, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 16, 72, 78
+];
+
+var dbase = [ /* Distance codes 0..29 base */
+  1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
+  257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
+  8193, 12289, 16385, 24577, 0, 0
+];
+
+var dext = [ /* Distance codes 0..29 extra */
+  16, 16, 16, 16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22,
+  23, 23, 24, 24, 25, 25, 26, 26, 27, 27,
+  28, 28, 29, 29, 64, 64
+];
+
+module.exports = function inflate_table(type, lens, lens_index, codes, table, table_index, work, opts)
+{
+  var bits = opts.bits;
+      //here = opts.here; /* table entry for duplication */
+
+  var len = 0;               /* a code's length in bits */
+  var sym = 0;               /* index of code symbols */
+  var min = 0, max = 0;          /* minimum and maximum code lengths */
+  var root = 0;              /* number of index bits for root table */
+  var curr = 0;              /* number of index bits for current table */
+  var drop = 0;              /* code bits to drop for sub-table */
+  var left = 0;                   /* number of prefix codes available */
+  var used = 0;              /* code entries in table used */
+  var huff = 0;              /* Huffman code */
+  var incr;              /* for incrementing code, index */
+  var fill;              /* index for replicating entries */
+  var low;               /* low bits for current root entry */
+  var mask;              /* mask for low root bits */
+  var next;             /* next available space in table */
+  var base = null;     /* base value table to use */
+  var base_index = 0;
+//  var shoextra;    /* extra bits table to use */
+  var end;                    /* use base and extra for symbol > end */
+  var count = new utils.Buf16(MAXBITS + 1); //[MAXBITS+1];    /* number of codes of each length */
+  var offs = new utils.Buf16(MAXBITS + 1); //[MAXBITS+1];     /* offsets in table for each length */
+  var extra = null;
+  var extra_index = 0;
+
+  var here_bits, here_op, here_val;
+
+  /*
+   Process a set of code lengths to create a canonical Huffman code.  The
+   code lengths are lens[0..codes-1].  Each length corresponds to the
+   symbols 0..codes-1.  The Huffman code is generated by first sorting the
+   symbols by length from short to long, and retaining the symbol order
+   for codes with equal lengths.  Then the code starts with all zero bits
+   for the first code of the shortest length, and the codes are integer
+   increments for the same length, and zeros are appended as the length
+   increases.  For the deflate format, these bits are stored backwards
+   from their more natural integer increment ordering, and so when the
+   decoding tables are built in the large loop below, the integer codes
+   are incremented backwards.
+
+   This routine assumes, but does not check, that all of the entries in
+   lens[] are in the range 0..MAXBITS.  The caller must assure this.
+   1..MAXBITS is interpreted as that code length.  zero means that that
+   symbol does not occur in this code.
+
+   The codes are sorted by computing a count of codes for each length,
+   creating from that a table of starting indices for each length in the
+   sorted table, and then entering the symbols in order in the sorted
+   table.  The sorted table is work[], with that space being provided by
+   the caller.
+
+   The length counts are used for other purposes as well, i.e. finding
+   the minimum and maximum length codes, determining if there are any
+   codes at all, checking for a valid set of lengths, and looking ahead
+   at length counts to determine sub-table sizes when building the
+   decoding tables.
+   */
+
+  /* accumulate lengths for codes (assumes lens[] all in 0..MAXBITS) */
+  for (len = 0; len <= MAXBITS; len++) {
+    count[len] = 0;
+  }
+  for (sym = 0; sym < codes; sym++) {
+    count[lens[lens_index + sym]]++;
+  }
+
+  /* bound code lengths, force root to be within code lengths */
+  root = bits;
+  for (max = MAXBITS; max >= 1; max--) {
+    if (count[max] !== 0) { break; }
+  }
+  if (root > max) {
+    root = max;
+  }
+  if (max === 0) {                     /* no symbols to code at all */
+    //table.op[opts.table_index] = 64;  //here.op = (var char)64;    /* invalid code marker */
+    //table.bits[opts.table_index] = 1;   //here.bits = (var char)1;
+    //table.val[opts.table_index++] = 0;   //here.val = (var short)0;
+    table[table_index++] = (1 << 24) | (64 << 16) | 0;
+
+
+    //table.op[opts.table_index] = 64;
+    //table.bits[opts.table_index] = 1;
+    //table.val[opts.table_index++] = 0;
+    table[table_index++] = (1 << 24) | (64 << 16) | 0;
+
+    opts.bits = 1;
+    return 0;     /* no symbols, but wait for decoding to report error */
+  }
+  for (min = 1; min < max; min++) {
+    if (count[min] !== 0) { break; }
+  }
+  if (root < min) {
+    root = min;
+  }
+
+  /* check for an over-subscribed or incomplete set of lengths */
+  left = 1;
+  for (len = 1; len <= MAXBITS; len++) {
+    left <<= 1;
+    left -= count[len];
+    if (left < 0) {
+      return -1;
+    }        /* over-subscribed */
+  }
+  if (left > 0 && (type === CODES || max !== 1)) {
+    return -1;                      /* incomplete set */
+  }
+
+  /* generate offsets into symbol table for each length for sorting */
+  offs[1] = 0;
+  for (len = 1; len < MAXBITS; len++) {
+    offs[len + 1] = offs[len] + count[len];
+  }
+
+  /* sort symbols by length, by symbol order within each length */
+  for (sym = 0; sym < codes; sym++) {
+    if (lens[lens_index + sym] !== 0) {
+      work[offs[lens[lens_index + sym]]++] = sym;
+    }
+  }
+
+  /*
+   Create and fill in decoding tables.  In this loop, the table being
+   filled is at next and has curr index bits.  The code being used is huff
+   with length len.  That code is converted to an index by dropping drop
+   bits off of the bottom.  For codes where len is less than drop + curr,
+   those top drop + curr - len bits are incremented through all values to
+   fill the table with replicated entries.
+
+   root is the number of index bits for the root table.  When len exceeds
+   root, sub-tables are created pointed to by the root entry with an index
+   of the low root bits of huff.  This is saved in low to check for when a
+   new sub-table should be started.  drop is zero when the root table is
+   being filled, and drop is root when sub-tables are being filled.
+
+   When a new sub-table is needed, it is necessary to look ahead in the
+   code lengths to determine what size sub-table is needed.  The length
+   counts are used for this, and so count[] is decremented as codes are
+   entered in the tables.
+
+   used keeps track of how many table entries have been allocated from the
+   provided *table space.  It is checked for LENS and DIST tables against
+   the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in
+   the initial root table size constants.  See the comments in inftrees.h
+   for more information.
+
+   sym increments through all symbols, and the loop terminates when
+   all codes of length max, i.e. all codes, have been processed.  This
+   routine permits incomplete codes, so another loop after this one fills
+   in the rest of the decoding tables with invalid code markers.
+   */
+
+  /* set up for code type */
+  // poor man optimization - use if-else instead of switch,
+  // to avoid deopts in old v8
+  if (type === CODES) {
+    base = extra = work;    /* dummy value--not used */
+    end = 19;
+
+  } else if (type === LENS) {
+    base = lbase;
+    base_index -= 257;
+    extra = lext;
+    extra_index -= 257;
+    end = 256;
+
+  } else {                    /* DISTS */
+    base = dbase;
+    extra = dext;
+    end = -1;
+  }
+
+  /* initialize opts for loop */
+  huff = 0;                   /* starting code */
+  sym = 0;                    /* starting code symbol */
+  len = min;                  /* starting code length */
+  next = table_index;              /* current table to fill in */
+  curr = root;                /* current table index bits */
+  drop = 0;                   /* current bits to drop from code for index */
+  low = -1;                   /* trigger new sub-table when len > root */
+  used = 1 << root;          /* use root table entries */
+  mask = used - 1;            /* mask for comparing low */
+
+  /* check available table space */
+  if ((type === LENS && used > ENOUGH_LENS) ||
+    (type === DISTS && used > ENOUGH_DISTS)) {
+    return 1;
+  }
+
+  /* process all codes and make table entries */
+  for (;;) {
+    /* create table entry */
+    here_bits = len - drop;
+    if (work[sym] < end) {
+      here_op = 0;
+      here_val = work[sym];
+    }
+    else if (work[sym] > end) {
+      here_op = extra[extra_index + work[sym]];
+      here_val = base[base_index + work[sym]];
+    }
+    else {
+      here_op = 32 + 64;         /* end of block */
+      here_val = 0;
+    }
+
+    /* replicate for those indices with low len bits equal to huff */
+    incr = 1 << (len - drop);
+    fill = 1 << curr;
+    min = fill;                 /* save offset to next table */
+    do {
+      fill -= incr;
+      table[next + (huff >> drop) + fill] = (here_bits << 24) | (here_op << 16) | here_val |0;
+    } while (fill !== 0);
+
+    /* backwards increment the len-bit code huff */
+    incr = 1 << (len - 1);
+    while (huff & incr) {
+      incr >>= 1;
+    }
+    if (incr !== 0) {
+      huff &= incr - 1;
+      huff += incr;
+    } else {
+      huff = 0;
+    }
+
+    /* go to next symbol, update count, len */
+    sym++;
+    if (--count[len] === 0) {
+      if (len === max) { break; }
+      len = lens[lens_index + work[sym]];
+    }
+
+    /* create new sub-table if needed */
+    if (len > root && (huff & mask) !== low) {
+      /* if first time, transition to sub-tables */
+      if (drop === 0) {
+        drop = root;
+      }
+
+      /* increment past last table */
+      next += min;            /* here min is 1 << curr */
+
+      /* determine length of next table */
+      curr = len - drop;
+      left = 1 << curr;
+      while (curr + drop < max) {
+        left -= count[curr + drop];
+        if (left <= 0) { break; }
+        curr++;
+        left <<= 1;
+      }
+
+      /* check for enough space */
+      used += 1 << curr;
+      if ((type === LENS && used > ENOUGH_LENS) ||
+        (type === DISTS && used > ENOUGH_DISTS)) {
+        return 1;
+      }
+
+      /* point entry in root table to sub-table */
+      low = huff & mask;
+      /*table.op[low] = curr;
+      table.bits[low] = root;
+      table.val[low] = next - opts.table_index;*/
+      table[low] = (root << 24) | (curr << 16) | (next - table_index) |0;
+    }
+  }
+
+  /* fill in remaining table entry if code is incomplete (guaranteed to have
+   at most one remaining entry, since if the code is incomplete, the
+   maximum code length that was allowed to get this far is one bit) */
+  if (huff !== 0) {
+    //table.op[next + huff] = 64;            /* invalid code marker */
+    //table.bits[next + huff] = len - drop;
+    //table.val[next + huff] = 0;
+    table[next + huff] = ((len - drop) << 24) | (64 << 16) |0;
+  }
+
+  /* set return parameters */
+  //opts.table_index += used;
+  opts.bits = root;
+  return 0;
 };
+
+},{"../utils/common":41}],51:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+module.exports = {
+  2:      'need dictionary',     /* Z_NEED_DICT       2  */
+  1:      'stream end',          /* Z_STREAM_END      1  */
+  0:      '',                    /* Z_OK              0  */
+  '-1':   'file error',          /* Z_ERRNO         (-1) */
+  '-2':   'stream error',        /* Z_STREAM_ERROR  (-2) */
+  '-3':   'data error',          /* Z_DATA_ERROR    (-3) */
+  '-4':   'insufficient memory', /* Z_MEM_ERROR     (-4) */
+  '-5':   'buffer error',        /* Z_BUF_ERROR     (-5) */
+  '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
+};
+
+},{}],52:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+var utils = require('../utils/common');
+
+/* Public constants ==========================================================*/
+/* ===========================================================================*/
+
+
+//var Z_FILTERED          = 1;
+//var Z_HUFFMAN_ONLY      = 2;
+//var Z_RLE               = 3;
+var Z_FIXED               = 4;
+//var Z_DEFAULT_STRATEGY  = 0;
+
+/* Possible values of the data_type field (though see inflate()) */
+var Z_BINARY              = 0;
+var Z_TEXT                = 1;
+//var Z_ASCII             = 1; // = Z_TEXT
+var Z_UNKNOWN             = 2;
+
+/*============================================================================*/
+
+
+function zero(buf) { var len = buf.length; while (--len >= 0) { buf[len] = 0; } }
+
+// From zutil.h
+
+var STORED_BLOCK = 0;
+var STATIC_TREES = 1;
+var DYN_TREES    = 2;
+/* The three kinds of block type */
+
+var MIN_MATCH    = 3;
+var MAX_MATCH    = 258;
+/* The minimum and maximum match lengths */
+
+// From deflate.h
+/* ===========================================================================
+ * Internal compression state.
+ */
+
+var LENGTH_CODES  = 29;
+/* number of length codes, not counting the special END_BLOCK code */
+
+var LITERALS      = 256;
+/* number of literal bytes 0..255 */
+
+var L_CODES       = LITERALS + 1 + LENGTH_CODES;
+/* number of Literal or Length codes, including the END_BLOCK code */
+
+var D_CODES       = 30;
+/* number of distance codes */
+
+var BL_CODES      = 19;
+/* number of codes used to transfer the bit lengths */
+
+var HEAP_SIZE     = 2 * L_CODES + 1;
+/* maximum heap size */
+
+var MAX_BITS      = 15;
+/* All codes must not exceed MAX_BITS bits */
+
+var Buf_size      = 16;
+/* size of bit buffer in bi_buf */
+
+
+/* ===========================================================================
+ * Constants
+ */
+
+var MAX_BL_BITS = 7;
+/* Bit length codes must not exceed MAX_BL_BITS bits */
+
+var END_BLOCK   = 256;
+/* end of block literal code */
+
+var REP_3_6     = 16;
+/* repeat previous bit length 3-6 times (2 bits of repeat count) */
+
+var REPZ_3_10   = 17;
+/* repeat a zero length 3-10 times  (3 bits of repeat count) */
+
+var REPZ_11_138 = 18;
+/* repeat a zero length 11-138 times  (7 bits of repeat count) */
+
+/* eslint-disable comma-spacing,array-bracket-spacing */
+var extra_lbits =   /* extra bits for each length code */
+  [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+
+var extra_dbits =   /* extra bits for each distance code */
+  [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+
+var extra_blbits =  /* extra bits for each bit length code */
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7];
+
+var bl_order =
+  [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];
+/* eslint-enable comma-spacing,array-bracket-spacing */
+
+/* The lengths of the bit length codes are sent in order of decreasing
+ * probability, to avoid transmitting the lengths for unused bit length codes.
+ */
+
+/* ===========================================================================
+ * Local data. These are initialized only once.
+ */
+
+// We pre-fill arrays with 0 to avoid uninitialized gaps
+
+var DIST_CODE_LEN = 512; /* see definition of array dist_code below */
+
+// !!!! Use flat array insdead of structure, Freq = i*2, Len = i*2+1
+var static_ltree  = new Array((L_CODES + 2) * 2);
+zero(static_ltree);
+/* The static literal tree. Since the bit lengths are imposed, there is no
+ * need for the L_CODES extra codes used during heap construction. However
+ * The codes 286 and 287 are needed to build a canonical tree (see _tr_init
+ * below).
+ */
+
+var static_dtree  = new Array(D_CODES * 2);
+zero(static_dtree);
+/* The static distance tree. (Actually a trivial tree since all codes use
+ * 5 bits.)
+ */
+
+var _dist_code    = new Array(DIST_CODE_LEN);
+zero(_dist_code);
+/* Distance codes. The first 256 values correspond to the distances
+ * 3 .. 258, the last 256 values correspond to the top 8 bits of
+ * the 15 bit distances.
+ */
+
+var _length_code  = new Array(MAX_MATCH - MIN_MATCH + 1);
+zero(_length_code);
+/* length code for each normalized match length (0 == MIN_MATCH) */
+
+var base_length   = new Array(LENGTH_CODES);
+zero(base_length);
+/* First normalized length for each code (0 = MIN_MATCH) */
+
+var base_dist     = new Array(D_CODES);
+zero(base_dist);
+/* First normalized distance for each code (0 = distance of 1) */
+
+
+function StaticTreeDesc(static_tree, extra_bits, extra_base, elems, max_length) {
+
+  this.static_tree  = static_tree;  /* static tree or NULL */
+  this.extra_bits   = extra_bits;   /* extra bits for each code or NULL */
+  this.extra_base   = extra_base;   /* base index for extra_bits */
+  this.elems        = elems;        /* max number of elements in the tree */
+  this.max_length   = max_length;   /* max bit length for the codes */
+
+  // show if `static_tree` has data or dummy - needed for monomorphic objects
+  this.has_stree    = static_tree && static_tree.length;
+}
+
+
+var static_l_desc;
+var static_d_desc;
+var static_bl_desc;
+
+
+function TreeDesc(dyn_tree, stat_desc) {
+  this.dyn_tree = dyn_tree;     /* the dynamic tree */
+  this.max_code = 0;            /* largest code with non zero frequency */
+  this.stat_desc = stat_desc;   /* the corresponding static tree */
+}
+
+
+
+function d_code(dist) {
+  return dist < 256 ? _dist_code[dist] : _dist_code[256 + (dist >>> 7)];
+}
+
+
+/* ===========================================================================
+ * Output a short LSB first on the stream.
+ * IN assertion: there is enough room in pendingBuf.
+ */
+function put_short(s, w) {
+//    put_byte(s, (uch)((w) & 0xff));
+//    put_byte(s, (uch)((ush)(w) >> 8));
+  s.pending_buf[s.pending++] = (w) & 0xff;
+  s.pending_buf[s.pending++] = (w >>> 8) & 0xff;
+}
+
+
+/* ===========================================================================
+ * Send a value on a given number of bits.
+ * IN assertion: length <= 16 and value fits in length bits.
+ */
+function send_bits(s, value, length) {
+  if (s.bi_valid > (Buf_size - length)) {
+    s.bi_buf |= (value << s.bi_valid) & 0xffff;
+    put_short(s, s.bi_buf);
+    s.bi_buf = value >> (Buf_size - s.bi_valid);
+    s.bi_valid += length - Buf_size;
+  } else {
+    s.bi_buf |= (value << s.bi_valid) & 0xffff;
+    s.bi_valid += length;
+  }
+}
+
+
+function send_code(s, c, tree) {
+  send_bits(s, tree[c * 2]/*.Code*/, tree[c * 2 + 1]/*.Len*/);
+}
+
+
+/* ===========================================================================
+ * Reverse the first len bits of a code, using straightforward code (a faster
+ * method would use a table)
+ * IN assertion: 1 <= len <= 15
+ */
+function bi_reverse(code, len) {
+  var res = 0;
+  do {
+    res |= code & 1;
+    code >>>= 1;
+    res <<= 1;
+  } while (--len > 0);
+  return res >>> 1;
+}
+
+
+/* ===========================================================================
+ * Flush the bit buffer, keeping at most 7 bits in it.
+ */
+function bi_flush(s) {
+  if (s.bi_valid === 16) {
+    put_short(s, s.bi_buf);
+    s.bi_buf = 0;
+    s.bi_valid = 0;
+
+  } else if (s.bi_valid >= 8) {
+    s.pending_buf[s.pending++] = s.bi_buf & 0xff;
+    s.bi_buf >>= 8;
+    s.bi_valid -= 8;
+  }
+}
+
+
+/* ===========================================================================
+ * Compute the optimal bit lengths for a tree and update the total bit length
+ * for the current block.
+ * IN assertion: the fields freq and dad are set, heap[heap_max] and
+ *    above are the tree nodes sorted by increasing frequency.
+ * OUT assertions: the field len is set to the optimal bit length, the
+ *     array bl_count contains the frequencies for each bit length.
+ *     The length opt_len is updated; static_len is also updated if stree is
+ *     not null.
+ */
+function gen_bitlen(s, desc)
+//    deflate_state *s;
+//    tree_desc *desc;    /* the tree descriptor */
+{
+  var tree            = desc.dyn_tree;
+  var max_code        = desc.max_code;
+  var stree           = desc.stat_desc.static_tree;
+  var has_stree       = desc.stat_desc.has_stree;
+  var extra           = desc.stat_desc.extra_bits;
+  var base            = desc.stat_desc.extra_base;
+  var max_length      = desc.stat_desc.max_length;
+  var h;              /* heap index */
+  var n, m;           /* iterate over the tree elements */
+  var bits;           /* bit length */
+  var xbits;          /* extra bits */
+  var f;              /* frequency */
+  var overflow = 0;   /* number of elements with bit length too large */
+
+  for (bits = 0; bits <= MAX_BITS; bits++) {
+    s.bl_count[bits] = 0;
+  }
+
+  /* In a first pass, compute the optimal bit lengths (which may
+   * overflow in the case of the bit length tree).
+   */
+  tree[s.heap[s.heap_max] * 2 + 1]/*.Len*/ = 0; /* root of the heap */
+
+  for (h = s.heap_max + 1; h < HEAP_SIZE; h++) {
+    n = s.heap[h];
+    bits = tree[tree[n * 2 + 1]/*.Dad*/ * 2 + 1]/*.Len*/ + 1;
+    if (bits > max_length) {
+      bits = max_length;
+      overflow++;
+    }
+    tree[n * 2 + 1]/*.Len*/ = bits;
+    /* We overwrite tree[n].Dad which is no longer needed */
+
+    if (n > max_code) { continue; } /* not a leaf node */
+
+    s.bl_count[bits]++;
+    xbits = 0;
+    if (n >= base) {
+      xbits = extra[n - base];
+    }
+    f = tree[n * 2]/*.Freq*/;
+    s.opt_len += f * (bits + xbits);
+    if (has_stree) {
+      s.static_len += f * (stree[n * 2 + 1]/*.Len*/ + xbits);
+    }
+  }
+  if (overflow === 0) { return; }
+
+  // Trace((stderr,"\nbit length overflow\n"));
+  /* This happens for example on obj2 and pic of the Calgary corpus */
+
+  /* Find the first bit length which could increase: */
+  do {
+    bits = max_length - 1;
+    while (s.bl_count[bits] === 0) { bits--; }
+    s.bl_count[bits]--;      /* move one leaf down the tree */
+    s.bl_count[bits + 1] += 2; /* move one overflow item as its brother */
+    s.bl_count[max_length]--;
+    /* The brother of the overflow item also moves one step up,
+     * but this does not affect bl_count[max_length]
+     */
+    overflow -= 2;
+  } while (overflow > 0);
+
+  /* Now recompute all bit lengths, scanning in increasing frequency.
+   * h is still equal to HEAP_SIZE. (It is simpler to reconstruct all
+   * lengths instead of fixing only the wrong ones. This idea is taken
+   * from 'ar' written by Haruhiko Okumura.)
+   */
+  for (bits = max_length; bits !== 0; bits--) {
+    n = s.bl_count[bits];
+    while (n !== 0) {
+      m = s.heap[--h];
+      if (m > max_code) { continue; }
+      if (tree[m * 2 + 1]/*.Len*/ !== bits) {
+        // Trace((stderr,"code %d bits %d->%d\n", m, tree[m].Len, bits));
+        s.opt_len += (bits - tree[m * 2 + 1]/*.Len*/) * tree[m * 2]/*.Freq*/;
+        tree[m * 2 + 1]/*.Len*/ = bits;
+      }
+      n--;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Generate the codes for a given tree and bit counts (which need not be
+ * optimal).
+ * IN assertion: the array bl_count contains the bit length statistics for
+ * the given tree and the field len is set for all tree elements.
+ * OUT assertion: the field code is set for all tree elements of non
+ *     zero code length.
+ */
+function gen_codes(tree, max_code, bl_count)
+//    ct_data *tree;             /* the tree to decorate */
+//    int max_code;              /* largest code with non zero frequency */
+//    ushf *bl_count;            /* number of codes at each bit length */
+{
+  var next_code = new Array(MAX_BITS + 1); /* next code value for each bit length */
+  var code = 0;              /* running code value */
+  var bits;                  /* bit index */
+  var n;                     /* code index */
+
+  /* The distribution counts are first used to generate the code values
+   * without bit reversal.
+   */
+  for (bits = 1; bits <= MAX_BITS; bits++) {
+    next_code[bits] = code = (code + bl_count[bits - 1]) << 1;
+  }
+  /* Check that the bit counts in bl_count are consistent. The last code
+   * must be all ones.
+   */
+  //Assert (code + bl_count[MAX_BITS]-1 == (1<<MAX_BITS)-1,
+  //        "inconsistent bit counts");
+  //Tracev((stderr,"\ngen_codes: max_code %d ", max_code));
+
+  for (n = 0;  n <= max_code; n++) {
+    var len = tree[n * 2 + 1]/*.Len*/;
+    if (len === 0) { continue; }
+    /* Now reverse the bits */
+    tree[n * 2]/*.Code*/ = bi_reverse(next_code[len]++, len);
+
+    //Tracecv(tree != static_ltree, (stderr,"\nn %3d %c l %2d c %4x (%x) ",
+    //     n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));
+  }
+}
+
+
+/* ===========================================================================
+ * Initialize the various 'constant' tables.
+ */
+function tr_static_init() {
+  var n;        /* iterates over tree elements */
+  var bits;     /* bit counter */
+  var length;   /* length value */
+  var code;     /* code value */
+  var dist;     /* distance index */
+  var bl_count = new Array(MAX_BITS + 1);
+  /* number of codes at each bit length for an optimal tree */
+
+  // do check in _tr_init()
+  //if (static_init_done) return;
+
+  /* For some embedded targets, global variables are not initialized: */
+/*#ifdef NO_INIT_GLOBAL_POINTERS
+  static_l_desc.static_tree = static_ltree;
+  static_l_desc.extra_bits = extra_lbits;
+  static_d_desc.static_tree = static_dtree;
+  static_d_desc.extra_bits = extra_dbits;
+  static_bl_desc.extra_bits = extra_blbits;
+#endif*/
+
+  /* Initialize the mapping length (0..255) -> length code (0..28) */
+  length = 0;
+  for (code = 0; code < LENGTH_CODES - 1; code++) {
+    base_length[code] = length;
+    for (n = 0; n < (1 << extra_lbits[code]); n++) {
+      _length_code[length++] = code;
+    }
+  }
+  //Assert (length == 256, "tr_static_init: length != 256");
+  /* Note that the length 255 (match length 258) can be represented
+   * in two different ways: code 284 + 5 bits or code 285, so we
+   * overwrite length_code[255] to use the best encoding:
+   */
+  _length_code[length - 1] = code;
+
+  /* Initialize the mapping dist (0..32K) -> dist code (0..29) */
+  dist = 0;
+  for (code = 0; code < 16; code++) {
+    base_dist[code] = dist;
+    for (n = 0; n < (1 << extra_dbits[code]); n++) {
+      _dist_code[dist++] = code;
+    }
+  }
+  //Assert (dist == 256, "tr_static_init: dist != 256");
+  dist >>= 7; /* from now on, all distances are divided by 128 */
+  for (; code < D_CODES; code++) {
+    base_dist[code] = dist << 7;
+    for (n = 0; n < (1 << (extra_dbits[code] - 7)); n++) {
+      _dist_code[256 + dist++] = code;
+    }
+  }
+  //Assert (dist == 256, "tr_static_init: 256+dist != 512");
+
+  /* Construct the codes of the static literal tree */
+  for (bits = 0; bits <= MAX_BITS; bits++) {
+    bl_count[bits] = 0;
+  }
+
+  n = 0;
+  while (n <= 143) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 8;
+    n++;
+    bl_count[8]++;
+  }
+  while (n <= 255) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 9;
+    n++;
+    bl_count[9]++;
+  }
+  while (n <= 279) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 7;
+    n++;
+    bl_count[7]++;
+  }
+  while (n <= 287) {
+    static_ltree[n * 2 + 1]/*.Len*/ = 8;
+    n++;
+    bl_count[8]++;
+  }
+  /* Codes 286 and 287 do not exist, but we must include them in the
+   * tree construction to get a canonical Huffman tree (longest code
+   * all ones)
+   */
+  gen_codes(static_ltree, L_CODES + 1, bl_count);
+
+  /* The static distance tree is trivial: */
+  for (n = 0; n < D_CODES; n++) {
+    static_dtree[n * 2 + 1]/*.Len*/ = 5;
+    static_dtree[n * 2]/*.Code*/ = bi_reverse(n, 5);
+  }
+
+  // Now data ready and we can init static trees
+  static_l_desc = new StaticTreeDesc(static_ltree, extra_lbits, LITERALS + 1, L_CODES, MAX_BITS);
+  static_d_desc = new StaticTreeDesc(static_dtree, extra_dbits, 0,          D_CODES, MAX_BITS);
+  static_bl_desc = new StaticTreeDesc(new Array(0), extra_blbits, 0,         BL_CODES, MAX_BL_BITS);
+
+  //static_init_done = true;
+}
+
+
+/* ===========================================================================
+ * Initialize a new block.
+ */
+function init_block(s) {
+  var n; /* iterates over tree elements */
+
+  /* Initialize the trees. */
+  for (n = 0; n < L_CODES;  n++) { s.dyn_ltree[n * 2]/*.Freq*/ = 0; }
+  for (n = 0; n < D_CODES;  n++) { s.dyn_dtree[n * 2]/*.Freq*/ = 0; }
+  for (n = 0; n < BL_CODES; n++) { s.bl_tree[n * 2]/*.Freq*/ = 0; }
+
+  s.dyn_ltree[END_BLOCK * 2]/*.Freq*/ = 1;
+  s.opt_len = s.static_len = 0;
+  s.last_lit = s.matches = 0;
+}
+
+
+/* ===========================================================================
+ * Flush the bit buffer and align the output on a byte boundary
+ */
+function bi_windup(s)
+{
+  if (s.bi_valid > 8) {
+    put_short(s, s.bi_buf);
+  } else if (s.bi_valid > 0) {
+    //put_byte(s, (Byte)s->bi_buf);
+    s.pending_buf[s.pending++] = s.bi_buf;
+  }
+  s.bi_buf = 0;
+  s.bi_valid = 0;
+}
+
+/* ===========================================================================
+ * Copy a stored block, storing first the length and its
+ * one's complement if requested.
+ */
+function copy_block(s, buf, len, header)
+//DeflateState *s;
+//charf    *buf;    /* the input data */
+//unsigned len;     /* its length */
+//int      header;  /* true if block header must be written */
+{
+  bi_windup(s);        /* align on byte boundary */
+
+  if (header) {
+    put_short(s, len);
+    put_short(s, ~len);
+  }
+//  while (len--) {
+//    put_byte(s, *buf++);
+//  }
+  utils.arraySet(s.pending_buf, s.window, buf, len, s.pending);
+  s.pending += len;
+}
+
+/* ===========================================================================
+ * Compares to subtrees, using the tree depth as tie breaker when
+ * the subtrees have equal frequency. This minimizes the worst case length.
+ */
+function smaller(tree, n, m, depth) {
+  var _n2 = n * 2;
+  var _m2 = m * 2;
+  return (tree[_n2]/*.Freq*/ < tree[_m2]/*.Freq*/ ||
+         (tree[_n2]/*.Freq*/ === tree[_m2]/*.Freq*/ && depth[n] <= depth[m]));
+}
+
+/* ===========================================================================
+ * Restore the heap property by moving down the tree starting at node k,
+ * exchanging a node with the smallest of its two sons if necessary, stopping
+ * when the heap property is re-established (each father smaller than its
+ * two sons).
+ */
+function pqdownheap(s, tree, k)
+//    deflate_state *s;
+//    ct_data *tree;  /* the tree to restore */
+//    int k;               /* node to move down */
+{
+  var v = s.heap[k];
+  var j = k << 1;  /* left son of k */
+  while (j <= s.heap_len) {
+    /* Set j to the smallest of the two sons: */
+    if (j < s.heap_len &&
+      smaller(tree, s.heap[j + 1], s.heap[j], s.depth)) {
+      j++;
+    }
+    /* Exit if v is smaller than both sons */
+    if (smaller(tree, v, s.heap[j], s.depth)) { break; }
+
+    /* Exchange v with the smallest son */
+    s.heap[k] = s.heap[j];
+    k = j;
+
+    /* And continue down the tree, setting j to the left son of k */
+    j <<= 1;
+  }
+  s.heap[k] = v;
+}
+
+
+// inlined manually
+// var SMALLEST = 1;
+
+/* ===========================================================================
+ * Send the block data compressed using the given Huffman trees
+ */
+function compress_block(s, ltree, dtree)
+//    deflate_state *s;
+//    const ct_data *ltree; /* literal tree */
+//    const ct_data *dtree; /* distance tree */
+{
+  var dist;           /* distance of matched string */
+  var lc;             /* match length or unmatched char (if dist == 0) */
+  var lx = 0;         /* running index in l_buf */
+  var code;           /* the code to send */
+  var extra;          /* number of extra bits to send */
+
+  if (s.last_lit !== 0) {
+    do {
+      dist = (s.pending_buf[s.d_buf + lx * 2] << 8) | (s.pending_buf[s.d_buf + lx * 2 + 1]);
+      lc = s.pending_buf[s.l_buf + lx];
+      lx++;
+
+      if (dist === 0) {
+        send_code(s, lc, ltree); /* send a literal byte */
+        //Tracecv(isgraph(lc), (stderr," '%c' ", lc));
+      } else {
+        /* Here, lc is the match length - MIN_MATCH */
+        code = _length_code[lc];
+        send_code(s, code + LITERALS + 1, ltree); /* send the length code */
+        extra = extra_lbits[code];
+        if (extra !== 0) {
+          lc -= base_length[code];
+          send_bits(s, lc, extra);       /* send the extra length bits */
+        }
+        dist--; /* dist is now the match distance - 1 */
+        code = d_code(dist);
+        //Assert (code < D_CODES, "bad d_code");
+
+        send_code(s, code, dtree);       /* send the distance code */
+        extra = extra_dbits[code];
+        if (extra !== 0) {
+          dist -= base_dist[code];
+          send_bits(s, dist, extra);   /* send the extra distance bits */
+        }
+      } /* literal or match pair ? */
+
+      /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */
+      //Assert((uInt)(s->pending) < s->lit_bufsize + 2*lx,
+      //       "pendingBuf overflow");
+
+    } while (lx < s.last_lit);
+  }
+
+  send_code(s, END_BLOCK, ltree);
+}
+
+
+/* ===========================================================================
+ * Construct one Huffman tree and assigns the code bit strings and lengths.
+ * Update the total bit length for the current block.
+ * IN assertion: the field freq is set for all tree elements.
+ * OUT assertions: the fields len and code are set to the optimal bit length
+ *     and corresponding code. The length opt_len is updated; static_len is
+ *     also updated if stree is not null. The field max_code is set.
+ */
+function build_tree(s, desc)
+//    deflate_state *s;
+//    tree_desc *desc; /* the tree descriptor */
+{
+  var tree     = desc.dyn_tree;
+  var stree    = desc.stat_desc.static_tree;
+  var has_stree = desc.stat_desc.has_stree;
+  var elems    = desc.stat_desc.elems;
+  var n, m;          /* iterate over heap elements */
+  var max_code = -1; /* largest code with non zero frequency */
+  var node;          /* new node being created */
+
+  /* Construct the initial heap, with least frequent element in
+   * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].
+   * heap[0] is not used.
+   */
+  s.heap_len = 0;
+  s.heap_max = HEAP_SIZE;
+
+  for (n = 0; n < elems; n++) {
+    if (tree[n * 2]/*.Freq*/ !== 0) {
+      s.heap[++s.heap_len] = max_code = n;
+      s.depth[n] = 0;
+
+    } else {
+      tree[n * 2 + 1]/*.Len*/ = 0;
+    }
+  }
+
+  /* The pkzip format requires that at least one distance code exists,
+   * and that at least one bit should be sent even if there is only one
+   * possible code. So to avoid special checks later on we force at least
+   * two codes of non zero frequency.
+   */
+  while (s.heap_len < 2) {
+    node = s.heap[++s.heap_len] = (max_code < 2 ? ++max_code : 0);
+    tree[node * 2]/*.Freq*/ = 1;
+    s.depth[node] = 0;
+    s.opt_len--;
+
+    if (has_stree) {
+      s.static_len -= stree[node * 2 + 1]/*.Len*/;
+    }
+    /* node is 0 or 1 so it does not have extra bits */
+  }
+  desc.max_code = max_code;
+
+  /* The elements heap[heap_len/2+1 .. heap_len] are leaves of the tree,
+   * establish sub-heaps of increasing lengths:
+   */
+  for (n = (s.heap_len >> 1/*int /2*/); n >= 1; n--) { pqdownheap(s, tree, n); }
+
+  /* Construct the Huffman tree by repeatedly combining the least two
+   * frequent nodes.
+   */
+  node = elems;              /* next internal node of the tree */
+  do {
+    //pqremove(s, tree, n);  /* n = node of least frequency */
+    /*** pqremove ***/
+    n = s.heap[1/*SMALLEST*/];
+    s.heap[1/*SMALLEST*/] = s.heap[s.heap_len--];
+    pqdownheap(s, tree, 1/*SMALLEST*/);
+    /***/
+
+    m = s.heap[1/*SMALLEST*/]; /* m = node of next least frequency */
+
+    s.heap[--s.heap_max] = n; /* keep the nodes sorted by frequency */
+    s.heap[--s.heap_max] = m;
+
+    /* Create a new node father of n and m */
+    tree[node * 2]/*.Freq*/ = tree[n * 2]/*.Freq*/ + tree[m * 2]/*.Freq*/;
+    s.depth[node] = (s.depth[n] >= s.depth[m] ? s.depth[n] : s.depth[m]) + 1;
+    tree[n * 2 + 1]/*.Dad*/ = tree[m * 2 + 1]/*.Dad*/ = node;
+
+    /* and insert the new node in the heap */
+    s.heap[1/*SMALLEST*/] = node++;
+    pqdownheap(s, tree, 1/*SMALLEST*/);
+
+  } while (s.heap_len >= 2);
+
+  s.heap[--s.heap_max] = s.heap[1/*SMALLEST*/];
+
+  /* At this point, the fields freq and dad are set. We can now
+   * generate the bit lengths.
+   */
+  gen_bitlen(s, desc);
+
+  /* The field len is now set, we can generate the bit codes */
+  gen_codes(tree, max_code, s.bl_count);
+}
+
+
+/* ===========================================================================
+ * Scan a literal or distance tree to determine the frequencies of the codes
+ * in the bit length tree.
+ */
+function scan_tree(s, tree, max_code)
+//    deflate_state *s;
+//    ct_data *tree;   /* the tree to be scanned */
+//    int max_code;    /* and its largest code of non zero frequency */
+{
+  var n;                     /* iterates over all tree elements */
+  var prevlen = -1;          /* last emitted length */
+  var curlen;                /* length of current code */
+
+  var nextlen = tree[0 * 2 + 1]/*.Len*/; /* length of next code */
+
+  var count = 0;             /* repeat count of the current code */
+  var max_count = 7;         /* max repeat count */
+  var min_count = 4;         /* min repeat count */
+
+  if (nextlen === 0) {
+    max_count = 138;
+    min_count = 3;
+  }
+  tree[(max_code + 1) * 2 + 1]/*.Len*/ = 0xffff; /* guard */
+
+  for (n = 0; n <= max_code; n++) {
+    curlen = nextlen;
+    nextlen = tree[(n + 1) * 2 + 1]/*.Len*/;
+
+    if (++count < max_count && curlen === nextlen) {
+      continue;
+
+    } else if (count < min_count) {
+      s.bl_tree[curlen * 2]/*.Freq*/ += count;
+
+    } else if (curlen !== 0) {
+
+      if (curlen !== prevlen) { s.bl_tree[curlen * 2]/*.Freq*/++; }
+      s.bl_tree[REP_3_6 * 2]/*.Freq*/++;
+
+    } else if (count <= 10) {
+      s.bl_tree[REPZ_3_10 * 2]/*.Freq*/++;
+
+    } else {
+      s.bl_tree[REPZ_11_138 * 2]/*.Freq*/++;
+    }
+
+    count = 0;
+    prevlen = curlen;
+
+    if (nextlen === 0) {
+      max_count = 138;
+      min_count = 3;
+
+    } else if (curlen === nextlen) {
+      max_count = 6;
+      min_count = 3;
+
+    } else {
+      max_count = 7;
+      min_count = 4;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Send a literal or distance tree in compressed form, using the codes in
+ * bl_tree.
+ */
+function send_tree(s, tree, max_code)
+//    deflate_state *s;
+//    ct_data *tree; /* the tree to be scanned */
+//    int max_code;       /* and its largest code of non zero frequency */
+{
+  var n;                     /* iterates over all tree elements */
+  var prevlen = -1;          /* last emitted length */
+  var curlen;                /* length of current code */
+
+  var nextlen = tree[0 * 2 + 1]/*.Len*/; /* length of next code */
+
+  var count = 0;             /* repeat count of the current code */
+  var max_count = 7;         /* max repeat count */
+  var min_count = 4;         /* min repeat count */
+
+  /* tree[max_code+1].Len = -1; */  /* guard already set */
+  if (nextlen === 0) {
+    max_count = 138;
+    min_count = 3;
+  }
+
+  for (n = 0; n <= max_code; n++) {
+    curlen = nextlen;
+    nextlen = tree[(n + 1) * 2 + 1]/*.Len*/;
+
+    if (++count < max_count && curlen === nextlen) {
+      continue;
+
+    } else if (count < min_count) {
+      do { send_code(s, curlen, s.bl_tree); } while (--count !== 0);
+
+    } else if (curlen !== 0) {
+      if (curlen !== prevlen) {
+        send_code(s, curlen, s.bl_tree);
+        count--;
+      }
+      //Assert(count >= 3 && count <= 6, " 3_6?");
+      send_code(s, REP_3_6, s.bl_tree);
+      send_bits(s, count - 3, 2);
+
+    } else if (count <= 10) {
+      send_code(s, REPZ_3_10, s.bl_tree);
+      send_bits(s, count - 3, 3);
+
+    } else {
+      send_code(s, REPZ_11_138, s.bl_tree);
+      send_bits(s, count - 11, 7);
+    }
+
+    count = 0;
+    prevlen = curlen;
+    if (nextlen === 0) {
+      max_count = 138;
+      min_count = 3;
+
+    } else if (curlen === nextlen) {
+      max_count = 6;
+      min_count = 3;
+
+    } else {
+      max_count = 7;
+      min_count = 4;
+    }
+  }
+}
+
+
+/* ===========================================================================
+ * Construct the Huffman tree for the bit lengths and return the index in
+ * bl_order of the last bit length code to send.
+ */
+function build_bl_tree(s) {
+  var max_blindex;  /* index of last bit length code of non zero freq */
+
+  /* Determine the bit length frequencies for literal and distance trees */
+  scan_tree(s, s.dyn_ltree, s.l_desc.max_code);
+  scan_tree(s, s.dyn_dtree, s.d_desc.max_code);
+
+  /* Build the bit length tree: */
+  build_tree(s, s.bl_desc);
+  /* opt_len now includes the length of the tree representations, except
+   * the lengths of the bit lengths codes and the 5+5+4 bits for the counts.
+   */
+
+  /* Determine the number of bit length codes to send. The pkzip format
+   * requires that at least 4 bit length codes be sent. (appnote.txt says
+   * 3 but the actual value used is 4.)
+   */
+  for (max_blindex = BL_CODES - 1; max_blindex >= 3; max_blindex--) {
+    if (s.bl_tree[bl_order[max_blindex] * 2 + 1]/*.Len*/ !== 0) {
+      break;
+    }
+  }
+  /* Update opt_len to include the bit length tree and counts */
+  s.opt_len += 3 * (max_blindex + 1) + 5 + 5 + 4;
+  //Tracev((stderr, "\ndyn trees: dyn %ld, stat %ld",
+  //        s->opt_len, s->static_len));
+
+  return max_blindex;
+}
+
+
+/* ===========================================================================
+ * Send the header for a block using dynamic Huffman trees: the counts, the
+ * lengths of the bit length codes, the literal tree and the distance tree.
+ * IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
+ */
+function send_all_trees(s, lcodes, dcodes, blcodes)
+//    deflate_state *s;
+//    int lcodes, dcodes, blcodes; /* number of codes for each tree */
+{
+  var rank;                    /* index in bl_order */
+
+  //Assert (lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
+  //Assert (lcodes <= L_CODES && dcodes <= D_CODES && blcodes <= BL_CODES,
+  //        "too many codes");
+  //Tracev((stderr, "\nbl counts: "));
+  send_bits(s, lcodes - 257, 5); /* not +255 as stated in appnote.txt */
+  send_bits(s, dcodes - 1,   5);
+  send_bits(s, blcodes - 4,  4); /* not -3 as stated in appnote.txt */
+  for (rank = 0; rank < blcodes; rank++) {
+    //Tracev((stderr, "\nbl code %2d ", bl_order[rank]));
+    send_bits(s, s.bl_tree[bl_order[rank] * 2 + 1]/*.Len*/, 3);
+  }
+  //Tracev((stderr, "\nbl tree: sent %ld", s->bits_sent));
+
+  send_tree(s, s.dyn_ltree, lcodes - 1); /* literal tree */
+  //Tracev((stderr, "\nlit tree: sent %ld", s->bits_sent));
+
+  send_tree(s, s.dyn_dtree, dcodes - 1); /* distance tree */
+  //Tracev((stderr, "\ndist tree: sent %ld", s->bits_sent));
+}
+
+
+/* ===========================================================================
+ * Check if the data type is TEXT or BINARY, using the following algorithm:
+ * - TEXT if the two conditions below are satisfied:
+ *    a) There are no non-portable control characters belonging to the
+ *       "black list" (0..6, 14..25, 28..31).
+ *    b) There is at least one printable character belonging to the
+ *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
+ * - BINARY otherwise.
+ * - The following partially-portable control characters form a
+ *   "gray list" that is ignored in this detection algorithm:
+ *   (7 {BEL}, 8 {BS}, 11 {VT}, 12 {FF}, 26 {SUB}, 27 {ESC}).
+ * IN assertion: the fields Freq of dyn_ltree are set.
+ */
+function detect_data_type(s) {
+  /* black_mask is the bit mask of black-listed bytes
+   * set bits 0..6, 14..25, and 28..31
+   * 0xf3ffc07f = binary 11110011111111111100000001111111
+   */
+  var black_mask = 0xf3ffc07f;
+  var n;
+
+  /* Check for non-textual ("black-listed") bytes. */
+  for (n = 0; n <= 31; n++, black_mask >>>= 1) {
+    if ((black_mask & 1) && (s.dyn_ltree[n * 2]/*.Freq*/ !== 0)) {
+      return Z_BINARY;
+    }
+  }
+
+  /* Check for textual ("white-listed") bytes. */
+  if (s.dyn_ltree[9 * 2]/*.Freq*/ !== 0 || s.dyn_ltree[10 * 2]/*.Freq*/ !== 0 ||
+      s.dyn_ltree[13 * 2]/*.Freq*/ !== 0) {
+    return Z_TEXT;
+  }
+  for (n = 32; n < LITERALS; n++) {
+    if (s.dyn_ltree[n * 2]/*.Freq*/ !== 0) {
+      return Z_TEXT;
+    }
+  }
+
+  /* There are no "black-listed" or "white-listed" bytes:
+   * this stream either is empty or has tolerated ("gray-listed") bytes only.
+   */
+  return Z_BINARY;
+}
+
+
+var static_init_done = false;
+
+/* ===========================================================================
+ * Initialize the tree data structures for a new zlib stream.
+ */
+function _tr_init(s)
+{
+
+  if (!static_init_done) {
+    tr_static_init();
+    static_init_done = true;
+  }
+
+  s.l_desc  = new TreeDesc(s.dyn_ltree, static_l_desc);
+  s.d_desc  = new TreeDesc(s.dyn_dtree, static_d_desc);
+  s.bl_desc = new TreeDesc(s.bl_tree, static_bl_desc);
+
+  s.bi_buf = 0;
+  s.bi_valid = 0;
+
+  /* Initialize the first block of the first file: */
+  init_block(s);
+}
+
+
+/* ===========================================================================
+ * Send a stored block
+ */
+function _tr_stored_block(s, buf, stored_len, last)
+//DeflateState *s;
+//charf *buf;       /* input block */
+//ulg stored_len;   /* length of input block */
+//int last;         /* one if this is the last block for a file */
+{
+  send_bits(s, (STORED_BLOCK << 1) + (last ? 1 : 0), 3);    /* send block type */
+  copy_block(s, buf, stored_len, true); /* with header */
+}
+
+
+/* ===========================================================================
+ * Send one empty static block to give enough lookahead for inflate.
+ * This takes 10 bits, of which 7 may remain in the bit buffer.
+ */
+function _tr_align(s) {
+  send_bits(s, STATIC_TREES << 1, 3);
+  send_code(s, END_BLOCK, static_ltree);
+  bi_flush(s);
+}
+
+
+/* ===========================================================================
+ * Determine the best encoding for the current block: dynamic trees, static
+ * trees or store, and output the encoded block to the zip file.
+ */
+function _tr_flush_block(s, buf, stored_len, last)
+//DeflateState *s;
+//charf *buf;       /* input block, or NULL if too old */
+//ulg stored_len;   /* length of input block */
+//int last;         /* one if this is the last block for a file */
+{
+  var opt_lenb, static_lenb;  /* opt_len and static_len in bytes */
+  var max_blindex = 0;        /* index of last bit length code of non zero freq */
+
+  /* Build the Huffman trees unless a stored block is forced */
+  if (s.level > 0) {
+
+    /* Check if the file is binary or text */
+    if (s.strm.data_type === Z_UNKNOWN) {
+      s.strm.data_type = detect_data_type(s);
+    }
+
+    /* Construct the literal and distance trees */
+    build_tree(s, s.l_desc);
+    // Tracev((stderr, "\nlit data: dyn %ld, stat %ld", s->opt_len,
+    //        s->static_len));
+
+    build_tree(s, s.d_desc);
+    // Tracev((stderr, "\ndist data: dyn %ld, stat %ld", s->opt_len,
+    //        s->static_len));
+    /* At this point, opt_len and static_len are the total bit lengths of
+     * the compressed block data, excluding the tree representations.
+     */
+
+    /* Build the bit length tree for the above two trees, and get the index
+     * in bl_order of the last bit length code to send.
+     */
+    max_blindex = build_bl_tree(s);
+
+    /* Determine the best encoding. Compute the block lengths in bytes. */
+    opt_lenb = (s.opt_len + 3 + 7) >>> 3;
+    static_lenb = (s.static_len + 3 + 7) >>> 3;
+
+    // Tracev((stderr, "\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u ",
+    //        opt_lenb, s->opt_len, static_lenb, s->static_len, stored_len,
+    //        s->last_lit));
+
+    if (static_lenb <= opt_lenb) { opt_lenb = static_lenb; }
+
+  } else {
+    // Assert(buf != (char*)0, "lost buf");
+    opt_lenb = static_lenb = stored_len + 5; /* force a stored block */
+  }
+
+  if ((stored_len + 4 <= opt_lenb) && (buf !== -1)) {
+    /* 4: two words for the lengths */
+
+    /* The test buf != NULL is only necessary if LIT_BUFSIZE > WSIZE.
+     * Otherwise we can't have processed more than WSIZE input bytes since
+     * the last block flush, because compression would have been
+     * successful. If LIT_BUFSIZE <= WSIZE, it is never too late to
+     * transform a block into a stored block.
+     */
+    _tr_stored_block(s, buf, stored_len, last);
+
+  } else if (s.strategy === Z_FIXED || static_lenb === opt_lenb) {
+
+    send_bits(s, (STATIC_TREES << 1) + (last ? 1 : 0), 3);
+    compress_block(s, static_ltree, static_dtree);
+
+  } else {
+    send_bits(s, (DYN_TREES << 1) + (last ? 1 : 0), 3);
+    send_all_trees(s, s.l_desc.max_code + 1, s.d_desc.max_code + 1, max_blindex + 1);
+    compress_block(s, s.dyn_ltree, s.dyn_dtree);
+  }
+  // Assert (s->compressed_len == s->bits_sent, "bad compressed size");
+  /* The above check is made mod 2^32, for files larger than 512 MB
+   * and uLong implemented on 32 bits.
+   */
+  init_block(s);
+
+  if (last) {
+    bi_windup(s);
+  }
+  // Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
+  //       s->compressed_len-7*last));
+}
+
+/* ===========================================================================
+ * Save the match info and tally the frequency counts. Return true if
+ * the current block must be flushed.
+ */
+function _tr_tally(s, dist, lc)
+//    deflate_state *s;
+//    unsigned dist;  /* distance of matched string */
+//    unsigned lc;    /* match length-MIN_MATCH or unmatched char (if dist==0) */
+{
+  //var out_length, in_length, dcode;
+
+  s.pending_buf[s.d_buf + s.last_lit * 2]     = (dist >>> 8) & 0xff;
+  s.pending_buf[s.d_buf + s.last_lit * 2 + 1] = dist & 0xff;
+
+  s.pending_buf[s.l_buf + s.last_lit] = lc & 0xff;
+  s.last_lit++;
+
+  if (dist === 0) {
+    /* lc is the unmatched char */
+    s.dyn_ltree[lc * 2]/*.Freq*/++;
+  } else {
+    s.matches++;
+    /* Here, lc is the match length - MIN_MATCH */
+    dist--;             /* dist = match distance - 1 */
+    //Assert((ush)dist < (ush)MAX_DIST(s) &&
+    //       (ush)lc <= (ush)(MAX_MATCH-MIN_MATCH) &&
+    //       (ush)d_code(dist) < (ush)D_CODES,  "_tr_tally: bad match");
+
+    s.dyn_ltree[(_length_code[lc] + LITERALS + 1) * 2]/*.Freq*/++;
+    s.dyn_dtree[d_code(dist) * 2]/*.Freq*/++;
+  }
+
+// (!) This block is disabled in zlib defailts,
+// don't enable it for binary compatibility
+
+//#ifdef TRUNCATE_BLOCK
+//  /* Try to guess if it is profitable to stop the current block here */
+//  if ((s.last_lit & 0x1fff) === 0 && s.level > 2) {
+//    /* Compute an upper bound for the compressed length */
+//    out_length = s.last_lit*8;
+//    in_length = s.strstart - s.block_start;
+//
+//    for (dcode = 0; dcode < D_CODES; dcode++) {
+//      out_length += s.dyn_dtree[dcode*2]/*.Freq*/ * (5 + extra_dbits[dcode]);
+//    }
+//    out_length >>>= 3;
+//    //Tracev((stderr,"\nlast_lit %u, in %ld, out ~%ld(%ld%%) ",
+//    //       s->last_lit, in_length, out_length,
+//    //       100L - out_length*100L/in_length));
+//    if (s.matches < (s.last_lit>>1)/*int /2*/ && out_length < (in_length>>1)/*int /2*/) {
+//      return true;
+//    }
+//  }
+//#endif
+
+  return (s.last_lit === s.lit_bufsize - 1);
+  /* We avoid equality with lit_bufsize because of wraparound at 64K
+   * on 16 bit machines and because stored blocks are restricted to
+   * 64K-1 bytes.
+   */
+}
+
+exports._tr_init  = _tr_init;
+exports._tr_stored_block = _tr_stored_block;
+exports._tr_flush_block  = _tr_flush_block;
+exports._tr_tally = _tr_tally;
+exports._tr_align = _tr_align;
+
+},{"../utils/common":41}],53:[function(require,module,exports){
+'use strict';
+
+// (C) 1995-2013 Jean-loup Gailly and Mark Adler
+// (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//   claim that you wrote the original software. If you use this software
+//   in a product, an acknowledgment in the product documentation would be
+//   appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//   misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
+function ZStream() {
+  /* next input byte */
+  this.input = null; // JS specific, because we have no pointers
+  this.next_in = 0;
+  /* number of bytes available at input */
+  this.avail_in = 0;
+  /* total number of input bytes read so far */
+  this.total_in = 0;
+  /* next output byte should be put there */
+  this.output = null; // JS specific, because we have no pointers
+  this.next_out = 0;
+  /* remaining free space at output */
+  this.avail_out = 0;
+  /* total number of bytes output so far */
+  this.total_out = 0;
+  /* last error message, NULL if no error */
+  this.msg = ''/*Z_NULL*/;
+  /* not visible by applications */
+  this.state = null;
+  /* best guess about the data type: binary or text */
+  this.data_type = 2/*Z_UNKNOWN*/;
+  /* adler32 value of the uncompressed data */
+  this.adler = 0;
+}
+
+module.exports = ZStream;
+
+},{}],54:[function(require,module,exports){
+'use strict';
+module.exports = typeof setImmediate === 'function' ? setImmediate :
+	function setImmediate() {
+		var args = [].slice.apply(arguments);
+		args.splice(1, 0, 0);
+		setTimeout.apply(null, args);
+	};
+
+},{}]},{},[10])(10)
+});
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../buffer/index.js */ "./node_modules/buffer/index.js").Buffer, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate))
 
 /***/ })
 
