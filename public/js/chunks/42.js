@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[42],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -11,12 +11,145 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @amcharts/amcharts4/core */ "./node_modules/@amcharts/amcharts4/core.js");
-/* harmony import */ var _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @amcharts/amcharts4/charts */ "./node_modules/@amcharts/amcharts4/charts.js");
-/* harmony import */ var _amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @amcharts/amcharts4/themes/animated */ "./node_modules/@amcharts/amcharts4/themes/animated.js");
-/* harmony import */ var _Servicios_indicadores__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Servicios/indicadores */ "./resources/js/Servicios/indicadores.js");
-/* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-apexcharts */ "./node_modules/vue-apexcharts/dist/vue-apexcharts.js");
-/* harmony import */ var vue_apexcharts__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue_apexcharts__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _Servicios_metodos_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/metodos_servicios */ "./resources/js/Servicios/metodos_servicios.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -159,178 +292,372 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-
-
-
-
-_amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"](_amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_3__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
-    this.calcular();
+    this.consultar(1);
   },
+  name: "barri",
   data: function data() {
     return {
-      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-      datos: {
-        nro_mujeres_embarazadas: 0,
-        porcentaje_embarazadas: 0,
-        nro_adolescentes_embarazadas: 0,
-        nro_adolescentes_desescolarizadas: 0,
-        nro_adolescentes_lactantes: 0,
-        embarazos_vih: 0,
-        porcentaje_atencion_prenatal: 0,
-        razon_gestantes_sin_atencion_prental: 0,
-        nro_gestantes: 0,
-        grupo_510: 0,
-        grupo_1117: 0,
-        grupo_1828: 0,
-        grupo_2959: 0,
-        gestantes_grupo_510: 0,
-        gestantes_grupo_1117: 0,
-        gestantes_grupo_1828: 0,
-        gestantes_grupo_2959: 0
+      errores: [],
+      bandera: false,
+      entrarPorError: false,
+      txtbusqueda: "",
+      metodos: [],
+      metodosData: {
+        descripcion: "",
+        observacion: "",
+        id: 0
       },
-      series: [],
-      series_barra: []
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+      paginacion: {
+        total: 0,
+        pagina_actual: 0,
+        por_pagina: 0,
+        ultima_pagina: 0,
+        desde: 0,
+        hasta: 0
+      },
+      offset: 4,
+      valG: true
     };
   },
-  methods: {
-    calcular: function calcular() {
-      var _this = this;
+  computed: {
+    // CLASES Y ERRORES DE CAMPO IDENTIFICACION
+    metodosError: function metodosError() {
+      var valor = this.metodosData.descripcion.trim();
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var data;
+      if (valor == "") {
+        return "El campo es obligatorio";
+      }
+    },
+    metodosClases: function metodosClases() {
+      return [{
+        "is-invalid": this.metodosError,
+        "is-valid": !this.metodosError
+      }];
+    },
+    esActivo: function esActivo() {
+      return this.paginacion.pagina_actual;
+    },
+    numeroDePaginas: function numeroDePaginas() {
+      if (!this.paginacion.hasta) {
+        return [];
+      }
+
+      var desde = this.paginacion.pagina_actual - this.offset; // TODO offset
+
+      if (desde < 1) {
+        desde = 1;
+      }
+
+      var aux = this.offset * 2;
+      var hasta = desde + aux;
+
+      if (hasta >= this.paginacion.ultima_pagina) {
+        hasta = this.paginacion.ultima_pagina;
+      }
+
+      var paginasArray = [];
+
+      while (desde <= hasta) {
+        paginasArray.push(desde);
+        desde++;
+      }
+
+      return paginasArray;
+    },
+    spinG: function spinG() {
+      if (this.valG) {
+        return {};
+      } else {
+        return ['kt-spinner', 'kt-spinner--right', 'kt-spinner--sm', 'kt-spinner--light'];
+      }
+    }
+  },
+  methods: {
+    consultar: function () {
+      var _consultar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(pagina) {
+        var _this = this;
+
+        var parametros;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                data = {
-                  _token: _this.csrf
+                parametros = {
+                  txtbusqueda: this.txtbusqueda.trim(),
+                  _token: this.csrf,
+                  page: pagina
                 };
-                _context.next = 3;
-                return _Servicios_indicadores__WEBPACK_IMPORTED_MODULE_4__["gestantes"](data).then(function (respuesta) {
-                  _this.datos = respuesta.data["cantidades"];
-
-                  _this.series.push({
-                    edad: "6-11",
-                    gestantes: _this.datos.grupo_510
-                  });
-
-                  _this.series.push({
-                    edad: "12-17",
-                    gestantes: _this.datos.grupo_1117
-                  });
-
-                  _this.series.push({
-                    edad: "18-28",
-                    gestantes: _this.datos.grupo_1828
-                  });
-
-                  _this.series.push({
-                    edad: "29-59",
-                    gestantes: _this.datos.grupo_2959
-                  });
-
-                  _this.series_barra.push({
-                    edad: "6-11",
-                    gestantes: _this.datos.gestantes_grupo_510
-                  });
-
-                  _this.series_barra.push({
-                    edad: "12-17",
-                    gestantes: _this.datos.gestantes_grupo_1117
-                  });
-
-                  _this.series_barra.push({
-                    edad: "18-28",
-                    gestantes: _this.datos.gestantes_grupo_1828
-                  });
-
-                  _this.series_barra.push({
-                    edad: "29-59",
-                    gestantes: _this.datos.gestantes_grupo_2959
-                  });
-
-                  _this.grafica_de_pie();
-
-                  _this.grafica_barra();
-                })["catch"](function (err) {
-                  console.log(err);
+                _context.prev = 1;
+                _context.next = 4;
+                return _Servicios_metodos_servicios__WEBPACK_IMPORTED_MODULE_1__["listar"](parametros).then(function (respuesta) {
+                  _this.metodos = respuesta.data.metodos.data;
+                  _this.paginacion = respuesta.data.paginacion;
                 });
 
-              case 3:
+              case 4:
+                _context.next = 15;
+                break;
+
+              case 6:
+                _context.prev = 6;
+                _context.t0 = _context["catch"](1);
+                _context.t1 = _context.t0.response.status;
+                _context.next = _context.t1 === 422 ? 11 : 13;
+                break;
+
+              case 11:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context.abrupt("break", 15);
+
+              case 13:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context.abrupt("break", 15);
+
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
-      }))();
+        }, _callee, this, [[1, 6]]);
+      }));
+
+      function consultar(_x) {
+        return _consultar.apply(this, arguments);
+      }
+
+      return consultar;
+    }(),
+    abrirModal: function abrirModal() {
+      this.metodosData.descripcion = "";
+      this.metodosData.observacion = "";
+      this.metodosData.id = 0;
+      this.errores = [];
+      this.entrarPorError = false;
+      this.$refs.modalMetodo.show();
     },
-    grafica_de_pie: function grafica_de_pie() {
-      // Themes begin
-      _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"](_amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_3__["default"]); // Themes end
-
-      var chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["create"]("chartdiv", _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["PieChart3D"]);
-      chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-
-      chart.legend = new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["Legend"]();
-      chart.data = this.series;
-      var series = chart.series.push(new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["PieSeries3D"]());
-      series.dataFields.value = "gestantes";
-      series.dataFields.category = "edad";
+    cerrarModal: function cerrarModal() {
+      this.$refs.modalMetodo.hide();
     },
-    grafica_barra: function grafica_barra() {
-      // Themes begin
-      _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"](_amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_3__["default"]); // Themes end
-      // Create chart instance
+    guardar: function () {
+      var _guardar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var _this2 = this;
 
-      var chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["create"]("chartbarra", _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["XYChart3D"]); // Add data
+        var parametros;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (this.checkForm()) {
+                  _context2.next = 4;
+                  break;
+                }
 
-      chart.data = this.series_barra; // Create axes
+                this.entrarPorError = false;
+                _context2.next = 23;
+                break;
 
-      var categoryAxis = chart.xAxes.push(new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["CategoryAxis"]());
-      categoryAxis.dataFields.category = "edad";
-      categoryAxis.renderer.labels.template.rotation = 270;
-      categoryAxis.renderer.labels.template.hideOversized = false;
-      categoryAxis.renderer.minGridDistance = 20;
-      categoryAxis.renderer.labels.template.horizontalCenter = "right";
-      categoryAxis.renderer.labels.template.verticalCenter = "middle";
-      categoryAxis.tooltip.label.rotation = 270;
-      categoryAxis.tooltip.label.horizontalCenter = "right";
-      categoryAxis.tooltip.label.verticalCenter = "middle";
-      var valueAxis = chart.yAxes.push(new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["ValueAxis"]());
-      valueAxis.title.text = "Gestantes";
-      valueAxis.title.fontWeight = "bold"; // Create series
+              case 4:
+                this.errores = [];
+                parametros = {
+                  _token: this.csrf,
+                  descripcion: this.metodosData.descripcion,
+                  observacion: this.metodosData.observacion,
+                  id: this.metodosData.id
+                };
+                this.valG = false;
+                _context2.prev = 7;
+                _context2.next = 10;
+                return _Servicios_metodos_servicios__WEBPACK_IMPORTED_MODULE_1__["guardar"](parametros).then(function (respuesta) {
+                  _this2.consultar(1);
 
-      var series = chart.series.push(new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["ColumnSeries3D"]());
-      series.dataFields.valueY = "gestantes";
-      series.dataFields.categoryX = "edad";
-      series.name = "Gestantes";
-      series.tooltipText = "{categoryX}: [bold]{valueY}[/]";
-      series.columns.template.fillOpacity = 0.8;
-      var columnTemplate = series.columns.template;
-      columnTemplate.strokeWidth = 2;
-      columnTemplate.strokeOpacity = 1;
-      columnTemplate.stroke = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["color"]("#FFFFFF");
-      columnTemplate.adapter.add("fill", function (fill, target) {
-        return chart.colors.getIndex(target.dataItem.index);
-      });
-      columnTemplate.adapter.add("stroke", function (stroke, target) {
-        return chart.colors.getIndex(target.dataItem.index);
-      });
-      chart.cursor = new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_2__["XYCursor"]();
-      chart.cursor.lineX.strokeOpacity = 0;
-      chart.cursor.lineY.strokeOpacity = 0;
-    }
+                  _this2.metodosData.descripcion = "";
+                  _this2.metodosData.observacion = "";
+                  _this2.metodosData.id = 0;
+
+                  _this2.cerrarModal();
+
+                  _this2.$swal("Guardar...!", "Datos Guardados Exitosamente!", "success");
+
+                  _this2.valG = true;
+                })["catch"](function (error) {
+                  _this2.errorDevuelto = error.response.data.errors;
+                  _this2.entrarPorError = true;
+                });
+
+              case 10:
+                _context2.next = 23;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](7);
+                _context2.t1 = _context2.t0.response.status;
+                _context2.next = _context2.t1 === 419 ? 17 : _context2.t1 === 422 ? 19 : 21;
+                break;
+
+              case 17:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 19:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 21:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 23:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[7, 12]]);
+      }));
+
+      function guardar() {
+        return _guardar.apply(this, arguments);
+      }
+
+      return guardar;
+    }(),
+    checkForm: function checkForm(e) {
+      this.errores = [];
+
+      if (!this.metodosData.descripcion) {
+        this.errores.push("La descripción es obligatoria.");
+      }
+
+      if (!this.errores.length) {
+        return true;
+      } else {
+        return false;
+      }
+
+      e.preventDefault();
+    },
+    cambiarPaginas: function cambiarPaginas(pagina) {
+      this.paginacion.pagina_actual = pagina;
+      this.consultar(pagina);
+    },
+    eliminar: function () {
+      var _eliminar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(usu) {
+        var _this3 = this;
+
+        var title, titulo;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                title = "";
+                titulo = "";
+
+                if (usu.estado == "Activo") {
+                  title = "¿Desea anular el metodo de planificación " + usu.descripcion + "?";
+                  titulo = "Metodo de planificación " + usu.descripcion + " anulado de manera exitosa";
+                } else {
+                  title = "¿Desea activar el metodo de planificación " + usu.descripcion + "?";
+                  titulo = "Metodo de planificación " + usu.descripcion + " activado de manera exitosa";
+                }
+
+                this.$swal({
+                  title: title,
+                  text: "",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Aceptar",
+                  cancelButtonText: "Cancelar"
+                }).then(function (result) {
+                  if (result.value) {
+                    var parametros = {
+                      _token: _this3.csrf,
+                      id: usu.id,
+                      estado: usu.estado
+                    };
+
+                    try {
+                      _Servicios_metodos_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminar"](parametros).then(function (respuesta) {
+                        _this3.consultar(1);
+
+                        _this3.$swal({
+                          position: "top-end",
+                          icon: "success",
+                          title: titulo,
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+                      })["catch"](function (error) {
+                        _this3.$swal("Error...!", "Ocurrio un error!", "error");
+                      });
+                    } catch (error) {
+                      switch (error.response.status) {
+                        case 422:
+                          _this3.$swal("Error...!", "Ocurrio un error!", "error");
+
+                          break;
+
+                        default:
+                          _this3.$swal("Error...!", "Ocurrio un error!", "error");
+
+                          break;
+                      }
+                    }
+                  }
+                });
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function eliminar(_x2) {
+        return _eliminar.apply(this, arguments);
+      }
+
+      return eliminar;
+    }(),
+    editar: function () {
+      var _editar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(item) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                this.metodosData.descripcion = item.descripcion;
+                this.metodosData.observacion = item.observacion;
+                this.metodosData.id = item.id;
+                this.$refs.modalMetodo.show();
+
+              case 4:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function editar(_x3) {
+        return _editar.apply(this, arguments);
+      }
+
+      return editar;
+    }()
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&":
-/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css& ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -339,22 +666,22 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.redondo {\n  border-radius: 25px;\n}\n.deabjohaciaarriba {\n  writing-mode: vertical-rl;\n  text-orientation: use-glyph-orientation;\n  transform: rotate(0.5turn);\n}\n.borderbottomright {\n  border-top-left-radius: 20px;\n  border-bottom-left-radius: 20px;\n  border-bottom-right-radius: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 0.5) !important;\n}\n.modal-title {\n  color: #f8f9fa !important;\n}\n.close {\n  display: none;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./gestantes.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Metodos.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -376,10 +703,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809&":
-/*!********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809& ***!
-  \********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0& ***!
+  \**************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -391,227 +718,672 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticStyle: { "margin-top": "-4%" } }, [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-12" }, [
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "kt-portlet", staticStyle: { "margin-top": "-4%" } },
+      [
         _vm._m(0),
         _vm._v(" "),
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("div", { staticClass: "row" }, [
-              _c(
-                "div",
-                { staticClass: "col-lg-3 text-center" },
-                [
-                  _c("h5", [_vm._v("Número gestanes")]),
-                  _vm._v(" "),
-                  _c(
-                    "vue-ellipse-progress",
-                    {
-                      attrs: {
-                        progress: _vm.datos.porcentaje_embarazadas,
-                        size: 120,
-                        angle: -90,
-                        gap: 10,
-                        legend: true,
-                        legendValue: 180,
-                        thickness: 5,
-                        emptyThickness: "5%",
-                        dash: "60 0.9",
-                        color: "#068204",
-                        noData: false,
-                        loading: false,
-                        fontColor: "white",
-                        half: false,
-                        "line-mode": "out 2"
-                      }
-                    },
-                    [
+        _c("div", { staticClass: "kt-portlet__body" }, [
+          _c("div", { staticClass: "kt-section" }, [
+            _c("div", { staticClass: "kt-section__content" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-6 col-lg-6" }, [
+                  _c("div", { staticClass: "kt-section" }, [
+                    _c("div", { staticClass: "kt-section__content" }, [
                       _c(
-                        "p",
+                        "a",
                         {
-                          staticStyle: {
-                            "font-size": "14px",
-                            "font-weight": "bold"
+                          staticClass: "btn btn-outline-primary btn-icon",
+                          attrs: {
+                            href: "javascript:;",
+                            "data-skin": "dark",
+                            "data-toggle": "kt-tooltip",
+                            "data-placement": "top",
+                            title: "Nuevo Metodo de Planificación"
                           },
-                          attrs: { slot: "legend-caption" },
-                          slot: "legend-caption"
+                          on: { click: _vm.abrirModal }
                         },
-                        [_vm._v(_vm._s(_vm.datos.nro_gestantes))]
-                      )
-                    ]
-                  )
-                ],
-                1
-              ),
+                        [_c("i", { staticClass: "la la-file-text-o" })]
+                      ),
+                      _vm._v(" \n                ")
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6 col-lg-6" }, [
+                  _c("form", { staticClass: "kt-form" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.txtbusqueda,
+                              expression: "txtbusqueda"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", placeholder: "Busqueda" },
+                          domProps: { value: _vm.txtbusqueda },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.txtbusqueda = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group-append" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-icon",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.consultar(1)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-search" })]
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
+                ])
+              ]),
               _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-lg-3 text-center" },
-                [
-                  _c("h5", [_vm._v("Adolescentes gestantes")]),
-                  _vm._v(" "),
-                  _c(
-                    "vue-ellipse-progress",
-                    {
-                      attrs: {
-                        progress: Math.round(
-                          _vm.datos.nro_adolescentes_embarazadas
-                        ),
-                        size: 120,
-                        angle: -90,
-                        gap: 10,
-                        legend: true,
-                        thickness: 5,
-                        emptyThickness: "5%",
-                        dash: "60 0.9",
-                        color: "#db2be3",
-                        noData: false,
-                        loading: false,
-                        fontColor: "white",
-                        half: false,
-                        "line-mode": "out 2"
-                      }
-                    },
-                    [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c("table", { staticClass: "table table-sm table-hover" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
                       _c(
-                        "p",
-                        {
-                          staticStyle: {
-                            "font-size": "14px",
-                            "font-weight": "bold"
-                          },
-                          attrs: { slot: "legend-caption" },
-                          slot: "legend-caption"
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              Math.round(_vm.datos.nro_adolescentes_embarazadas)
+                        "tbody",
+                        _vm._l(_vm.metodos, function(item, index) {
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [_vm._v(_vm._s(item.descripcion))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [_vm._v(_vm._s(item.observacion))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "center"
+                                }
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "kt-badge kt-badge--inline",
+                                    class:
+                                      item.estado == "Activo"
+                                        ? "kt-badge--success"
+                                        : "kt-badge--danger"
+                                  },
+                                  [_vm._v(_vm._s(item.estado))]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-outline-info btn-icon btn-sm",
+                                    attrs: { type: "button", title: "Editar" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.editar(item)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-edit" })]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-icon btn-sm",
+                                    class:
+                                      item.estado == "Activo"
+                                        ? "btn-outline-danger"
+                                        : "btn-outline-success",
+                                    attrs: {
+                                      type: "button",
+                                      title:
+                                        item.estado == "Activo"
+                                          ? "Anular"
+                                          : "Activar"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminar(item)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa",
+                                      class:
+                                        item.estado == "Activo"
+                                          ? "fa-trash"
+                                          : "fa-check"
+                                    })
+                                  ]
+                                )
+                              ]
                             )
-                          )
-                        ]
+                          ])
+                        }),
+                        0
                       )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-lg-3 text-center" },
-                [
-                  _c("h5", [_vm._v("Atención prenatal")]),
-                  _vm._v(" "),
-                  _c(
-                    "vue-ellipse-progress",
-                    {
-                      attrs: {
-                        progress: Math.round(
-                          _vm.datos.porcentaje_atencion_prenatal
-                        ),
-                        size: 120,
-                        angle: -90,
-                        gap: 10,
-                        legend: true,
-                        thickness: 5,
-                        emptyThickness: "5%",
-                        dash: "60 0.9",
-                        color: "#0511ca",
-                        noData: false,
-                        loading: false,
-                        fontColor: "white",
-                        half: false,
-                        "line-mode": "out 2"
-                      }
-                    },
-                    [
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "kt-separator kt-separator--border-dashed"
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "kt-section" }, [
                       _c(
-                        "p",
-                        {
-                          staticStyle: {
-                            "font-size": "14px",
-                            "font-weight": "bold"
-                          },
-                          attrs: { slot: "legend-caption" },
-                          slot: "legend-caption"
-                        },
+                        "div",
+                        { staticClass: "kt-pagination kt-pagination--danger" },
                         [
-                          _vm._v(
-                            _vm._s(
-                              Math.round(_vm.datos.porcentaje_atencion_prenatal)
-                            ) + "%"
+                          _c(
+                            "ul",
+                            { staticClass: "kt-pagination__links" },
+                            [
+                              _vm.paginacion.pagina_actual > 1
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--first"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(1)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-double-left kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual > 1
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--next"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.pagina_actual - 1
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-left kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm._l(_vm.numeroDePaginas, function(
+                                pagina,
+                                index
+                              ) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: index,
+                                    class: [
+                                      pagina == _vm.esActivo
+                                        ? "kt-pagination__link--active"
+                                        : ""
+                                    ]
+                                  },
+                                  [
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: { href: "javascript:;" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.cambiarPaginas(pagina)
+                                          }
+                                        }
+                                      },
+                                      [_vm._v(_vm._s(pagina))]
+                                    )
+                                  ]
+                                )
+                              }),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual <
+                              _vm.paginacion.ultima_pagina
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--prev"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.pagina_actual + 1
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-right kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual <
+                              _vm.paginacion.ultima_pagina
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--last"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.ultima_pagina
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-double-right kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ],
+                            2
                           )
                         ]
                       )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-lg-3 text-center" },
-                [
-                  _c("h5", [_vm._v("Sin atención prenatal")]),
-                  _vm._v(" "),
-                  _c(
-                    "vue-ellipse-progress",
-                    {
-                      attrs: {
-                        progress: Math.round(
-                          100 - _vm.datos.porcentaje_atencion_prenatal
-                        ),
-                        size: 120,
-                        angle: -90,
-                        gap: 10,
-                        legend: true,
-                        thickness: 5,
-                        emptyThickness: "5%",
-                        dash: "60 0.9",
-                        color: "#891481",
-                        noData: false,
-                        loading: false,
-                        fontColor: "white",
-                        half: false,
-                        "line-mode": "out 2"
-                      }
-                    },
-                    [
-                      _c(
-                        "p",
-                        {
-                          staticStyle: {
-                            "font-size": "14px",
-                            "font-weight": "bold"
-                          },
-                          attrs: { slot: "legend-caption" },
-                          slot: "legend-caption"
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              Math.round(
-                                100 - _vm.datos.porcentaje_atencion_prenatal
-                              )
-                            ) + "%"
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ],
-                1
-              )
+                    ])
+                  ])
+                ])
+              ])
             ])
           ])
         ]),
         _vm._v(" "),
-        _vm._m(1)
-      ])
-    ])
+        _c(
+          "b-modal",
+          {
+            ref: "modalMetodo",
+            attrs: {
+              "hide-footer": "",
+              title: "Gestion de Metodos de Planificación",
+              size: "xl",
+              centered: "",
+              "header-bg-variant": "danger",
+              "header-text-variant": "light",
+              "no-close-on-backdrop": true
+            }
+          },
+          [
+            _c("div", { staticClass: "d-block" }, [
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-lg-12" },
+                  [
+                    _c(
+                      "transition",
+                      { attrs: { duration: 1000, name: "fade" } },
+                      [
+                        _vm.entrarPorError
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "alert alert-warning fade show",
+                                attrs: { role: "alert" }
+                              },
+                              [
+                                _c("div", { staticClass: "alert-icon" }, [
+                                  _c("i", { staticClass: "flaticon-warning" })
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-text" }, [
+                                  _vm._v(
+                                    "\n                  Por favor, corrija el(los) siguiente(s) error(es):\n                  "
+                                  ),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "ul",
+                                    _vm._l(_vm.errorDevuelto, function(
+                                      error,
+                                      index
+                                    ) {
+                                      return _c("li", { key: index }, [
+                                        _vm._v(_vm._s(error))
+                                      ])
+                                    }),
+                                    0
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-close" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "close",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "alert",
+                                        "aria-label": "Close"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [
+                                          _c("i", {
+                                            staticClass: "la la-close"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-lg-12" },
+                  [
+                    _c(
+                      "transition",
+                      { attrs: { duration: 1000, name: "fade" } },
+                      [
+                        _vm.errores.length
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "alert alert-warning fade show",
+                                attrs: { role: "alert" }
+                              },
+                              [
+                                _c("div", { staticClass: "alert-icon" }, [
+                                  _c("i", { staticClass: "flaticon-warning" })
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-text" }, [
+                                  _vm._v(
+                                    "\n                  Por favor, corrija el(los) siguiente(s) error(es):\n                  "
+                                  ),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "ul",
+                                    _vm._l(_vm.errores, function(error, index) {
+                                      return _c("li", { key: index }, [
+                                        _vm._v(_vm._s(error))
+                                      ])
+                                    }),
+                                    0
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-close" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "close",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "alert",
+                                        "aria-label": "Close"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [
+                                          _c("i", {
+                                            staticClass: "la la-close"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("form", [
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("label", [_vm._v("Metodo de Planificación:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.metodosData.descripcion,
+                          expression: "metodosData.descripcion"
+                        }
+                      ],
+                      staticClass: "form-control text-capitalize",
+                      class: _vm.metodosClases,
+                      attrs: { type: "text", placeholder: "Descripción" },
+                      domProps: { value: _vm.metodosData.descripcion },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.metodosData,
+                            "descripcion",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.metodosError
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(_vm._s(_vm.metodosError))
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("label", [_vm._v("Observación:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.metodosData.observacion,
+                          expression: "metodosData.observacion"
+                        }
+                      ],
+                      staticClass: "form-control text-capitalize",
+                      attrs: { type: "text", placeholder: "Observación" },
+                      domProps: { value: _vm.metodosData.observacion },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.metodosData,
+                            "observacion",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-right" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      class: _vm.spinG,
+                      attrs: { type: "button", disabled: !_vm.valG },
+                      on: { click: _vm.guardar }
+                    },
+                    [
+                      _c("i", { staticClass: "fa fa-edit" }),
+                      _vm._v(" Guardar\n            ")
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-warning",
+                      attrs: { type: "button" },
+                      on: { click: _vm.cerrarModal }
+                    },
+                    [
+                      _c("i", { staticClass: "fa fa-window-close" }),
+                      _vm._v(" Cancelar\n            ")
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ]
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = [
@@ -619,41 +1391,31 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body" }, [_c("h3", [_vm._v("Gestantes")])])
+    return _c("div", { staticClass: "kt-portlet__head" }, [
+      _c("div", { staticClass: "kt-portlet__head-label" }, [
+        _c("h3", { staticClass: "kt-portlet__head-title" }, [
+          _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
+            _vm._v("GESTIÓN DE METODOS DE PLANIFICACIÓN")
+          ])
+        ])
+      ])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body" }, [
-        _c("br"),
+    return _c("thead", {}, [
+      _c("tr", { staticClass: "kt-bg-fill-brand" }, [
+        _c("th", [_vm._v("No.")]),
         _vm._v(" "),
-        _c("div", { staticClass: "row justify-center" }, [
-          _c("div", { staticClass: "col-lg-6 text-center" }, [
-            _c("h4", [_vm._v("Números de gestantes")]),
-            _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _c("div", {
-              staticStyle: { width: "100%", height: "400px" },
-              attrs: { id: "chartbarra" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-lg-6 text-center" }, [
-            _c("h4", [_vm._v("Porcentaje de gestantes sin atención prenatal")]),
-            _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _c("div", {
-              staticStyle: { width: "100%", height: "400px" },
-              attrs: { id: "chartdiv" }
-            })
-          ])
-        ])
+        _c("th", [_vm._v("Metodo")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Observación")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "text-center" }, [_vm._v("Estado")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "text-center" }, [_vm._v("Opciones")])
       ])
     ])
   }
@@ -664,48 +1426,44 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./resources/js/Servicios/indicadores.js":
-/*!***********************************************!*\
-  !*** ./resources/js/Servicios/indicadores.js ***!
-  \***********************************************/
-/*! exports provided: listar, gestantes, spa, filtrospa */
+/***/ "./resources/js/Servicios/metodos_servicios.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/Servicios/metodos_servicios.js ***!
+  \*****************************************************/
+/*! exports provided: listar, guardar, eliminar */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listar", function() { return listar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gestantes", function() { return gestantes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "spa", function() { return spa; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filtrospa", function() { return filtrospa; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardar", function() { return guardar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminar", function() { return eliminar; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
 function listar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/indicadores/calcular', $data);
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/metodos', $data);
 }
-function gestantes($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/indicadores/gestantes', $data);
+function guardar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/metodos/guardar', $data);
 }
-function spa($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/indicadores/spa', $data);
-}
-function filtrospa($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/indicadores/filtrospa', $data);
+function eliminar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/metodos/eliminar', $data);
 }
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Indicadores/gestantes.vue":
-/*!*******************************************************!*\
-  !*** ./resources/js/Vistas/Indicadores/gestantes.vue ***!
-  \*******************************************************/
+/***/ "./resources/js/Vistas/Metodos/Metodos.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/Vistas/Metodos/Metodos.vue ***!
+  \*************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./gestantes.vue?vue&type=template&id=6a228809& */ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809&");
-/* harmony import */ var _gestantes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./gestantes.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./gestantes.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Metodos.vue?vue&type=template&id=236bd2f0& */ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0&");
+/* harmony import */ var _Metodos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Metodos.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Metodos.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -716,9 +1474,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _gestantes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Metodos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -728,54 +1486,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Indicadores/gestantes.vue"
+component.options.__file = "resources/js/Vistas/Metodos/Metodos.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js&":
-/*!********************************************************************************!*\
-  !*** ./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************/
+/***/ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./gestantes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Metodos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css& ***!
+  \**********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./gestantes.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Metodos.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809&":
-/*!**************************************************************************************!*\
-  !*** ./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809& ***!
-  \**************************************************************************************/
+/***/ "./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0& ***!
+  \********************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./gestantes.vue?vue&type=template&id=6a228809& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Indicadores/gestantes.vue?vue&type=template&id=6a228809&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Metodos.vue?vue&type=template&id=236bd2f0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Metodos/Metodos.vue?vue&type=template&id=236bd2f0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_gestantes_vue_vue_type_template_id_6a228809___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Metodos_vue_vue_type_template_id_236bd2f0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

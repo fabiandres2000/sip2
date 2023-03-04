@@ -1,8 +1,8 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[38],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&":
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -11,7 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/escolaridad_servicios */ "./resources/js/Servicios/escolaridad_servicios.js");
+/* harmony import */ var _Servicios_estados_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/estados_servicios */ "./resources/js/Servicios/estados_servicios.js");
 //
 //
 //
@@ -303,8 +303,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       bandera: false,
       entrarPorError: false,
       txtbusqueda: "",
-      escolaridad: [],
-      escolaridadData: {
+      estadocivil: [],
+      estadocivilData: {
         descripcion: "",
         observacion: "",
         id: 0
@@ -324,17 +324,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   computed: {
     // CLASES Y ERRORES DE CAMPO IDENTIFICACION
-    escolaridadError: function escolaridadError() {
-      var valor = this.escolaridadData.descripcion.trim();
+    estadosError: function estadosError() {
+      var valor = this.estadocivilData.descripcion.trim();
 
       if (valor == "") {
         return "El campo es obligatorio";
       }
     },
-    escolaridadClases: function escolaridadClases() {
+    estadosClases: function estadosClases() {
       return [{
-        "is-invalid": this.escolaridadError,
-        "is-valid": !this.escolaridadError
+        "is-invalid": this.estadosError,
+        "is-valid": !this.estadosError
       }];
     },
     esActivo: function esActivo() {
@@ -392,8 +392,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 };
                 _context.prev = 1;
                 _context.next = 4;
-                return _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["listarEscolaridad"](parametros).then(function (respuesta) {
-                  _this.escolaridad = respuesta.data.escolaridad.data;
+                return _Servicios_estados_servicios__WEBPACK_IMPORTED_MODULE_1__["listarEstados"](parametros).then(function (respuesta) {
+                  _this.estadocivil = respuesta.data.estadocivil.data;
                   _this.paginacion = respuesta.data.paginacion;
                 });
 
@@ -431,18 +431,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return consultar;
     }(),
     abrirModal: function abrirModal() {
-      this.escolaridadData.descripcion = "";
-      this.escolaridadData.observacion = "";
-      this.escolaridadData.id = 0;
+      this.estadocivilData.descripcion = "";
+      this.estadocivilData.observacion = "";
+      this.estadocivilData.id = 0;
       this.errores = [];
       this.entrarPorError = false;
-      this.$refs.modalEscolaridad.show();
+      this.$refs.modalEstados.show();
     },
     cerrarModal: function cerrarModal() {
-      this.$refs.modalEscolaridad.hide();
+      this.$refs.modalEstados.hide();
     },
-    guardarEscolaridad: function () {
-      var _guardarEscolaridad = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    guardarEstado: function () {
+      var _guardarEstado = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var _this2 = this;
 
         var parametros;
@@ -463,19 +463,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.errores = [];
                 parametros = {
                   _token: this.csrf,
-                  descripcion: this.escolaridadData.descripcion,
-                  observacion: this.escolaridadData.observacion,
-                  id: this.escolaridadData.id
+                  descripcion: this.estadocivilData.descripcion,
+                  observacion: this.estadocivilData.observacion,
+                  id: this.estadocivilData.id
                 };
                 this.valG = false;
                 _context2.prev = 7;
                 _context2.next = 10;
-                return _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["guardarEscolaridad"](parametros).then(function (respuesta) {
+                return _Servicios_estados_servicios__WEBPACK_IMPORTED_MODULE_1__["guardarEstados"](parametros).then(function (respuesta) {
                   _this2.consultar(1);
 
-                  _this2.escolaridadData.descripcion = "";
-                  _this2.escolaridadData.observacion = "";
-                  _this2.escolaridadData.id = 0;
+                  _this2.estadocivilData.descripcion = "";
+                  _this2.estadocivilData.observacion = "";
+                  _this2.estadocivilData.id = 0;
 
                   _this2.cerrarModal();
 
@@ -518,16 +518,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, this, [[7, 12]]);
       }));
 
-      function guardarEscolaridad() {
-        return _guardarEscolaridad.apply(this, arguments);
+      function guardarEstado() {
+        return _guardarEstado.apply(this, arguments);
       }
 
-      return guardarEscolaridad;
+      return guardarEstado;
     }(),
     checkForm: function checkForm(e) {
       this.errores = [];
 
-      if (!this.escolaridadData.descripcion) {
+      if (!this.estadocivilData.descripcion) {
         this.errores.push("La descripción es obligatoria.");
       }
 
@@ -556,11 +556,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 titulo = "";
 
                 if (usu.estado == "Activo") {
-                  title = "¿Desea anular la escolaridad " + usu.descripcion + "?";
-                  titulo = "Escolaridad " + usu.descripcion + " anulada de manera exitosa";
+                  title = "¿Desea anular el estado civil " + usu.descripcion + "?";
+                  titulo = "Estado Civil " + usu.descripcion + " anulado de manera exitosa";
                 } else {
-                  title = "¿Desea activar la escolaridad " + usu.descripcion + "?";
-                  titulo = "Escolaridad " + usu.descripcion + " activada de manera exitosa";
+                  title = "¿Desea activar el estado civil " + usu.descripcion + "?";
+                  titulo = "Estado Civil " + usu.descripcion + " activado de manera exitosa";
                 }
 
                 this.$swal({
@@ -581,7 +581,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     };
 
                     try {
-                      _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminarEscolaridad"](parametros).then(function (respuesta) {
+                      _Servicios_estados_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminarEstados"](parametros).then(function (respuesta) {
                         _this3.consultar(1);
 
                         _this3.$swal({
@@ -630,10 +630,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                this.escolaridadData.descripcion = item.descripcion;
-                this.escolaridadData.observacion = item.observacion;
-                this.escolaridadData.id = item.id;
-                this.$refs.modalEscolaridad.show();
+                this.estadocivilData.descripcion = item.descripcion;
+                this.estadocivilData.observacion = item.observacion;
+                this.estadocivilData.id = item.id;
+                this.$refs.modalEstados.show();
 
               case 4:
               case "end":
@@ -654,9 +654,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css& ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -673,15 +673,15 @@ exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css& ***!
   \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Estadocivil.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -703,9 +703,9 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&":
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0&":
 /*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470& ***!
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0& ***!
   \**********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -741,7 +741,7 @@ var render = function() {
                             "data-skin": "dark",
                             "data-toggle": "kt-tooltip",
                             "data-placement": "top",
-                            title: "Nueva Escolaridad"
+                            title: "Nuevo Estado Civil"
                           },
                           on: { click: _vm.abrirModal }
                         },
@@ -807,7 +807,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tbody",
-                        _vm._l(_vm.escolaridad, function(item, index) {
+                        _vm._l(_vm.estadocivil, function(item, index) {
                           return _c("tr", { key: index }, [
                             _c(
                               "td",
@@ -1117,10 +1117,10 @@ var render = function() {
         _c(
           "b-modal",
           {
-            ref: "modalEscolaridad",
+            ref: "modalEstados",
             attrs: {
               "hide-footer": "",
-              title: "Gestion de Escolaridad",
+              title: "Gestion de Estado Civil",
               size: "xl",
               centered: "",
               "header-bg-variant": "danger",
@@ -1280,28 +1280,28 @@ var render = function() {
               _c("form", [
                 _c("div", { staticClass: "form-group row" }, [
                   _c("div", { staticClass: "col-lg-4" }, [
-                    _c("label", [_vm._v("Escolaridad:")]),
+                    _c("label", [_vm._v("Estado Civil:")]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.escolaridadData.descripcion,
-                          expression: "escolaridadData.descripcion"
+                          value: _vm.estadocivilData.descripcion,
+                          expression: "estadocivilData.descripcion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
-                      class: _vm.escolaridadClases,
+                      class: _vm.estadosClases,
                       attrs: { type: "text", placeholder: "Descripción" },
-                      domProps: { value: _vm.escolaridadData.descripcion },
+                      domProps: { value: _vm.estadocivilData.descripcion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.escolaridadData,
+                            _vm.estadocivilData,
                             "descripcion",
                             $event.target.value
                           )
@@ -1309,9 +1309,9 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _vm.escolaridadError
+                    _vm.estadosError
                       ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(_vm._s(_vm.escolaridadError))
+                          _vm._v(_vm._s(_vm.estadosError))
                         ])
                       : _vm._e()
                   ]),
@@ -1324,20 +1324,20 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.escolaridadData.observacion,
-                          expression: "escolaridadData.observacion"
+                          value: _vm.estadocivilData.observacion,
+                          expression: "estadocivilData.observacion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
                       attrs: { type: "text", placeholder: "Observación" },
-                      domProps: { value: _vm.escolaridadData.observacion },
+                      domProps: { value: _vm.estadocivilData.observacion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.escolaridadData,
+                            _vm.estadocivilData,
                             "observacion",
                             $event.target.value
                           )
@@ -1356,7 +1356,7 @@ var render = function() {
                       staticClass: "btn btn-success",
                       class: _vm.spinG,
                       attrs: { type: "button", disabled: !_vm.valG },
-                      on: { click: _vm.guardarEscolaridad }
+                      on: { click: _vm.guardarEstado }
                     },
                     [
                       _c("i", { staticClass: "fa fa-edit" }),
@@ -1395,7 +1395,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "kt-portlet__head-label" }, [
         _c("h3", { staticClass: "kt-portlet__head-title" }, [
           _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
-            _vm._v("GESTIÓN DE ESCOLARIDAD")
+            _vm._v("GESTIÓN DE ESTADO CIVIL")
           ])
         ])
       ])
@@ -1409,7 +1409,7 @@ var staticRenderFns = [
       _c("tr", { staticClass: "kt-bg-fill-brand" }, [
         _c("th", [_vm._v("No.")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Escolaridad")]),
+        _c("th", [_vm._v("Estado Civil")]),
         _vm._v(" "),
         _c("th", [_vm._v("Observación")]),
         _vm._v(" "),
@@ -1426,44 +1426,44 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./resources/js/Servicios/escolaridad_servicios.js":
-/*!*********************************************************!*\
-  !*** ./resources/js/Servicios/escolaridad_servicios.js ***!
-  \*********************************************************/
-/*! exports provided: listarEscolaridad, guardarEscolaridad, eliminarEscolaridad */
+/***/ "./resources/js/Servicios/estados_servicios.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/Servicios/estados_servicios.js ***!
+  \*****************************************************/
+/*! exports provided: listarEstados, guardarEstados, eliminarEstados */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listarEscolaridad", function() { return listarEscolaridad; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardarEscolaridad", function() { return guardarEscolaridad; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminarEscolaridad", function() { return eliminarEscolaridad; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listarEstados", function() { return listarEstados; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardarEstados", function() { return guardarEstados; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminarEstados", function() { return eliminarEstados; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
-function listarEscolaridad($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad', $data);
+function listarEstados($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/estadocivil', $data);
 }
-function guardarEscolaridad($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad/guardar', $data);
+function guardarEstados($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/estadocivil/guardar', $data);
 }
-function eliminarEscolaridad($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad/eliminar', $data);
+function eliminarEstados($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/estadocivil/eliminar', $data);
 }
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue":
+/***/ "./resources/js/Vistas/Estadocivil/Estadocivil.vue":
 /*!*********************************************************!*\
-  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue ***!
+  !*** ./resources/js/Vistas/Estadocivil/Estadocivil.vue ***!
   \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=template&id=57e5d470& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&");
-/* harmony import */ var _Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Estadocivil.vue?vue&type=template&id=75f272e0& */ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0&");
+/* harmony import */ var _Estadocivil_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Estadocivil.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Estadocivil.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -1474,9 +1474,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Estadocivil_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -1486,54 +1486,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Escolaridad/Escolaridad.vue"
+component.options.__file = "resources/js/Vistas/Estadocivil/Estadocivil.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************!*\
-  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Estadocivil.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/***/ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&":
 /*!******************************************************************************************!*\
-  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  !*** ./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css& ***!
   \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Estadocivil.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&":
+/***/ "./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0&":
 /*!****************************************************************************************!*\
-  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470& ***!
+  !*** ./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0& ***!
   \****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=template&id=57e5d470& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Estadocivil.vue?vue&type=template&id=75f272e0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Estadocivil/Estadocivil.vue?vue&type=template&id=75f272e0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Estadocivil_vue_vue_type_template_id_75f272e0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

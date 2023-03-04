@@ -172,6 +172,117 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -209,7 +320,13 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
       isLoading: false,
       rutaPdf: "",
       chart_alteraciones_transtornos_audicion: null,
-      chart_alteraciones_transtornos_audicion_edad: null
+      chart_alteraciones_transtornos_audicion_edad: null,
+      chart_alteraciones_transtornos_visuales: null,
+      chart_alteraciones_transtornos_visuales_edad: null,
+      chart_cancer: null,
+      chart_cancer_edad: null,
+      chart_consumo_spa: null,
+      chart_consumo_spa_edad: null
     };
   },
   methods: {
@@ -228,6 +345,18 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
                   _this.grafica_riesgo(_this.poblacion_array.alteraciones_transtornos_audicion, "chartdiv_alteraciones_transtornos_audicion");
 
                   _this.grafica_riesgo_edad(_this.poblacion_array.alteraciones_transtornos_audicion, "chartdiv_alteraciones_transtornos_audicion_edad");
+
+                  _this.grafica_riesgo(_this.poblacion_array.alteraciones_transtornos_visuales, "chartdiv_alteraciones_transtornos_visuales");
+
+                  _this.grafica_riesgo_edad(_this.poblacion_array.alteraciones_transtornos_visuales, "chartdiv_alteraciones_transtornos_visuales_edad");
+
+                  _this.grafica_riesgo(_this.poblacion_array.cancer, "chartdiv_cancer");
+
+                  _this.grafica_riesgo_edad(_this.poblacion_array.cancer, "chartdiv_cancer_edad");
+
+                  _this.grafica_riesgo(_this.poblacion_array.consumo_spa, "chartdiv_consumo_spa");
+
+                  _this.grafica_riesgo_edad(_this.poblacion_array.consumo_spa, "chartdiv_consumo_spa_edad");
                 })["catch"](function (err) {
                   console.log(err);
                 });
@@ -249,14 +378,44 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                chart = null;
+
                 if (riesgo == "chartdiv_alteraciones_transtornos_audicion") {
                   if (_this2.chart_alteraciones_transtornos_audicion != null) {
                     _this2.chart_alteraciones_transtornos_audicion.dispose();
                   }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this2.chart_alteraciones_transtornos_audicion = chart;
                 }
 
-                chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
-                _this2.chart_alteraciones_transtornos_audicion = chart;
+                if (riesgo == "chartdiv_alteraciones_transtornos_visuales") {
+                  if (_this2.chart_alteraciones_transtornos_visuales != null) {
+                    _this2.chart_alteraciones_transtornos_visuales.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this2.chart_alteraciones_transtornos_visuales = chart;
+                }
+
+                if (riesgo == "chartdiv_cancer") {
+                  if (_this2.chart_cancer != null) {
+                    _this2.chart_cancer.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this2.chart_cancer = chart;
+                }
+
+                if (riesgo == "chartdiv_consumo_spa") {
+                  if (_this2.chart_consumo_spa != null) {
+                    _this2.chart_consumo_spa.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this2.chart_consumo_spa = chart;
+                }
+
                 chart.data = [{
                   category: "Alto",
                   first: array.alto
@@ -274,7 +433,7 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
                 series.dataFields.value = "first";
                 series.dataFields.category = "category";
 
-              case 7:
+              case 9:
               case "end":
                 return _context2.stop();
             }
@@ -291,14 +450,44 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                if (riesgo == "chartdiv_alteraciones_transtornos_audicion") {
+                chart = null;
+
+                if (riesgo == "chartdiv_alteraciones_transtornos_audicion_edad") {
                   if (_this3.chart_alteraciones_transtornos_audicion_edad != null) {
                     _this3.chart_alteraciones_transtornos_audicion_edad.dispose();
                   }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this3.chart_alteraciones_transtornos_audicion_edad = chart;
                 }
 
-                chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
-                _this3.chart_alteraciones_transtornos_audicion_edad = chart;
+                if (riesgo == "chartdiv_alteraciones_transtornos_visuales_edad") {
+                  if (_this3.chart_alteraciones_transtornos_visuales_edad != null) {
+                    _this3.chart_alteraciones_transtornos_visuales_edad.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this3.chart_alteraciones_transtornos_visuales_edad = chart;
+                }
+
+                if (riesgo == "chartdiv_cancer_edad") {
+                  if (_this3.chart_cancer_edad != null) {
+                    _this3.chart_cancer_edad.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this3.chart_cancer_edad = chart;
+                }
+
+                if (riesgo == "chartdiv_consumo_spa_edad") {
+                  if (_this3.chart_consumo_spa_edad != null) {
+                    _this3.chart_consumo_spa_edad.dispose();
+                  }
+
+                  chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"](riesgo, _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
+                  _this3.chart_consumo_spa_edad = chart;
+                }
+
                 chart.data = [{
                   category: "-1 Años",
                   first: array.de0a1
@@ -325,7 +514,7 @@ _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amch
                 series.dataFields.value = "first";
                 series.dataFields.category = "category";
 
-              case 7:
+              case 9:
               case "end":
                 return _context3.stop();
             }
@@ -2327,15 +2516,15 @@ var render = function() {
                 staticStyle: { "text-align": "left" }
               },
               [
+                _c("br"),
+                _vm._v(" "),
+                _c("h4", { staticStyle: { color: "#fd397a" } }, [
+                  _vm._v(
+                    "Alteraciones Y Transtornos De La Audición Y Comunicación"
+                  )
+                ]),
+                _vm._v(" "),
                 _c("div", { staticClass: "row" }, [
-                  _c("h4", { staticStyle: { color: "#fd397a" } }, [
-                    _vm._v(
-                      "Alteraciones Y Transtornos De La Audición Y Comunicación"
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
                   _vm.poblacion_array != null
                     ? _c(
                         "div",
@@ -2580,6 +2769,710 @@ var render = function() {
                     : _vm._e(),
                   _vm._v(" "),
                   _vm._m(2)
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("h4", { staticStyle: { color: "#fd397a" } }, [
+                  _vm._v("Alteraciones Y Transtornos Visuales")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales
+                                    .numero_personas
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(", se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Alto: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array
+                                      .alteraciones_transtornos_visuales.alto
+                                  ) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo Moderado: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array
+                                      .alteraciones_transtornos_visuales
+                                      .moderado
+                                  ) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Bajo: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array
+                                      .alteraciones_transtornos_visuales.bajo
+                                  ) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo nexistente: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array
+                                      .alteraciones_transtornos_visuales
+                                      .inexistente
+                                  ) +
+                                  " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De esas "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.alto
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" que se encuentran en nivel de riesgo "),
+                            _c("strong", [_vm._v('"Alto" ')]),
+                            _vm._v("se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales
+                                    .porcentaje_femeninos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Femenino, "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales
+                                    .porcentaje_masculinos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Masculino, ademas el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales
+                                    .porcentaje_zona_urbana
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en la zona urbana, y el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales
+                                    .porcentaje_zona_rural
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en zona rural.")
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "10px" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              "Personas en nivel de riesgo alto por grupo de edad: "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Menores de 1 Año: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de0a1
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 1 a 5 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de1a5
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 6 a 11 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de6a11
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 12 a 17 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de12a17
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 18 a 28 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de18a28
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 29 a 59 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.de29a59
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Mayores de 60 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array
+                                    .alteraciones_transtornos_visuales.mayores60
+                                ) + " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(4)
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("h4", { staticStyle: { color: "#fd397a" } }, [
+                  _vm._v("Cancer")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.cancer.numero_personas
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(", se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Alto: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.poblacion_array.cancer.alto) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo Moderado: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.poblacion_array.cancer.moderado) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Bajo: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.poblacion_array.cancer.bajo) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo nexistente: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array.cancer.inexistente
+                                  ) +
+                                  " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(5),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De esas "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.alto) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" que se encuentran en nivel de riesgo "),
+                            _c("strong", [_vm._v('"Alto" ')]),
+                            _vm._v("se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.cancer
+                                    .porcentaje_femeninos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Femenino, "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.cancer
+                                    .porcentaje_masculinos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Masculino, ademas el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.cancer
+                                    .porcentaje_zona_urbana
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en la zona urbana, y el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.cancer
+                                    .porcentaje_zona_rural
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en zona rural.")
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "10px" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              "Personas en nivel de riesgo alto por grupo de edad: "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Menores de 1 Año: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de0a1) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 1 a 5 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de1a5) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 6 a 11 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de6a11) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 12 a 17 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de12a17) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 18 a 28 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de18a28) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 29 a 59 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.de29a59) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Mayores de 60 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.cancer.mayores60) +
+                                  " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(6)
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("h4", { staticStyle: { color: "#fd397a" } }, [
+                  _vm._v("Consumo de SPA")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa
+                                    .numero_personas
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(", se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Alto: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.poblacion_array.consumo_spa.alto) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo Moderado: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array.consumo_spa.moderado
+                                  ) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Nivel de Riesgo Bajo: ")]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(_vm.poblacion_array.consumo_spa.bajo) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [
+                                _vm._v("Nivel de Riesgo nexistente: ")
+                              ]),
+                              _vm._v(
+                                " " +
+                                  _vm._s(
+                                    _vm.poblacion_array.consumo_spa.inexistente
+                                  ) +
+                                  " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-12",
+                          staticStyle: { "padding-top": "30px" }
+                        },
+                        [
+                          _c("h5", [
+                            _vm._v("De esas "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.consumo_spa.alto) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" que se encuentran en nivel de riesgo "),
+                            _c("strong", [_vm._v('"Alto" ')]),
+                            _vm._v("se tiene que: ")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa
+                                    .porcentaje_femeninos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Femenino, "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa
+                                    .porcentaje_masculinos_alto
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" son de genero Masculino, ademas el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa
+                                    .porcentaje_zona_urbana
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en la zona urbana, y el "),
+                            _c("strong", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa
+                                    .porcentaje_zona_rural
+                                ) + "%"
+                              )
+                            ]),
+                            _vm._v(" se encuentra en zona rural.")
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.poblacion_array != null
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "col-lg-6",
+                          staticStyle: { "padding-top": "10px" }
+                        },
+                        [
+                          _c("strong", [
+                            _vm._v(
+                              "Personas en nivel de riesgo alto por grupo de edad: "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("ul", [
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Menores de 1 Año: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.consumo_spa.de0a1) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 1 a 5 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.consumo_spa.de1a5) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 6 a 11 Años: ")]),
+                              _vm._v(
+                                _vm._s(_vm.poblacion_array.consumo_spa.de6a11) +
+                                  " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 12 a 17 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa.de12a17
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 18 a 28 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa.de18a28
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("De 29 a 59 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa.de29a59
+                                ) + " Personas"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("li", { staticClass: "li_li" }, [
+                              _c("strong", [_vm._v("Mayores de 60 Años: ")]),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.poblacion_array.consumo_spa.mayores60
+                                ) + " Personas"
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm._m(8)
                 ])
               ]
             )
@@ -2677,6 +3570,114 @@ var staticRenderFns = [
         _c("div", {
           staticStyle: { width: "100%", height: "230px" },
           attrs: { id: "chartdiv_alteraciones_transtornos_audicion_edad" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "180px" },
+          attrs: { id: "chartdiv_alteraciones_transtornos_visuales" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "230px" },
+          attrs: { id: "chartdiv_alteraciones_transtornos_visuales_edad" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "180px" },
+          attrs: { id: "chartdiv_cancer" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "230px" },
+          attrs: { id: "chartdiv_cancer_edad" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "180px" },
+          attrs: { id: "chartdiv_consumo_spa" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "col-lg-6 text-center",
+        staticStyle: { "padding-top": "30px" }
+      },
+      [
+        _c("div", {
+          staticStyle: { width: "100%", height: "230px" },
+          attrs: { id: "chartdiv_consumo_spa_edad" }
         })
       ]
     )

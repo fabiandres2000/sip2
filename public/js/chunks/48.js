@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[48],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -11,7 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Servicios_parentescos_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/parentescos_servicios */ "./resources/js/Servicios/parentescos_servicios.js");
+/* harmony import */ var _Servicios_religion_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/religion_servicios */ "./resources/js/Servicios/religion_servicios.js");
 //
 //
 //
@@ -303,8 +303,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       bandera: false,
       entrarPorError: false,
       txtbusqueda: "",
-      parentescos: [],
-      parentescosData: {
+      religion: [],
+      religionData: {
         descripcion: "",
         observacion: "",
         id: 0
@@ -324,17 +324,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   computed: {
     // CLASES Y ERRORES DE CAMPO IDENTIFICACION
-    parentescosError: function parentescosError() {
-      var valor = this.parentescosData.descripcion.trim();
+    religionError: function religionError() {
+      var valor = this.religionData.descripcion.trim();
 
       if (valor == "") {
         return "El campo es obligatorio";
       }
     },
-    parentescosClases: function parentescosClases() {
+    religionClases: function religionClases() {
       return [{
-        "is-invalid": this.parentescosError,
-        "is-valid": !this.parentescosError
+        "is-invalid": this.religionError,
+        "is-valid": !this.religionError
       }];
     },
     esActivo: function esActivo() {
@@ -392,8 +392,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 };
                 _context.prev = 1;
                 _context.next = 4;
-                return _Servicios_parentescos_servicios__WEBPACK_IMPORTED_MODULE_1__["listarParentescos"](parametros).then(function (respuesta) {
-                  _this.parentescos = respuesta.data.parentescos.data;
+                return _Servicios_religion_servicios__WEBPACK_IMPORTED_MODULE_1__["listar"](parametros).then(function (respuesta) {
+                  _this.religion = respuesta.data.religion.data;
                   _this.paginacion = respuesta.data.paginacion;
                 });
 
@@ -431,18 +431,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return consultar;
     }(),
     abrirModal: function abrirModal() {
-      this.parentescosData.descripcion = "";
-      this.parentescosData.observacion = "";
-      this.parentescosData.id = 0;
+      this.religionData.descripcion = "";
+      this.religionData.observacion = "";
+      this.religionData.id = 0;
       this.errores = [];
       this.entrarPorError = false;
-      this.$refs.modalParentescos.show();
+      this.$refs.modalReligion.show();
     },
     cerrarModal: function cerrarModal() {
-      this.$refs.modalParentescos.hide();
+      this.$refs.modalReligion.hide();
     },
-    guardarParentesco: function () {
-      var _guardarParentesco = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    guardar: function () {
+      var _guardar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var _this2 = this;
 
         var parametros;
@@ -463,19 +463,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.errores = [];
                 parametros = {
                   _token: this.csrf,
-                  descripcion: this.parentescosData.descripcion,
-                  observacion: this.parentescosData.observacion,
-                  id: this.parentescosData.id
+                  descripcion: this.religionData.descripcion,
+                  observacion: this.religionData.observacion,
+                  id: this.religionData.id
                 };
                 this.valG = false;
                 _context2.prev = 7;
                 _context2.next = 10;
-                return _Servicios_parentescos_servicios__WEBPACK_IMPORTED_MODULE_1__["guardarParentescos"](parametros).then(function (respuesta) {
+                return _Servicios_religion_servicios__WEBPACK_IMPORTED_MODULE_1__["guardar"](parametros).then(function (respuesta) {
                   _this2.consultar(1);
 
-                  _this2.parentescosData.descripcion = "";
-                  _this2.parentescosData.observacion = "";
-                  _this2.parentescosData.id = 0;
+                  _this2.religionData.descripcion = "";
+                  _this2.religionData.observacion = "";
+                  _this2.religionData.id = 0;
 
                   _this2.cerrarModal();
 
@@ -518,16 +518,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, this, [[7, 12]]);
       }));
 
-      function guardarParentesco() {
-        return _guardarParentesco.apply(this, arguments);
+      function guardar() {
+        return _guardar.apply(this, arguments);
       }
 
-      return guardarParentesco;
+      return guardar;
     }(),
     checkForm: function checkForm(e) {
       this.errores = [];
 
-      if (!this.parentescosData.descripcion) {
+      if (!this.religionData.descripcion) {
         this.errores.push("La descripción es obligatoria.");
       }
 
@@ -556,11 +556,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 titulo = "";
 
                 if (usu.estado == "Activo") {
-                  title = "¿Desea anular el parentesco " + usu.descripcion + "?";
-                  titulo = "Parentesco " + usu.descripcion + " anulado de manera exitosa";
+                  title = "¿Desea anular la religión " + usu.descripcion + "?";
+                  titulo = "Religión " + usu.descripcion + " anulado de manera exitosa";
                 } else {
-                  title = "¿Desea activar el parentesco " + usu.descripcion + "?";
-                  titulo = "Parentesco " + usu.descripcion + " activado de manera exitosa";
+                  title = "¿Desea activar la religión " + usu.descripcion + "?";
+                  titulo = "Religión " + usu.descripcion + " activado de manera exitosa";
                 }
 
                 this.$swal({
@@ -581,7 +581,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     };
 
                     try {
-                      _Servicios_parentescos_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminarParentescos"](parametros).then(function (respuesta) {
+                      _Servicios_religion_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminar"](parametros).then(function (respuesta) {
                         _this3.consultar(1);
 
                         _this3.$swal({
@@ -630,10 +630,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                this.parentescosData.descripcion = item.descripcion;
-                this.parentescosData.observacion = item.observacion;
-                this.parentescosData.id = item.id;
-                this.$refs.modalParentescos.show();
+                this.religionData.descripcion = item.descripcion;
+                this.religionData.observacion = item.observacion;
+                this.religionData.id = item.id;
+                this.$refs.modalReligion.show();
 
               case 4:
               case "end":
@@ -654,10 +654,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&":
-/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css& ***!
-  \*************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -673,15 +673,15 @@ exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&":
-/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css& ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Parentescos.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Religion.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -703,10 +703,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4&":
-/*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4& ***!
-  \**********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8& ***!
+  \****************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -741,7 +741,7 @@ var render = function() {
                             "data-skin": "dark",
                             "data-toggle": "kt-tooltip",
                             "data-placement": "top",
-                            title: "Nuevo Parentesco"
+                            title: "Nueva Religión"
                           },
                           on: { click: _vm.abrirModal }
                         },
@@ -807,7 +807,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tbody",
-                        _vm._l(_vm.parentescos, function(item, index) {
+                        _vm._l(_vm.religion, function(item, index) {
                           return _c("tr", { key: index }, [
                             _c(
                               "td",
@@ -1117,10 +1117,10 @@ var render = function() {
         _c(
           "b-modal",
           {
-            ref: "modalParentescos",
+            ref: "modalReligion",
             attrs: {
               "hide-footer": "",
-              title: "Gestion de Parentescos",
+              title: "Gestion de Religiones",
               size: "xl",
               centered: "",
               "header-bg-variant": "danger",
@@ -1279,29 +1279,29 @@ var render = function() {
               _vm._v(" "),
               _c("form", [
                 _c("div", { staticClass: "form-group row" }, [
-                  _c("div", { staticClass: "col-lg-4" }, [
-                    _c("label", [_vm._v("Parentesco:")]),
+                  _c("div", { staticClass: "col-lg-6" }, [
+                    _c("label", [_vm._v("Religión:")]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.parentescosData.descripcion,
-                          expression: "parentescosData.descripcion"
+                          value: _vm.religionData.descripcion,
+                          expression: "religionData.descripcion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
-                      class: _vm.parentescosClases,
+                      class: _vm.religionClases,
                       attrs: { type: "text", placeholder: "Descripción" },
-                      domProps: { value: _vm.parentescosData.descripcion },
+                      domProps: { value: _vm.religionData.descripcion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.parentescosData,
+                            _vm.religionData,
                             "descripcion",
                             $event.target.value
                           )
@@ -1309,14 +1309,14 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _vm.parentescosError
+                    _vm.religionError
                       ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(_vm._s(_vm.parentescosError))
+                          _vm._v(_vm._s(_vm.religionError))
                         ])
                       : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-8" }, [
+                  _c("div", { staticClass: "col-lg-6" }, [
                     _c("label", [_vm._v("Observación:")]),
                     _vm._v(" "),
                     _c("input", {
@@ -1324,20 +1324,20 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.parentescosData.observacion,
-                          expression: "parentescosData.observacion"
+                          value: _vm.religionData.observacion,
+                          expression: "religionData.observacion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
                       attrs: { type: "text", placeholder: "Observación" },
-                      domProps: { value: _vm.parentescosData.observacion },
+                      domProps: { value: _vm.religionData.observacion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.parentescosData,
+                            _vm.religionData,
                             "observacion",
                             $event.target.value
                           )
@@ -1356,7 +1356,7 @@ var render = function() {
                       staticClass: "btn btn-success",
                       class: _vm.spinG,
                       attrs: { type: "button", disabled: !_vm.valG },
-                      on: { click: _vm.guardarParentesco }
+                      on: { click: _vm.guardar }
                     },
                     [
                       _c("i", { staticClass: "fa fa-edit" }),
@@ -1395,7 +1395,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "kt-portlet__head-label" }, [
         _c("h3", { staticClass: "kt-portlet__head-title" }, [
           _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
-            _vm._v("GESTIÓN DE PARENTESCOS")
+            _vm._v("GESTIÓN DE RELIGIONES")
           ])
         ])
       ])
@@ -1409,7 +1409,7 @@ var staticRenderFns = [
       _c("tr", { staticClass: "kt-bg-fill-brand" }, [
         _c("th", [_vm._v("No.")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Parentesco")]),
+        _c("th", [_vm._v("Religión")]),
         _vm._v(" "),
         _c("th", [_vm._v("Observación")]),
         _vm._v(" "),
@@ -1426,44 +1426,44 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./resources/js/Servicios/parentescos_servicios.js":
-/*!*********************************************************!*\
-  !*** ./resources/js/Servicios/parentescos_servicios.js ***!
-  \*********************************************************/
-/*! exports provided: listarParentescos, guardarParentescos, eliminarParentescos */
+/***/ "./resources/js/Servicios/religion_servicios.js":
+/*!******************************************************!*\
+  !*** ./resources/js/Servicios/religion_servicios.js ***!
+  \******************************************************/
+/*! exports provided: listar, guardar, eliminar */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listarParentescos", function() { return listarParentescos; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardarParentescos", function() { return guardarParentescos; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminarParentescos", function() { return eliminarParentescos; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listar", function() { return listar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardar", function() { return guardar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminar", function() { return eliminar; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
-function listarParentescos($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/parentescos', $data);
+function listar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/religion', $data);
 }
-function guardarParentescos($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/parentescos/guardar', $data);
+function guardar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/religion/guardar', $data);
 }
-function eliminarParentescos($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/parentescos/eliminar', $data);
+function eliminar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/religion/eliminar', $data);
 }
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Parentescos/Parentescos.vue":
-/*!*********************************************************!*\
-  !*** ./resources/js/Vistas/Parentescos/Parentescos.vue ***!
-  \*********************************************************/
+/***/ "./resources/js/Vistas/Religion/Religion.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/Vistas/Religion/Religion.vue ***!
+  \***************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Parentescos.vue?vue&type=template&id=131a0ca4& */ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4&");
-/* harmony import */ var _Parentescos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Parentescos.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Parentescos.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Religion.vue?vue&type=template&id=26d2e4b8& */ "./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8&");
+/* harmony import */ var _Religion_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Religion.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Religion.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -1474,9 +1474,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _Parentescos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Religion_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -1486,54 +1486,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Parentescos/Parentescos.vue"
+component.options.__file = "resources/js/Vistas/Religion/Religion.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************/
+/***/ "./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Parentescos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Religion.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&":
-/*!******************************************************************************************!*\
-  !*** ./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css& ***!
-  \******************************************************************************************/
+/***/ "./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Parentescos.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Religion.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8& ***!
+  \**********************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Parentescos.vue?vue&type=template&id=131a0ca4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Parentescos/Parentescos.vue?vue&type=template&id=131a0ca4&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Religion.vue?vue&type=template&id=26d2e4b8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Religion/Religion.vue?vue&type=template&id=26d2e4b8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Parentescos_vue_vue_type_template_id_131a0ca4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Religion_vue_vue_type_template_id_26d2e4b8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

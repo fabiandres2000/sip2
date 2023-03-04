@@ -33,9 +33,9 @@
                 </div>
                 <div class="card">
                     <div class="card-body" style="text-align: left;">
+                        <br>
+                        <h4  style="color: #fd397a">Alteraciones Y Transtornos De La Audición Y Comunicación</h4>
                         <div class="row">
-                            <h4  style="color: #fd397a">Alteraciones Y Transtornos De La Audición Y Comunicación</h4>
-                            <br>
                             <div v-if="poblacion_array != null" class="col-lg-6"  style="padding-top: 30px">
                                 <h5>De <strong>{{ poblacion_array.alteraciones_transtornos_audicion.numero_personas }} Personas</strong>, se tiene que: </h5>
                                 <br>
@@ -67,7 +67,118 @@
                             </div>
                             <div class="col-lg-6 text-center"  style="padding-top: 30px">
                                 <div id="chartdiv_alteraciones_transtornos_audicion_edad" style="width: 100%; height: 230px"></div>
+                            </div>   
+                        </div>
+                        <br>
+                        <br>
+                        <h4  style="color: #fd397a">Alteraciones Y Transtornos Visuales</h4>
+                        <div class="row"> 
+                            <div v-if="poblacion_array != null" class="col-lg-6"  style="padding-top: 30px">
+                                <h5>De <strong>{{ poblacion_array.alteraciones_transtornos_visuales.numero_personas }} Personas</strong>, se tiene que: </h5>
+                                <br>
+                                <ul>
+                                    <li class="li_li"><strong>Nivel de Riesgo Alto: </strong> {{poblacion_array.alteraciones_transtornos_visuales.alto}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Moderado: </strong> {{poblacion_array.alteraciones_transtornos_visuales.moderado}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Bajo: </strong> {{poblacion_array.alteraciones_transtornos_visuales.bajo}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo nexistente: </strong> {{poblacion_array.alteraciones_transtornos_visuales.inexistente}} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_alteraciones_transtornos_visuales" style="width: 100%; height: 180px"></div>
                             </div>  
+                            <div v-if="poblacion_array != null" class="col-lg-12" style="padding-top: 30px">
+                                <h5>De esas <strong>{{ poblacion_array.alteraciones_transtornos_visuales.alto }} Personas</strong> que se encuentran en nivel de riesgo <strong>"Alto" </strong>se tiene que: </h5>
+                                <p><strong>{{ poblacion_array.alteraciones_transtornos_visuales.porcentaje_femeninos_alto }}%</strong> son de genero Femenino, <strong>{{ poblacion_array.alteraciones_transtornos_visuales.porcentaje_masculinos_alto }}%</strong> son de genero Masculino, ademas el <strong>{{ poblacion_array.alteraciones_transtornos_visuales.porcentaje_zona_urbana }}%</strong> se encuentra en la zona urbana, y el <strong>{{ poblacion_array.alteraciones_transtornos_visuales.porcentaje_zona_rural }}%</strong> se encuentra en zona rural.</p>
+                            </div>
+                            <div v-if="poblacion_array != null" class="col-lg-6" style="padding-top: 10px">
+                                <strong>Personas en nivel de riesgo alto por grupo de edad: </strong>
+                                <ul>
+                                    <li class="li_li"><strong>Menores de 1 Año: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de0a1 }} Personas</li>
+                                    <li class="li_li"><strong>De 1 a 5 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de1a5 }} Personas</li>
+                                    <li class="li_li"><strong>De 6 a 11 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de6a11 }} Personas</li>
+                                    <li class="li_li"><strong>De 12 a 17 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de12a17 }} Personas</li>
+                                    <li class="li_li"><strong>De 18 a 28 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de18a28 }} Personas</li>
+                                    <li class="li_li"><strong>De 29 a 59 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.de29a59 }} Personas</li>
+                                    <li class="li_li"><strong>Mayores de 60 Años: </strong>{{ poblacion_array.alteraciones_transtornos_visuales.mayores60 }} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_alteraciones_transtornos_visuales_edad" style="width: 100%; height: 230px"></div>
+                            </div> 
+                        </div>
+                        <br>
+                        <br>
+                        <h4  style="color: #fd397a">Cancer</h4>
+                        <div class="row"> 
+                            <div v-if="poblacion_array != null" class="col-lg-6"  style="padding-top: 30px">
+                                <h5>De <strong>{{ poblacion_array.cancer.numero_personas }} Personas</strong>, se tiene que: </h5>
+                                <br>
+                                <ul>
+                                    <li class="li_li"><strong>Nivel de Riesgo Alto: </strong> {{poblacion_array.cancer.alto}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Moderado: </strong> {{poblacion_array.cancer.moderado}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Bajo: </strong> {{poblacion_array.cancer.bajo}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo nexistente: </strong> {{poblacion_array.cancer.inexistente}} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_cancer" style="width: 100%; height: 180px"></div>
+                            </div>  
+                            <div v-if="poblacion_array != null" class="col-lg-12" style="padding-top: 30px">
+                                <h5>De esas <strong>{{ poblacion_array.cancer.alto }} Personas</strong> que se encuentran en nivel de riesgo <strong>"Alto" </strong>se tiene que: </h5>
+                                <p><strong>{{ poblacion_array.cancer.porcentaje_femeninos_alto }}%</strong> son de genero Femenino, <strong>{{ poblacion_array.cancer.porcentaje_masculinos_alto }}%</strong> son de genero Masculino, ademas el <strong>{{ poblacion_array.cancer.porcentaje_zona_urbana }}%</strong> se encuentra en la zona urbana, y el <strong>{{ poblacion_array.cancer.porcentaje_zona_rural }}%</strong> se encuentra en zona rural.</p>
+                            </div>
+                            <div v-if="poblacion_array != null" class="col-lg-6" style="padding-top: 10px">
+                                <strong>Personas en nivel de riesgo alto por grupo de edad: </strong>
+                                <ul>
+                                    <li class="li_li"><strong>Menores de 1 Año: </strong>{{ poblacion_array.cancer.de0a1 }} Personas</li>
+                                    <li class="li_li"><strong>De 1 a 5 Años: </strong>{{ poblacion_array.cancer.de1a5 }} Personas</li>
+                                    <li class="li_li"><strong>De 6 a 11 Años: </strong>{{ poblacion_array.cancer.de6a11 }} Personas</li>
+                                    <li class="li_li"><strong>De 12 a 17 Años: </strong>{{ poblacion_array.cancer.de12a17 }} Personas</li>
+                                    <li class="li_li"><strong>De 18 a 28 Años: </strong>{{ poblacion_array.cancer.de18a28 }} Personas</li>
+                                    <li class="li_li"><strong>De 29 a 59 Años: </strong>{{ poblacion_array.cancer.de29a59 }} Personas</li>
+                                    <li class="li_li"><strong>Mayores de 60 Años: </strong>{{ poblacion_array.cancer.mayores60 }} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_cancer_edad" style="width: 100%; height: 230px"></div>
+                            </div> 
+                        </div>
+                        <br>
+                        <br>
+                        <h4  style="color: #fd397a">Consumo de SPA</h4>
+                        <div class="row"> 
+                            <div v-if="poblacion_array != null" class="col-lg-6"  style="padding-top: 30px">
+                                <h5>De <strong>{{ poblacion_array.consumo_spa.numero_personas }} Personas</strong>, se tiene que: </h5>
+                                <br>
+                                <ul>
+                                    <li class="li_li"><strong>Nivel de Riesgo Alto: </strong> {{poblacion_array.consumo_spa.alto}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Moderado: </strong> {{poblacion_array.consumo_spa.moderado}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo Bajo: </strong> {{poblacion_array.consumo_spa.bajo}} Personas</li>
+                                    <li class="li_li"><strong>Nivel de Riesgo nexistente: </strong> {{poblacion_array.consumo_spa.inexistente}} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_consumo_spa" style="width: 100%; height: 180px"></div>
+                            </div>  
+                            <div v-if="poblacion_array != null" class="col-lg-12" style="padding-top: 30px">
+                                <h5>De esas <strong>{{ poblacion_array.consumo_spa.alto }} Personas</strong> que se encuentran en nivel de riesgo <strong>"Alto" </strong>se tiene que: </h5>
+                                <p><strong>{{ poblacion_array.consumo_spa.porcentaje_femeninos_alto }}%</strong> son de genero Femenino, <strong>{{ poblacion_array.consumo_spa.porcentaje_masculinos_alto }}%</strong> son de genero Masculino, ademas el <strong>{{ poblacion_array.consumo_spa.porcentaje_zona_urbana }}%</strong> se encuentra en la zona urbana, y el <strong>{{ poblacion_array.consumo_spa.porcentaje_zona_rural }}%</strong> se encuentra en zona rural.</p>
+                            </div>
+                            <div v-if="poblacion_array != null" class="col-lg-6" style="padding-top: 10px">
+                                <strong>Personas en nivel de riesgo alto por grupo de edad: </strong>
+                                <ul>
+                                    <li class="li_li"><strong>Menores de 1 Año: </strong>{{ poblacion_array.consumo_spa.de0a1 }} Personas</li>
+                                    <li class="li_li"><strong>De 1 a 5 Años: </strong>{{ poblacion_array.consumo_spa.de1a5 }} Personas</li>
+                                    <li class="li_li"><strong>De 6 a 11 Años: </strong>{{ poblacion_array.consumo_spa.de6a11 }} Personas</li>
+                                    <li class="li_li"><strong>De 12 a 17 Años: </strong>{{ poblacion_array.consumo_spa.de12a17 }} Personas</li>
+                                    <li class="li_li"><strong>De 18 a 28 Años: </strong>{{ poblacion_array.consumo_spa.de18a28 }} Personas</li>
+                                    <li class="li_li"><strong>De 29 a 59 Años: </strong>{{ poblacion_array.consumo_spa.de29a59 }} Personas</li>
+                                    <li class="li_li"><strong>Mayores de 60 Años: </strong>{{ poblacion_array.consumo_spa.mayores60 }} Personas</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 text-center"  style="padding-top: 30px">
+                                <div id="chartdiv_consumo_spa_edad" style="width: 100%; height: 230px"></div>
+                            </div> 
                         </div>
                     </div>
                 </div>    
@@ -138,7 +249,13 @@
                 isLoading: false,       
                 rutaPdf: "",
                 chart_alteraciones_transtornos_audicion: null,
-                chart_alteraciones_transtornos_audicion_edad: null
+                chart_alteraciones_transtornos_audicion_edad: null,
+                chart_alteraciones_transtornos_visuales: null,
+                chart_alteraciones_transtornos_visuales_edad: null,
+                chart_cancer: null,
+                chart_cancer_edad: null,
+                chart_consumo_spa: null,
+                chart_consumo_spa_edad: null
             }
         },
         methods: {
@@ -147,20 +264,55 @@
                     this.poblacion_array = respuesta.data; 
                     this.grafica_riesgo(this.poblacion_array.alteraciones_transtornos_audicion, "chartdiv_alteraciones_transtornos_audicion");
                     this.grafica_riesgo_edad(this.poblacion_array.alteraciones_transtornos_audicion, "chartdiv_alteraciones_transtornos_audicion_edad");
+                    this.grafica_riesgo(this.poblacion_array.alteraciones_transtornos_visuales, "chartdiv_alteraciones_transtornos_visuales");
+                    this.grafica_riesgo_edad(this.poblacion_array.alteraciones_transtornos_visuales, "chartdiv_alteraciones_transtornos_visuales_edad");
+                    this.grafica_riesgo(this.poblacion_array.cancer, "chartdiv_cancer");
+                    this.grafica_riesgo_edad(this.poblacion_array.cancer, "chartdiv_cancer_edad");
+                    this.grafica_riesgo(this.poblacion_array.consumo_spa, "chartdiv_consumo_spa");
+                    this.grafica_riesgo_edad(this.poblacion_array.consumo_spa, "chartdiv_consumo_spa_edad");
                 })
                 .catch(err => {
                     console.log(err);
                 });
             },
             async grafica_riesgo(array, riesgo) {
+                var chart = null;
+
                 if(riesgo == "chartdiv_alteraciones_transtornos_audicion"){
                     if(this.chart_alteraciones_transtornos_audicion != null){
                         this.chart_alteraciones_transtornos_audicion.dispose();
-                    } 
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_alteraciones_transtornos_audicion = chart;    
                 }
 
-                var chart = am4core.create(riesgo, am4charts.PieChart3D);
-                this.chart_alteraciones_transtornos_audicion = chart;
+                if(riesgo == "chartdiv_alteraciones_transtornos_visuales"){
+                    if(this.chart_alteraciones_transtornos_visuales != null){
+                        this.chart_alteraciones_transtornos_visuales.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_alteraciones_transtornos_visuales = chart;  
+                }
+
+                if(riesgo == "chartdiv_cancer"){
+                    if(this.chart_cancer != null){
+                        this.chart_cancer.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_cancer = chart;  
+                }
+
+                if(riesgo == "chartdiv_consumo_spa"){
+                    if(this.chart_consumo_spa != null){
+                        this.chart_consumo_spa.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_consumo_spa = chart;  
+                }
 
                 chart.data = [
                     {
@@ -187,14 +339,43 @@
             },
             async grafica_riesgo_edad(array, riesgo) {
 
-                if(riesgo == "chartdiv_alteraciones_transtornos_audicion"){
+                var chart = null;
+                if(riesgo == "chartdiv_alteraciones_transtornos_audicion_edad"){
                     if(this.chart_alteraciones_transtornos_audicion_edad != null){
                         this.chart_alteraciones_transtornos_audicion_edad.dispose();
                     }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_alteraciones_transtornos_audicion_edad = chart;
+                    
                 }
 
-                var chart = am4core.create(riesgo, am4charts.PieChart3D);
-                this.chart_alteraciones_transtornos_audicion_edad = chart;
+                if(riesgo == "chartdiv_alteraciones_transtornos_visuales_edad"){
+                    if(this.chart_alteraciones_transtornos_visuales_edad != null){
+                        this.chart_alteraciones_transtornos_visuales_edad.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_alteraciones_transtornos_visuales_edad = chart; 
+                }
+
+                if(riesgo == "chartdiv_cancer_edad"){
+                    if(this.chart_cancer_edad != null){
+                        this.chart_cancer_edad.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_cancer_edad = chart; 
+                }
+
+                if(riesgo == "chartdiv_consumo_spa_edad"){
+                    if(this.chart_consumo_spa_edad != null){
+                        this.chart_consumo_spa_edad.dispose();
+                    }
+
+                    chart = am4core.create(riesgo, am4charts.PieChart3D);
+                    this.chart_consumo_spa_edad = chart;  
+                }
 
                 chart.data = [
                     {

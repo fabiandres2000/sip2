@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[37],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -11,7 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/enfermedadesInf_servicios */ "./resources/js/Servicios/enfermedadesInf_servicios.js");
+/* harmony import */ var _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/escolaridad_servicios */ "./resources/js/Servicios/escolaridad_servicios.js");
 //
 //
 //
@@ -303,8 +303,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       bandera: false,
       entrarPorError: false,
       txtbusqueda: "",
-      enfermedadesinf: [],
-      enfermedadData: {
+      escolaridad: [],
+      escolaridadData: {
         descripcion: "",
         observacion: "",
         id: 0
@@ -324,17 +324,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   computed: {
     // CLASES Y ERRORES DE CAMPO IDENTIFICACION
-    enfermedadesinfError: function enfermedadesinfError() {
-      var valor = this.enfermedadData.descripcion.trim();
+    escolaridadError: function escolaridadError() {
+      var valor = this.escolaridadData.descripcion.trim();
 
       if (valor == "") {
         return "El campo es obligatorio";
       }
     },
-    enfermedadesClases: function enfermedadesClases() {
+    escolaridadClases: function escolaridadClases() {
       return [{
-        "is-invalid": this.enfermedadesinfError,
-        "is-valid": !this.enfermedadesinfError
+        "is-invalid": this.escolaridadError,
+        "is-valid": !this.escolaridadError
       }];
     },
     esActivo: function esActivo() {
@@ -392,8 +392,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 };
                 _context.prev = 1;
                 _context.next = 4;
-                return _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_1__["listar"](parametros).then(function (respuesta) {
-                  _this.enfermedadesinf = respuesta.data.enfermedadesinf.data;
+                return _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["listarEscolaridad"](parametros).then(function (respuesta) {
+                  _this.escolaridad = respuesta.data.escolaridad.data;
                   _this.paginacion = respuesta.data.paginacion;
                 });
 
@@ -431,18 +431,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return consultar;
     }(),
     abrirModal: function abrirModal() {
-      this.enfermedadData.descripcion = "";
-      this.enfermedadData.observacion = "";
-      this.enfermedadData.id = 0;
+      this.escolaridadData.descripcion = "";
+      this.escolaridadData.observacion = "";
+      this.escolaridadData.id = 0;
       this.errores = [];
       this.entrarPorError = false;
-      this.$refs.modalEnfermedad.show();
+      this.$refs.modalEscolaridad.show();
     },
     cerrarModal: function cerrarModal() {
-      this.$refs.modalEnfermedad.hide();
+      this.$refs.modalEscolaridad.hide();
     },
-    guardar: function () {
-      var _guardar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    guardarEscolaridad: function () {
+      var _guardarEscolaridad = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var _this2 = this;
 
         var parametros;
@@ -463,19 +463,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.errores = [];
                 parametros = {
                   _token: this.csrf,
-                  descripcion: this.enfermedadData.descripcion,
-                  observacion: this.enfermedadData.observacion,
-                  id: this.enfermedadData.id
+                  descripcion: this.escolaridadData.descripcion,
+                  observacion: this.escolaridadData.observacion,
+                  id: this.escolaridadData.id
                 };
                 this.valG = false;
                 _context2.prev = 7;
                 _context2.next = 10;
-                return _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_1__["guardar"](parametros).then(function (respuesta) {
+                return _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["guardarEscolaridad"](parametros).then(function (respuesta) {
                   _this2.consultar(1);
 
-                  _this2.enfermedadData.descripcion = "";
-                  _this2.enfermedadData.observacion = "";
-                  _this2.enfermedadData.id = 0;
+                  _this2.escolaridadData.descripcion = "";
+                  _this2.escolaridadData.observacion = "";
+                  _this2.escolaridadData.id = 0;
 
                   _this2.cerrarModal();
 
@@ -518,16 +518,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, this, [[7, 12]]);
       }));
 
-      function guardar() {
-        return _guardar.apply(this, arguments);
+      function guardarEscolaridad() {
+        return _guardarEscolaridad.apply(this, arguments);
       }
 
-      return guardar;
+      return guardarEscolaridad;
     }(),
     checkForm: function checkForm(e) {
       this.errores = [];
 
-      if (!this.enfermedadData.descripcion) {
+      if (!this.escolaridadData.descripcion) {
         this.errores.push("La descripción es obligatoria.");
       }
 
@@ -556,11 +556,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 titulo = "";
 
                 if (usu.estado == "Activo") {
-                  title = "¿Desea anular la enfermedad infecciosa " + usu.descripcion + "?";
-                  titulo = "Enfermedad infecciosa " + usu.descripcion + " anulada de manera exitosa";
+                  title = "¿Desea anular la escolaridad " + usu.descripcion + "?";
+                  titulo = "Escolaridad " + usu.descripcion + " anulada de manera exitosa";
                 } else {
-                  title = "¿Desea activar la enfermedad infecciosa " + usu.descripcion + "?";
-                  titulo = "Enfermedad infecciosa " + usu.descripcion + " activada de manera exitosa";
+                  title = "¿Desea activar la escolaridad " + usu.descripcion + "?";
+                  titulo = "Escolaridad " + usu.descripcion + " activada de manera exitosa";
                 }
 
                 this.$swal({
@@ -581,7 +581,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     };
 
                     try {
-                      _Servicios_enfermedadesInf_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminar"](parametros).then(function (respuesta) {
+                      _Servicios_escolaridad_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminarEscolaridad"](parametros).then(function (respuesta) {
                         _this3.consultar(1);
 
                         _this3.$swal({
@@ -630,10 +630,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                this.enfermedadData.descripcion = item.descripcion;
-                this.enfermedadData.observacion = item.observacion;
-                this.enfermedadData.id = item.id;
-                this.$refs.modalEnfermedad.show();
+                this.escolaridadData.descripcion = item.descripcion;
+                this.escolaridadData.observacion = item.observacion;
+                this.escolaridadData.id = item.id;
+                this.$refs.modalEscolaridad.show();
 
               case 4:
               case "end":
@@ -654,10 +654,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -673,15 +673,15 @@ exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInf.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -703,10 +703,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d&":
-/*!***************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d& ***!
-  \***************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470& ***!
+  \**********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -741,7 +741,7 @@ var render = function() {
                             "data-skin": "dark",
                             "data-toggle": "kt-tooltip",
                             "data-placement": "top",
-                            title: "Nueva Enfermedad Infecciosa"
+                            title: "Nueva Escolaridad"
                           },
                           on: { click: _vm.abrirModal }
                         },
@@ -807,7 +807,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "tbody",
-                        _vm._l(_vm.enfermedadesinf, function(item, index) {
+                        _vm._l(_vm.escolaridad, function(item, index) {
                           return _c("tr", { key: index }, [
                             _c(
                               "td",
@@ -1117,10 +1117,10 @@ var render = function() {
         _c(
           "b-modal",
           {
-            ref: "modalEnfermedad",
+            ref: "modalEscolaridad",
             attrs: {
               "hide-footer": "",
-              title: "Gestion de Enfermedades Infecciosas",
+              title: "Gestion de Escolaridad",
               size: "xl",
               centered: "",
               "header-bg-variant": "danger",
@@ -1279,29 +1279,29 @@ var render = function() {
               _vm._v(" "),
               _c("form", [
                 _c("div", { staticClass: "form-group row" }, [
-                  _c("div", { staticClass: "col-lg-6" }, [
-                    _c("label", [_vm._v("Enfermedad Infecciosa:")]),
+                  _c("div", { staticClass: "col-lg-4" }, [
+                    _c("label", [_vm._v("Escolaridad:")]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.enfermedadData.descripcion,
-                          expression: "enfermedadData.descripcion"
+                          value: _vm.escolaridadData.descripcion,
+                          expression: "escolaridadData.descripcion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
-                      class: _vm.enfermedadesClases,
+                      class: _vm.escolaridadClases,
                       attrs: { type: "text", placeholder: "Descripción" },
-                      domProps: { value: _vm.enfermedadData.descripcion },
+                      domProps: { value: _vm.escolaridadData.descripcion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.enfermedadData,
+                            _vm.escolaridadData,
                             "descripcion",
                             $event.target.value
                           )
@@ -1309,14 +1309,14 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _vm.enfermedadesinfError
+                    _vm.escolaridadError
                       ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(_vm._s(_vm.enfermedadesinfError))
+                          _vm._v(_vm._s(_vm.escolaridadError))
                         ])
                       : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "col-lg-6" }, [
+                  _c("div", { staticClass: "col-lg-8" }, [
                     _c("label", [_vm._v("Observación:")]),
                     _vm._v(" "),
                     _c("input", {
@@ -1324,20 +1324,20 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.enfermedadData.observacion,
-                          expression: "enfermedadData.observacion"
+                          value: _vm.escolaridadData.observacion,
+                          expression: "escolaridadData.observacion"
                         }
                       ],
                       staticClass: "form-control text-capitalize",
                       attrs: { type: "text", placeholder: "Observación" },
-                      domProps: { value: _vm.enfermedadData.observacion },
+                      domProps: { value: _vm.escolaridadData.observacion },
                       on: {
                         input: function($event) {
                           if ($event.target.composing) {
                             return
                           }
                           _vm.$set(
-                            _vm.enfermedadData,
+                            _vm.escolaridadData,
                             "observacion",
                             $event.target.value
                           )
@@ -1356,7 +1356,7 @@ var render = function() {
                       staticClass: "btn btn-success",
                       class: _vm.spinG,
                       attrs: { type: "button", disabled: !_vm.valG },
-                      on: { click: _vm.guardar }
+                      on: { click: _vm.guardarEscolaridad }
                     },
                     [
                       _c("i", { staticClass: "fa fa-edit" }),
@@ -1395,7 +1395,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "kt-portlet__head-label" }, [
         _c("h3", { staticClass: "kt-portlet__head-title" }, [
           _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
-            _vm._v("GESTIÓN DE ENFERMEDADES INFECCIOSAS")
+            _vm._v("GESTIÓN DE ESCOLARIDAD")
           ])
         ])
       ])
@@ -1409,7 +1409,7 @@ var staticRenderFns = [
       _c("tr", { staticClass: "kt-bg-fill-brand" }, [
         _c("th", [_vm._v("No.")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Enfermedad")]),
+        _c("th", [_vm._v("Escolaridad")]),
         _vm._v(" "),
         _c("th", [_vm._v("Observación")]),
         _vm._v(" "),
@@ -1426,48 +1426,44 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./resources/js/Servicios/enfermedadesInf_servicios.js":
-/*!*************************************************************!*\
-  !*** ./resources/js/Servicios/enfermedadesInf_servicios.js ***!
-  \*************************************************************/
-/*! exports provided: listar, guardar, eliminar, combo */
+/***/ "./resources/js/Servicios/escolaridad_servicios.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/Servicios/escolaridad_servicios.js ***!
+  \*********************************************************/
+/*! exports provided: listarEscolaridad, guardarEscolaridad, eliminarEscolaridad */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listar", function() { return listar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardar", function() { return guardar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminar", function() { return eliminar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "combo", function() { return combo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listarEscolaridad", function() { return listarEscolaridad; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardarEscolaridad", function() { return guardarEscolaridad; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminarEscolaridad", function() { return eliminarEscolaridad; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
-function listar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf', $data);
+function listarEscolaridad($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad', $data);
 }
-function guardar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf/guardar', $data);
+function guardarEscolaridad($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad/guardar', $data);
 }
-function eliminar($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/enfermedadesInf/eliminar', $data);
-}
-function combo($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/enfermedadesInf/combo');
+function eliminarEscolaridad($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/escolaridad/eliminar', $data);
 }
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue":
-/*!**************************************************************!*\
-  !*** ./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue ***!
-  \**************************************************************/
+/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue ***!
+  \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EnfermedadesInf.vue?vue&type=template&id=4e73700d& */ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d&");
-/* harmony import */ var _EnfermedadesInf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EnfermedadesInf.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EnfermedadesInf.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=template&id=57e5d470& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&");
+/* harmony import */ var _Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -1478,9 +1474,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _EnfermedadesInf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -1490,54 +1486,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/Enfermedades/EnfermedadesInf.vue"
+component.options.__file = "resources/js/Vistas/Escolaridad/Escolaridad.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************!*\
-  !*** ./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************/
+/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInf.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&":
-/*!***********************************************************************************************!*\
-  !*** ./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css& ***!
-  \***********************************************************************************************/
+/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInf.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d&":
-/*!*********************************************************************************************!*\
-  !*** ./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d& ***!
-  \*********************************************************************************************/
+/***/ "./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470& ***!
+  \****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./EnfermedadesInf.vue?vue&type=template&id=4e73700d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Enfermedades/EnfermedadesInf.vue?vue&type=template&id=4e73700d&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Escolaridad.vue?vue&type=template&id=57e5d470& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Escolaridad/Escolaridad.vue?vue&type=template&id=57e5d470&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EnfermedadesInf_vue_vue_type_template_id_4e73700d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Escolaridad_vue_vue_type_template_id_57e5d470___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

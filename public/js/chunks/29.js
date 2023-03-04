@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[29],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -11,22 +11,187 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_html2pdf__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-html2pdf */ "./node_modules/vue-html2pdf/dist/vue-html2pdf.esm.js");
-/* harmony import */ var vue_easy_pie_chart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-easy-pie-chart */ "./node_modules/vue-easy-pie-chart/dist/vue-easy-pie-chart.common.js");
-/* harmony import */ var vue_easy_pie_chart__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_easy_pie_chart__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var vue_easy_pie_chart_dist_vue_easy_pie_chart_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-easy-pie-chart/dist/vue-easy-pie-chart.css */ "./node_modules/vue-easy-pie-chart/dist/vue-easy-pie-chart.css");
-/* harmony import */ var vue_easy_pie_chart_dist_vue_easy_pie_chart_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_easy_pie_chart_dist_vue_easy_pie_chart_css__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var easy_circular_progress__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! easy-circular-progress */ "./node_modules/easy-circular-progress/dist/easy-circular-progress.umd.min.js");
-/* harmony import */ var easy_circular_progress__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(easy_circular_progress__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var vue2_circle_progress__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue2-circle-progress */ "./node_modules/vue2-circle-progress/dist/vue-circle-progress.js");
-/* harmony import */ var vue2_circle_progress__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(vue2_circle_progress__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _Servicios_informes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../Servicios/informes */ "./resources/js/Servicios/informes.js");
-/* harmony import */ var _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @amcharts/amcharts4/core */ "./node_modules/@amcharts/amcharts4/core.js");
-/* harmony import */ var _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @amcharts/amcharts4/charts */ "./node_modules/@amcharts/amcharts4/charts.js");
-/* harmony import */ var _amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @amcharts/amcharts4/themes/animated */ "./node_modules/@amcharts/amcharts4/themes/animated.js");
-/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-loading-overlay */ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js");
-/* harmony import */ var vue_loading_overlay__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(vue_loading_overlay__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../store */ "./resources/js/store.js");
+/* harmony import */ var _Servicios_actividad_servicios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Servicios/actividad_servicios */ "./resources/js/Servicios/actividad_servicios.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -127,287 +292,391 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-
-
-
-
-
-
-
-
-_amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["useTheme"](_amcharts_amcharts4_themes_animated__WEBPACK_IMPORTED_MODULE_9__["default"]);
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    VueHtml2pdf: vue_html2pdf__WEBPACK_IMPORTED_MODULE_1__["default"],
-    VueEasyPieChart: vue_easy_pie_chart__WEBPACK_IMPORTED_MODULE_2___default.a,
-    Progress: easy_circular_progress__WEBPACK_IMPORTED_MODULE_4___default.a,
-    VueCircle: vue2_circle_progress__WEBPACK_IMPORTED_MODULE_5___default.a,
-    Loading: vue_loading_overlay__WEBPACK_IMPORTED_MODULE_10___default.a
-  },
   mounted: function mounted() {
-    this.riesgos_salud();
+    this.consultar(1);
   },
+  name: "barri",
   data: function data() {
     return {
-      poblacion_array: null,
-      isLoading: false,
-      rutaPdf: "",
-      chart_alteraciones_transtornos_audicion: null
+      errores: [],
+      bandera: false,
+      entrarPorError: false,
+      txtbusqueda: "",
+      actividades: [],
+      actividadesData: {
+        descripcion: "",
+        observacion: "",
+        id: 0
+      },
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+      paginacion: {
+        total: 0,
+        pagina_actual: 0,
+        por_pagina: 0,
+        ultima_pagina: 0,
+        desde: 0,
+        hasta: 0
+      },
+      offset: 4,
+      variableGlobal: "GUARDAR",
+      valG: true
     };
   },
-  methods: {
-    riesgos_salud: function riesgos_salud() {
-      var _this = this;
+  computed: {
+    // CLASES Y ERRORES DE CAMPO IDENTIFICACION
+    ocupacionesError: function ocupacionesError() {
+      var valor = this.actividadesData.descripcion.trim();
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      if (valor == "") {
+        return "El campo es obligatorio";
+      }
+    },
+    ocupacionesClases: function ocupacionesClases() {
+      return [{
+        "is-invalid": this.ocupacionesError,
+        "is-valid": !this.ocupacionesError
+      }];
+    },
+    esActivo: function esActivo() {
+      return this.paginacion.pagina_actual;
+    },
+    numeroDePaginas: function numeroDePaginas() {
+      if (!this.paginacion.hasta) {
+        return [];
+      }
+
+      var desde = this.paginacion.pagina_actual - this.offset; // TODO offset
+
+      if (desde < 1) {
+        desde = 1;
+      }
+
+      var aux = this.offset * 2;
+      var hasta = desde + aux;
+
+      if (hasta >= this.paginacion.ultima_pagina) {
+        hasta = this.paginacion.ultima_pagina;
+      }
+
+      var paginasArray = [];
+
+      while (desde <= hasta) {
+        paginasArray.push(desde);
+        desde++;
+      }
+
+      return paginasArray;
+    },
+    spinG: function spinG() {
+      if (this.valG) {
+        return {};
+      } else {
+        return ['kt-spinner', 'kt-spinner--right', 'kt-spinner--sm', 'kt-spinner--light'];
+      }
+    }
+  },
+  methods: {
+    consultar: function () {
+      var _consultar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(pagina) {
+        var _this = this;
+
+        var parametros;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _Servicios_informes__WEBPACK_IMPORTED_MODULE_6__["riesgos_salud"]().then(function (respuesta) {
-                  _this.poblacion_array = respuesta.data;
-
-                  _this.grafica_alteraciones_transtornos_audicion(_this.poblacion_array.alteraciones_transtornos_audicion);
-                })["catch"](function (err) {
-                  console.log(err);
+                parametros = {
+                  txtbusqueda: this.txtbusqueda.trim(),
+                  _token: this.csrf,
+                  page: pagina
+                };
+                _context.prev = 1;
+                _context.next = 4;
+                return _Servicios_actividad_servicios__WEBPACK_IMPORTED_MODULE_1__["listar"](parametros).then(function (respuesta) {
+                  _this.actividades = respuesta.data.actividades.data;
+                  _this.paginacion = respuesta.data.paginacion;
                 });
 
-              case 2:
+              case 4:
+                _context.next = 15;
+                break;
+
+              case 6:
+                _context.prev = 6;
+                _context.t0 = _context["catch"](1);
+                _context.t1 = _context.t0.response.status;
+                _context.next = _context.t1 === 422 ? 11 : 13;
+                break;
+
+              case 11:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context.abrupt("break", 15);
+
+              case 13:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context.abrupt("break", 15);
+
+              case 15:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
-      }))();
-    },
-    grafica_alteraciones_transtornos_audicion: function grafica_alteraciones_transtornos_audicion(array) {
-      var _this2 = this;
+        }, _callee, this, [[1, 6]]);
+      }));
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var chart, series;
+      function consultar(_x) {
+        return _consultar.apply(this, arguments);
+      }
+
+      return consultar;
+    }(),
+    abrirModal: function abrirModal() {
+      this.variableGlobal = "GUARDAR";
+      this.actividadesData.descripcion = "";
+      this.actividadesData.observacion = "";
+      this.actividadesData.id = 0;
+      this.errores = [];
+      this.entrarPorError = false;
+      this.$refs.modalOcupaciones.show();
+    },
+    cerrarModal: function cerrarModal() {
+      this.$refs.modalOcupaciones.hide();
+    },
+    guardarOcupacion: function () {
+      var _guardarOcupacion = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var _this2 = this;
+
+        var parametros;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (_this2.chart_desempleo != null) {
-                  _this2.chart_desempleo.dispose();
+                if (this.checkForm()) {
+                  _context2.next = 4;
+                  break;
                 }
 
-                chart = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_7__["create"]("chartdiv_alteraciones_transtornos_audicion", _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieChart3D"]);
-                _this2.chart_desempleo = chart;
-                chart.data = [{
-                  category: "Alto",
-                  first: array.alto
-                }, {
-                  category: "Moderado",
-                  first: array.moderado
-                }, {
-                  category: "Bajo",
-                  first: array.bajo
-                }, {
-                  category: "Inexistente",
-                  first: array.inexistente
-                }];
-                series = chart.series.push(new _amcharts_amcharts4_charts__WEBPACK_IMPORTED_MODULE_8__["PieSeries3D"]());
-                series.dataFields.value = "first";
-                series.dataFields.category = "category";
+                this.entrarPorError = false;
+                _context2.next = 23;
+                break;
 
-              case 7:
+              case 4:
+                this.errores = [];
+                parametros = {
+                  _token: this.csrf,
+                  descripcion: this.actividadesData.descripcion,
+                  observacion: this.actividadesData.observacion,
+                  id: this.actividadesData.id,
+                  opcion: this.variableGlobal
+                };
+                this.valG = false;
+                _context2.prev = 7;
+                _context2.next = 10;
+                return _Servicios_actividad_servicios__WEBPACK_IMPORTED_MODULE_1__["guardar"](parametros).then(function (respuesta) {
+                  _this2.consultar(1);
+
+                  _this2.actividadesData.descripcion = "";
+                  _this2.actividadesData.observacion = "";
+
+                  _this2.cerrarModal();
+
+                  _this2.$swal("Guardar...!", "Datos Guardados Exitosamente!", "success");
+
+                  _this2.entrarPorError = false;
+                  _this2.valG = true;
+                })["catch"](function (error) {
+                  _this2.errorDevuelto = error.response.data.errors;
+                  _this2.entrarPorError = true;
+                });
+
+              case 10:
+                _context2.next = 23;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](7);
+                _context2.t1 = _context2.t0.response.status;
+                _context2.next = _context2.t1 === 419 ? 17 : _context2.t1 === 422 ? 19 : 21;
+                break;
+
+              case 17:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 19:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 21:
+                this.$swal("Error...!", "Ocurrio un error!", "error");
+                return _context2.abrupt("break", 23);
+
+              case 23:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
-      }))();
+        }, _callee2, this, [[7, 12]]);
+      }));
+
+      function guardarOcupacion() {
+        return _guardarOcupacion.apply(this, arguments);
+      }
+
+      return guardarOcupacion;
+    }(),
+    checkForm: function checkForm(e) {
+      this.errores = [];
+
+      if (!this.actividadesData.descripcion) {
+        this.errores.push("La descripción es obligatoria.");
+      }
+
+      if (!this.errores.length) {
+        return true;
+      } else {
+        return false;
+      }
+
+      e.preventDefault();
     },
-    generarPDF: function () {
-      var _generarPDF = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    checkForm2: function checkForm2(e) {
+      this.errores = [];
+
+      if (this.actividadesData.descripcion == "") {
+        this.errores.push("La descripción es obligatoria.");
+      }
+
+      if (!this.errores.length) {
+        return true;
+      } else {
+        return false;
+      }
+
+      e.preventDefault();
+    },
+    cambiarPaginas: function cambiarPaginas(pagina) {
+      this.paginacion.pagina_actual = pagina;
+      this.consultar(pagina);
+    },
+    eliminar: function () {
+      var _eliminar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(usu) {
         var _this3 = this;
 
-        var options, chart_torta_edades, chart_no_asegurado_1, chart_no_asegurado_2, chart_poblacion_pobreza, chart_escolaridad, chart_desempleo, chart_acueducto, chart_alcantarillado, chart_cronica, chart_infecciosa, chart_discapacidad, chart_embarazo, chart_inmunizacion, chart_peso_para_talla, chart_talla_para_edad, chart_imc, chart_imc_5_17, chart_imc_5_17_e, chart_imc_18_60, chart_imc_18_60_e, parametros;
+        var title, titulo;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                this.isLoading = true;
-                options = {
-                  type: 'dataURL',
-                  useCORS: true
-                };
-                _context3.next = 4;
-                return this.chart_torta_edades.exporting.getImage("png");
+                title = "";
+                titulo = "";
 
-              case 4:
-                chart_torta_edades = _context3.sent;
-                _context3.next = 7;
-                return this.chart_no_asegurado_1.exporting.getImage("png");
+                if (usu.estado == "Activo") {
+                  title = "¿Desea anular la actividad economica " + usu.descripcion + "?";
+                  titulo = "Actividad Economica " + usu.descripcion + " anulada de manera exitosa";
+                } else {
+                  title = "¿Desea activar la actividad economica " + usu.descripcion + "?";
+                  titulo = "Actividad Economica " + usu.descripcion + " activada de manera exitosa";
+                }
 
-              case 7:
-                chart_no_asegurado_1 = _context3.sent;
-                _context3.next = 10;
-                return this.chart_no_asegurado_2.exporting.getImage("png");
+                this.$swal({
+                  title: title,
+                  text: "",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Aceptar",
+                  cancelButtonText: "Cancelar"
+                }).then(function (result) {
+                  if (result.value) {
+                    var parametros = {
+                      _token: _this3.csrf,
+                      id: usu.id,
+                      estado: usu.estado
+                    };
 
-              case 10:
-                chart_no_asegurado_2 = _context3.sent;
-                _context3.next = 13;
-                return this.chart_poblacion_pobreza.exporting.getImage("png");
+                    try {
+                      _Servicios_actividad_servicios__WEBPACK_IMPORTED_MODULE_1__["eliminar"](parametros).then(function (respuesta) {
+                        _this3.consultar(1);
 
-              case 13:
-                chart_poblacion_pobreza = _context3.sent;
-                _context3.next = 16;
-                return this.chart_escolaridad.exporting.getImage("png");
+                        _this3.$swal({
+                          position: "top-end",
+                          icon: "success",
+                          title: titulo,
+                          showConfirmButton: false,
+                          timer: 2000
+                        });
+                      })["catch"](function (error) {
+                        _this3.$swal("Error...!", "Ocurrio un error!", "error");
+                      });
+                    } catch (error) {
+                      switch (error.response.status) {
+                        case 422:
+                          _this3.$swal("Error...!", "Ocurrio un error!", "error");
 
-              case 16:
-                chart_escolaridad = _context3.sent;
-                _context3.next = 19;
-                return this.chart_desempleo.exporting.getImage("png");
+                          break;
 
-              case 19:
-                chart_desempleo = _context3.sent;
-                _context3.next = 22;
-                return this.chart_acueducto.exporting.getImage("png");
+                        default:
+                          _this3.$swal("Error...!", "Ocurrio un error!", "error");
 
-              case 22:
-                chart_acueducto = _context3.sent;
-                _context3.next = 25;
-                return this.chart_alcantarillado.exporting.getImage("png");
-
-              case 25:
-                chart_alcantarillado = _context3.sent;
-                _context3.next = 28;
-                return this.chart_cronica.exporting.getImage("png");
-
-              case 28:
-                chart_cronica = _context3.sent;
-                _context3.next = 31;
-                return this.chart_infecciosa.exporting.getImage("png");
-
-              case 31:
-                chart_infecciosa = _context3.sent;
-                _context3.next = 34;
-                return this.chart_discapacidad.exporting.getImage("png");
-
-              case 34:
-                chart_discapacidad = _context3.sent;
-                _context3.next = 37;
-                return this.chart_embarazo.exporting.getImage("png");
-
-              case 37:
-                chart_embarazo = _context3.sent;
-                _context3.next = 40;
-                return this.chart_inmunizacion.exporting.getImage("png");
-
-              case 40:
-                chart_inmunizacion = _context3.sent;
-                _context3.next = 43;
-                return this.chart_peso_para_talla.exporting.getImage("png");
-
-              case 43:
-                chart_peso_para_talla = _context3.sent;
-                _context3.next = 46;
-                return this.chart_talla_para_edad.exporting.getImage("png");
-
-              case 46:
-                chart_talla_para_edad = _context3.sent;
-                _context3.next = 49;
-                return this.chart_imc.exporting.getImage("png");
-
-              case 49:
-                chart_imc = _context3.sent;
-                _context3.next = 52;
-                return this.chart_imc_5_17.exporting.getImage("png");
-
-              case 52:
-                chart_imc_5_17 = _context3.sent;
-                _context3.next = 55;
-                return this.chart_imc_5_17_e.exporting.getImage("png");
-
-              case 55:
-                chart_imc_5_17_e = _context3.sent;
-                _context3.next = 58;
-                return this.chart_imc_18_60.exporting.getImage("png");
-
-              case 58:
-                chart_imc_18_60 = _context3.sent;
-                _context3.next = 61;
-                return this.chart_imc_18_60_e.exporting.getImage("png");
-
-              case 61:
-                chart_imc_18_60_e = _context3.sent;
-                parametros = {
-                  _token: this.csrf,
-                  poblacion_array: this.poblacion_array,
-                  poblacion_no_asegurada: this.poblacion_no_asegurada,
-                  chart_torta_edades: chart_torta_edades,
-                  chart_no_asegurado_1: chart_no_asegurado_1,
-                  chart_no_asegurado_2: chart_no_asegurado_2,
-                  determinante_salud_array: this.determinante_salud_array,
-                  chart_poblacion_pobreza: chart_poblacion_pobreza,
-                  chart_escolaridad: chart_escolaridad,
-                  chart_desempleo: chart_desempleo,
-                  chart_acueducto: chart_acueducto,
-                  chart_alcantarillado: chart_alcantarillado,
-                  condiciones_salud_array: this.condiciones_salud_array,
-                  chart_cronica: chart_cronica,
-                  chart_infecciosa: chart_infecciosa,
-                  chart_discapacidad: chart_discapacidad,
-                  chart_embarazo: chart_embarazo,
-                  chart_inmunizacion: chart_inmunizacion,
-                  chart_peso_para_talla: chart_peso_para_talla,
-                  chart_talla_para_edad: chart_talla_para_edad,
-                  chart_imc: chart_imc,
-                  chart_imc_5_17: chart_imc_5_17,
-                  chart_imc_5_17_e: chart_imc_5_17_e,
-                  chart_imc_18_60: chart_imc_18_60,
-                  chart_imc_18_60_e: chart_imc_18_60_e
-                };
-                _context3.prev = 63;
-                _context3.next = 66;
-                return _Servicios_informes__WEBPACK_IMPORTED_MODULE_6__["exportarGeneralSalud"](parametros).then(function (respuesta) {
-                  _this3.rutaPdf = _store__WEBPACK_IMPORTED_MODULE_11__["default"].state.apiURL + respuesta.data.nombre;
-                  _this3.isLoading = false;
-
-                  _this3.$refs.modalpdf.show();
+                          break;
+                      }
+                    }
+                  }
                 });
 
-              case 66:
-                _context3.next = 71;
-                break;
-
-              case 68:
-                _context3.prev = 68;
-                _context3.t0 = _context3["catch"](63);
-                this.$swal("Error...!", "Ocurrio un error!", "error");
-
-              case 71:
+              case 4:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[63, 68]]);
+        }, _callee3, this);
       }));
 
-      function generarPDF() {
-        return _generarPDF.apply(this, arguments);
+      function eliminar(_x2) {
+        return _eliminar.apply(this, arguments);
       }
 
-      return generarPDF;
+      return eliminar;
     }(),
-    cerrarModal: function cerrarModal() {
-      this.$refs.modalpdf.hide();
-    }
+    editar: function () {
+      var _editar = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(item) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                this.actividadesData.descripcion = item.descripcion;
+                this.actividadesData.observacion = item.observacion;
+                this.actividadesData.id = item.id;
+                this.variableGlobal = "EDITAR";
+                this.$refs.modalOcupaciones.show();
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function editar(_x3) {
+        return _editar.apply(this, arguments);
+      }
+
+      return editar;
+    }()
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -416,22 +685,22 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.li_li {\n    padding-top: 7px;\n    padding-bottom: 7px;\n}\np{\n    line-height: 200%;\n}\n#divPadre {\n    text-align:center;\n}\n#divHijo {\n    width:25cm;\n    margin:0px auto;\n}\n.table_data {\n    width: 100%;\n    font-size: 13px;\n    border-collapse: collapse;\n}\n.table_data thead {\n    padding: 0.3em;\n    color: #fff;\n    background: #5578eb;\n}\n.table_data thead tr th, .table_data tbody tr td {\n    text-align: left;\n    vertical-align: top;\n    padding: 0.3em;\n    caption-side: bottom;\n}\n.table_data tbody tr:nth-child(odd) {\n    background-color: #fff;\n}\n.table_data tbody tr:nth-child(even) {\n    background-color: #f1f1f1;\n}\n.nav-pills, .nav-tabs {\n    margin: 0 0 -10px 0 !important;\n}\n", ""]);
+exports.push([module.i, "\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 0.5) !important;\n}\n.modal-title {\n  color: #f8f9fa !important;\n}\n.close {\n  display: none;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css& ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--5-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./riesgoSalud.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&");
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Actividad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -453,10 +722,10 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523& ***!
-  \*******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0& ***!
+  \******************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -468,305 +737,706 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticStyle: { "margin-top": "4%" }, attrs: { id: "divPadre" } },
-    [
-      _c("loading", {
-        attrs: {
-          active: _vm.isLoading,
-          "can-cancel": true,
-          loader: "dots",
-          height: 128,
-          width: 128,
-          color: "#007bff",
-          "is-full-page": true
-        },
-        on: {
-          "update:active": function($event) {
-            _vm.isLoading = $event
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "row", attrs: { id: "divHijo" } }, [
-        _c("div", { staticClass: "col-lg-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-body" }, [
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "kt-portlet", staticStyle: { "margin-top": "-4%" } },
+      [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "kt-portlet__body" }, [
+          _c("div", { staticClass: "kt-section" }, [
+            _c("div", { staticClass: "kt-section__content" }, [
               _c("div", { staticClass: "row" }, [
-                _vm._m(0),
+                _c("div", { staticClass: "col-md-6 col-lg-6" }, [
+                  _c("div", { staticClass: "kt-section" }, [
+                    _c("div", { staticClass: "kt-section__content" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-outline-primary btn-icon",
+                          attrs: {
+                            href: "javascript:;",
+                            "data-skin": "dark",
+                            "data-toggle": "kt-tooltip",
+                            "data-placement": "top",
+                            title: "Nueva Actividad Economica"
+                          },
+                          on: { click: _vm.abrirModal }
+                        },
+                        [_c("i", { staticClass: "la la-file-text-o" })]
+                      ),
+                      _vm._v(" \n                ")
+                    ])
+                  ])
+                ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-sm-3 text-right" }, [
+                _c("div", { staticClass: "col-md-6 col-lg-6" }, [
+                  _c("form", { staticClass: "kt-form" }, [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("div", { staticClass: "input-group" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.txtbusqueda,
+                              expression: "txtbusqueda"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { type: "text", placeholder: "Busqueda" },
+                          domProps: { value: _vm.txtbusqueda },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.txtbusqueda = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-group-append" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary btn-icon",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.consultar(1)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-search" })]
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c("div", { staticClass: "table-responsive" }, [
+                    _c("table", { staticClass: "table table-sm table-hover" }, [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.actividades, function(item, index) {
+                          return _c("tr", { key: index }, [
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [_vm._v(_vm._s(index + 1))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [_vm._v(_vm._s(item.descripcion))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "left",
+                                  "text-transform": "capitalize"
+                                }
+                              },
+                              [_vm._v(_vm._s(item.observacion))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "font-weight": "normal",
+                                  "vertical-align": "middle",
+                                  "text-align": "center"
+                                }
+                              },
+                              [
+                                _c(
+                                  "span",
+                                  {
+                                    staticClass: "kt-badge kt-badge--inline",
+                                    class:
+                                      item.estado == "Activo"
+                                        ? "kt-badge--success"
+                                        : "kt-badge--danger"
+                                  },
+                                  [_vm._v(_vm._s(item.estado))]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  "vertical-align": "middle"
+                                }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn btn-outline-info btn-icon btn-sm",
+                                    attrs: { type: "button", title: "Editar" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.editar(item)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-edit" })]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-icon btn-sm",
+                                    class:
+                                      item.estado == "Activo"
+                                        ? "btn-outline-danger"
+                                        : "btn-outline-success",
+                                    attrs: {
+                                      type: "button",
+                                      title:
+                                        item.estado == "Activo"
+                                          ? "Anular"
+                                          : "Activar"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.eliminar(item)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa",
+                                      class:
+                                        item.estado == "Activo"
+                                          ? "fa-trash"
+                                          : "fa-check"
+                                    })
+                                  ]
+                                )
+                              ]
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "kt-separator kt-separator--border-dashed"
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "kt-section" }, [
+                      _c(
+                        "div",
+                        { staticClass: "kt-pagination kt-pagination--danger" },
+                        [
+                          _c(
+                            "ul",
+                            { staticClass: "kt-pagination__links" },
+                            [
+                              _vm.paginacion.pagina_actual > 1
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--first"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(1)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-double-left kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual > 1
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--next"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.pagina_actual - 1
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-left kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm._l(_vm.numeroDePaginas, function(
+                                pagina,
+                                index
+                              ) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: index,
+                                    class: [
+                                      pagina == _vm.esActivo
+                                        ? "kt-pagination__link--active"
+                                        : ""
+                                    ]
+                                  },
+                                  [
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: { href: "javascript:;" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.cambiarPaginas(pagina)
+                                          }
+                                        }
+                                      },
+                                      [_vm._v(_vm._s(pagina))]
+                                    )
+                                  ]
+                                )
+                              }),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual <
+                              _vm.paginacion.ultima_pagina
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--prev"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.pagina_actual + 1
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-right kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.paginacion.pagina_actual <
+                              _vm.paginacion.ultima_pagina
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass: "kt-pagination__link--last"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: { href: "javascript:;" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.cambiarPaginas(
+                                                _vm.paginacion.ultima_pagina
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass:
+                                              "fa fa-angle-double-right kt-font-danger"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ],
+                            2
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "b-modal",
+          {
+            ref: "modalOcupaciones",
+            attrs: {
+              "hide-footer": "",
+              title: "Gestion de Actividades Economicas",
+              size: "xl",
+              centered: "",
+              "header-bg-variant": "danger",
+              "header-text-variant": "light",
+              "no-close-on-backdrop": true
+            }
+          },
+          [
+            _c("div", { staticClass: "d-block" }, [
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-lg-12" },
+                  [
+                    _c(
+                      "transition",
+                      { attrs: { duration: 1000, name: "fade" } },
+                      [
+                        _vm.entrarPorError
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "alert alert-warning fade show",
+                                attrs: { role: "alert" }
+                              },
+                              [
+                                _c("div", { staticClass: "alert-icon" }, [
+                                  _c("i", { staticClass: "flaticon-warning" })
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-text" }, [
+                                  _vm._v(
+                                    "\n                  Por favor, corrija el(los) siguiente(s) error(es):\n                  "
+                                  ),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "ul",
+                                    _vm._l(_vm.errorDevuelto, function(
+                                      error,
+                                      index
+                                    ) {
+                                      return _c("li", { key: index }, [
+                                        _vm._v(_vm._s(error))
+                                      ])
+                                    }),
+                                    0
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-close" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "close",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "alert",
+                                        "aria-label": "Close"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [
+                                          _c("i", {
+                                            staticClass: "la la-close"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-lg-12" },
+                  [
+                    _c(
+                      "transition",
+                      { attrs: { duration: 1000, name: "fade" } },
+                      [
+                        _vm.errores.length
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "alert alert-warning fade show",
+                                attrs: { role: "alert" }
+                              },
+                              [
+                                _c("div", { staticClass: "alert-icon" }, [
+                                  _c("i", { staticClass: "flaticon-warning" })
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-text" }, [
+                                  _vm._v(
+                                    "\n                  Por favor, corrija el(los) siguiente(s) error(es):\n                  "
+                                  ),
+                                  _c("hr"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "ul",
+                                    _vm._l(_vm.errores, function(error, index) {
+                                      return _c("li", { key: index }, [
+                                        _vm._v(_vm._s(error))
+                                      ])
+                                    }),
+                                    0
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "alert-close" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "close",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "alert",
+                                        "aria-label": "Close"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        { attrs: { "aria-hidden": "true" } },
+                                        [
+                                          _c("i", {
+                                            staticClass: "la la-close"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]
+                            )
+                          : _vm._e()
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("form", [
+                _c("div", { staticClass: "form-group row" }, [
+                  _c("div", { staticClass: "col-lg-4" }, [
+                    _c("label", [_vm._v("Actividad Economica:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.actividadesData.descripcion,
+                          expression: "actividadesData.descripcion"
+                        }
+                      ],
+                      staticClass: "form-control text-capitalize",
+                      class: _vm.actividadesData,
+                      attrs: { type: "text", placeholder: "Descripción" },
+                      domProps: { value: _vm.actividadesData.descripcion },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.actividadesData,
+                            "descripcion",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.ocupacionesError
+                      ? _c("div", { staticClass: "invalid-feedback" }, [
+                          _vm._v(_vm._s(_vm.ocupacionesError))
+                        ])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-lg-8" }, [
+                    _c("label", [_vm._v("Observación:")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.actividadesData.observacion,
+                          expression: "actividadesData.observacion"
+                        }
+                      ],
+                      staticClass: "form-control text-capitalize",
+                      attrs: { type: "text", placeholder: "Observación" },
+                      domProps: { value: _vm.actividadesData.observacion },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.actividadesData,
+                            "observacion",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", { staticClass: "text-right" }, [
                   _c(
                     "button",
                     {
-                      staticClass: "btn btn-danger",
-                      attrs: { type: "button" },
-                      on: { click: _vm.generarPDF }
+                      staticClass: "btn btn-success",
+                      class: _vm.spinG,
+                      attrs: { type: "button", disabled: !_vm.valG },
+                      on: { click: _vm.guardarOcupacion }
                     },
                     [
-                      _c("i", { staticClass: "la la-pdf" }),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "kt-hidden-mobile" }, [
-                        _vm._v("Generar PDF")
-                      ])
+                      _c("i", { staticClass: "fa fa-edit" }),
+                      _vm._v(" Guardar\n            ")
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-warning",
+                      attrs: { type: "button" },
+                      on: { click: _vm.cerrarModal }
+                    },
+                    [
+                      _c("i", { staticClass: "fa fa-window-close" }),
+                      _vm._v(" Cancelar\n            ")
                     ]
                   )
                 ])
               ])
             ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card" }, [
-            _c(
-              "div",
-              {
-                staticClass: "card-body",
-                staticStyle: { "text-align": "left" }
-              },
-              [
-                _c("div", { staticClass: "row" }, [
-                  _c("h4", { staticStyle: { color: "#fd397a" } }, [
-                    _vm._v(
-                      "Alteraciones Y Transtornos De La Audición Y Comunicación"
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("br"),
-                  _vm._v(" "),
-                  _vm.poblacion_array != null
-                    ? _c(
-                        "div",
-                        {
-                          staticClass: "col-lg-6",
-                          staticStyle: { "padding-top": "30px" }
-                        },
-                        [
-                          _c("h5", [
-                            _vm._v("De "),
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion
-                                    .numero_personas
-                                ) + " Personas"
-                              )
-                            ]),
-                            _vm._v(", se tiene que: ")
-                          ]),
-                          _vm._v(" "),
-                          _c("ul", [
-                            _c("li", { staticClass: "li_li" }, [
-                              _c("strong", [_vm._v("Nivel de Riesgo Alto: ")]),
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    _vm.poblacion_array
-                                      .alteraciones_transtornos_audicion.alto
-                                  ) +
-                                  " Personas"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "li_li" }, [
-                              _c("strong", [
-                                _vm._v("Nivel de Riesgo Moderado: ")
-                              ]),
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    _vm.poblacion_array
-                                      .alteraciones_transtornos_audicion
-                                      .moderado
-                                  ) +
-                                  " Personas"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "li_li" }, [
-                              _c("strong", [_vm._v("Nivel de Riesgo Bajo: ")]),
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    _vm.poblacion_array
-                                      .alteraciones_transtornos_audicion.bajo
-                                  ) +
-                                  " Personas"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("li", { staticClass: "li_li" }, [
-                              _c("strong", [
-                                _vm._v("Nivel de Riesgo nexistente: ")
-                              ]),
-                              _vm._v(
-                                " " +
-                                  _vm._s(
-                                    _vm.poblacion_array
-                                      .alteraciones_transtornos_audicion
-                                      .inexistente
-                                  ) +
-                                  " Personas"
-                              )
-                            ])
-                          ])
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _vm.poblacion_array != null
-                    ? _c(
-                        "div",
-                        {
-                          staticClass: "col-lg-12",
-                          staticStyle: { "padding-top": "30px" }
-                        },
-                        [
-                          _c("h5", [
-                            _vm._v("De esas "),
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion.alto
-                                ) + " Personas"
-                              )
-                            ]),
-                            _vm._v(" que se encuentran en nivel de riesgo "),
-                            _c("strong", [_vm._v('"Alto" ')]),
-                            _vm._v("se tiene que: ")
-                          ]),
-                          _vm._v(" "),
-                          _c("p", [
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion
-                                    .porcentaje_femeninos_alto
-                                ) + "%"
-                              )
-                            ]),
-                            _vm._v(" son de genero Femenino, "),
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion
-                                    .porcentaje_masculinos_alto
-                                ) + "%"
-                              )
-                            ]),
-                            _vm._v(" son de genero Masculino, ademas el "),
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion
-                                    .porcentaje_zona_urbana
-                                ) + "%"
-                              )
-                            ]),
-                            _vm._v(" se encuentra en la zona urbana, y el "),
-                            _c("strong", [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.poblacion_array
-                                    .alteraciones_transtornos_audicion
-                                    .porcentaje_zona_rural
-                                ) + "%"
-                              )
-                            ]),
-                            _vm._v(" se encuentra en zona rural.")
-                          ])
-                        ]
-                      )
-                    : _vm._e()
-                ])
-              ]
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "b-modal",
-        {
-          ref: "modalpdf",
-          attrs: {
-            "hide-footer": "",
-            title: "INFORME GENERAL RIESGOS DE SALUD",
-            size: "xl",
-            centered: "",
-            "header-bg-variant": "danger",
-            "header-text-variant": "light",
-            "no-close-on-backdrop": true
-          }
-        },
-        [
-          _c("embed", {
-            attrs: {
-              id: "divPdf",
-              src: _vm.rutaPdf,
-              type: "application/pdf",
-              width: "100%",
-              height: "650px"
-            }
-          }),
-          _vm._v(" "),
-          _c("hr"),
-          _vm._v(" "),
-          _c("div", { staticClass: "text-right" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-warning",
-                attrs: { type: "button" },
-                on: { click: _vm.cerrarModal }
-              },
-              [
-                _c("i", { staticClass: "fa fa-window-close" }),
-                _vm._v(" Cancelar\n            ")
-              ]
-            )
-          ])
-        ]
-      )
-    ],
-    1
-  )
+          ]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "col-sm-9", staticStyle: { "text-align": "left" } },
-      [_c("h4", [_vm._v("INFORME GENERAL RIESGOS DE SALUD")])]
-    )
+    return _c("div", { staticClass: "kt-portlet__head" }, [
+      _c("div", { staticClass: "kt-portlet__head-label" }, [
+        _c("h3", { staticClass: "kt-portlet__head-title" }, [
+          _c("span", { staticClass: "kt-widget20__number kt-font-danger" }, [
+            _vm._v("GESTIÓN DE ACTIVIDADES ECONOMICAS")
+          ])
+        ])
+      ])
+    ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "col-lg-6 text-center",
-        staticStyle: { "padding-top": "30px" }
-      },
-      [
-        _c("div", {
-          staticStyle: { width: "100%", height: "180px" },
-          attrs: { id: "chartdiv_alteraciones_transtornos_audicion" }
-        })
-      ]
-    )
+    return _c("thead", {}, [
+      _c("tr", { staticClass: "kt-bg-fill-brand" }, [
+        _c("th", [_vm._v("No.")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actividad Economica")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Observación")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "text-center" }, [_vm._v("Estado")]),
+        _vm._v(" "),
+        _c("td", { staticClass: "text-center" }, [_vm._v("Opciones")])
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -775,67 +1445,44 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loading-overlay/dist/vue-loading.min.js":
-/*!******************************************************************!*\
-  !*** ./node_modules/vue-loading-overlay/dist/vue-loading.min.js ***!
-  \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-!function(t,e){ true?module.exports=e():undefined}("undefined"!=typeof self?self:this,(function(){return function(t){var e={};function i(n){if(e[n])return e[n].exports;var r=e[n]={i:n,l:!1,exports:{}};return t[n].call(r.exports,r,r.exports,i),r.l=!0,r.exports}return i.m=t,i.c=e,i.d=function(t,e,n){i.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},i.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},i.t=function(t,e){if(1&e&&(t=i(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(i.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)i.d(n,r,function(e){return t[e]}.bind(null,r));return n},i.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return i.d(e,"a",e),e},i.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},i.p="",i(i.s=1)}([function(t,e,i){},function(t,e,i){"use strict";i.r(e);var n="undefined"!=typeof window?window.HTMLElement:Object,r={mounted:function(){this.enforceFocus&&document.addEventListener("focusin",this.focusIn)},methods:{focusIn:function(t){if(this.isActive&&t.target!==this.$el&&!this.$el.contains(t.target)){var e=this.container?this.container:this.isFullPage?null:this.$el.parentElement;(this.isFullPage||e&&e.contains(t.target))&&(t.preventDefault(),this.$el.focus())}}},beforeDestroy:function(){document.removeEventListener("focusin",this.focusIn)}};function a(t,e,i,n,r,a,o,s){var l,u="function"==typeof t?t.options:t;if(e&&(u.render=e,u.staticRenderFns=i,u._compiled=!0),n&&(u.functional=!0),a&&(u._scopeId="data-v-"+a),o?(l=function(t){(t=t||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(t=__VUE_SSR_CONTEXT__),r&&r.call(this,t),t&&t._registeredComponents&&t._registeredComponents.add(o)},u._ssrRegister=l):r&&(l=s?function(){r.call(this,(u.functional?this.parent:this).$root.$options.shadowRoot)}:r),l)if(u.functional){u._injectStyles=l;var c=u.render;u.render=function(t,e){return l.call(e),c(t,e)}}else{var d=u.beforeCreate;u.beforeCreate=d?[].concat(d,l):[l]}return{exports:t,options:u}}var o=a({name:"spinner",props:{color:{type:String,default:"#000"},height:{type:Number,default:64},width:{type:Number,default:64}}},(function(){var t=this.$createElement,e=this._self._c||t;return e("svg",{attrs:{viewBox:"0 0 38 38",xmlns:"http://www.w3.org/2000/svg",width:this.width,height:this.height,stroke:this.color}},[e("g",{attrs:{fill:"none","fill-rule":"evenodd"}},[e("g",{attrs:{transform:"translate(1 1)","stroke-width":"2"}},[e("circle",{attrs:{"stroke-opacity":".25",cx:"18",cy:"18",r:"18"}}),e("path",{attrs:{d:"M36 18c0-9.94-8.06-18-18-18"}},[e("animateTransform",{attrs:{attributeName:"transform",type:"rotate",from:"0 18 18",to:"360 18 18",dur:"0.8s",repeatCount:"indefinite"}})],1)])])])}),[],!1,null,null,null).exports,s=a({name:"dots",props:{color:{type:String,default:"#000"},height:{type:Number,default:240},width:{type:Number,default:60}}},(function(){var t=this.$createElement,e=this._self._c||t;return e("svg",{attrs:{viewBox:"0 0 120 30",xmlns:"http://www.w3.org/2000/svg",fill:this.color,width:this.width,height:this.height}},[e("circle",{attrs:{cx:"15",cy:"15",r:"15"}},[e("animate",{attrs:{attributeName:"r",from:"15",to:"15",begin:"0s",dur:"0.8s",values:"15;9;15",calcMode:"linear",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"fill-opacity",from:"1",to:"1",begin:"0s",dur:"0.8s",values:"1;.5;1",calcMode:"linear",repeatCount:"indefinite"}})]),e("circle",{attrs:{cx:"60",cy:"15",r:"9","fill-opacity":"0.3"}},[e("animate",{attrs:{attributeName:"r",from:"9",to:"9",begin:"0s",dur:"0.8s",values:"9;15;9",calcMode:"linear",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"fill-opacity",from:"0.5",to:"0.5",begin:"0s",dur:"0.8s",values:".5;1;.5",calcMode:"linear",repeatCount:"indefinite"}})]),e("circle",{attrs:{cx:"105",cy:"15",r:"15"}},[e("animate",{attrs:{attributeName:"r",from:"15",to:"15",begin:"0s",dur:"0.8s",values:"15;9;15",calcMode:"linear",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"fill-opacity",from:"1",to:"1",begin:"0s",dur:"0.8s",values:"1;.5;1",calcMode:"linear",repeatCount:"indefinite"}})])])}),[],!1,null,null,null).exports,l=a({name:"bars",props:{color:{type:String,default:"#000"},height:{type:Number,default:40},width:{type:Number,default:40}}},(function(){var t=this.$createElement,e=this._self._c||t;return e("svg",{attrs:{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 30 30",height:this.height,width:this.width,fill:this.color}},[e("rect",{attrs:{x:"0",y:"13",width:"4",height:"5"}},[e("animate",{attrs:{attributeName:"height",attributeType:"XML",values:"5;21;5",begin:"0s",dur:"0.6s",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"y",attributeType:"XML",values:"13; 5; 13",begin:"0s",dur:"0.6s",repeatCount:"indefinite"}})]),e("rect",{attrs:{x:"10",y:"13",width:"4",height:"5"}},[e("animate",{attrs:{attributeName:"height",attributeType:"XML",values:"5;21;5",begin:"0.15s",dur:"0.6s",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"y",attributeType:"XML",values:"13; 5; 13",begin:"0.15s",dur:"0.6s",repeatCount:"indefinite"}})]),e("rect",{attrs:{x:"20",y:"13",width:"4",height:"5"}},[e("animate",{attrs:{attributeName:"height",attributeType:"XML",values:"5;21;5",begin:"0.3s",dur:"0.6s",repeatCount:"indefinite"}}),e("animate",{attrs:{attributeName:"y",attributeType:"XML",values:"13; 5; 13",begin:"0.3s",dur:"0.6s",repeatCount:"indefinite"}})])])}),[],!1,null,null,null).exports,u=a({name:"vue-loading",mixins:[r],props:{active:Boolean,programmatic:Boolean,container:[Object,Function,n],isFullPage:{type:Boolean,default:!0},enforceFocus:{type:Boolean,default:!0},lockScroll:{type:Boolean,default:!1},transition:{type:String,default:"fade"},canCancel:Boolean,onCancel:{type:Function,default:function(){}},color:String,backgroundColor:String,blur:{type:String,default:"2px"},opacity:Number,width:Number,height:Number,zIndex:Number,loader:{type:String,default:"spinner"}},data:function(){return{isActive:this.active}},components:{Spinner:o,Dots:s,Bars:l},beforeMount:function(){this.programmatic&&(this.container?(this.isFullPage=!1,this.container.appendChild(this.$el)):document.body.appendChild(this.$el))},mounted:function(){this.programmatic&&(this.isActive=!0),document.addEventListener("keyup",this.keyPress)},methods:{cancel:function(){this.canCancel&&this.isActive&&(this.hide(),this.onCancel.apply(null,arguments))},hide:function(){var t=this;this.$emit("hide"),this.$emit("update:active",!1),this.programmatic&&(this.isActive=!1,setTimeout((function(){var e;t.$destroy(),void 0!==(e=t.$el).remove?e.remove():e.parentNode.removeChild(e)}),150))},disableScroll:function(){this.isFullPage&&this.lockScroll&&document.body.classList.add("vld-shown")},enableScroll:function(){this.isFullPage&&this.lockScroll&&document.body.classList.remove("vld-shown")},keyPress:function(t){27===t.keyCode&&this.cancel()}},watch:{active:function(t){this.isActive=t},isActive:function(t){t?this.disableScroll():this.enableScroll()}},computed:{bgStyle:function(){return{background:this.backgroundColor,opacity:this.opacity,backdropFilter:"blur(".concat(this.blur,")")}}},beforeDestroy:function(){document.removeEventListener("keyup",this.keyPress)}},(function(){var t=this,e=t.$createElement,i=t._self._c||e;return i("transition",{attrs:{name:t.transition}},[i("div",{directives:[{name:"show",rawName:"v-show",value:t.isActive,expression:"isActive"}],staticClass:"vld-overlay is-active",class:{"is-full-page":t.isFullPage},style:{zIndex:t.zIndex},attrs:{tabindex:"0","aria-busy":t.isActive,"aria-label":"Loading"}},[i("div",{staticClass:"vld-background",style:t.bgStyle,on:{click:function(e){return e.preventDefault(),t.cancel(e)}}}),i("div",{staticClass:"vld-icon"},[t._t("before"),t._t("default",[i(t.loader,{tag:"component",attrs:{color:t.color,width:t.width,height:t.height}})]),t._t("after")],2)])])}),[],!1,null,null,null).exports,c=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};return{show:function(){var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:e,r=arguments.length>1&&void 0!==arguments[1]?arguments[1]:i,a={programmatic:!0},o=Object.assign({},e,n,a),s=new(t.extend(u))({el:document.createElement("div"),propsData:o}),l=Object.assign({},i,r);return Object.keys(l).map((function(t){s.$slots[t]=l[t]})),s}}};i(0);u.install=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},i=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{},n=c(t,e,i);t.$loading=n,t.prototype.$loading=n};e.default=u}]).default}));
-
-/***/ }),
-
-/***/ "./resources/js/Servicios/informes.js":
-/*!********************************************!*\
-  !*** ./resources/js/Servicios/informes.js ***!
-  \********************************************/
-/*! exports provided: inicialesMigrantes, poblacion_no_asegurada, determinante_salud, condiciones_salud, exportarGeneralSalud, riesgos_salud */
+/***/ "./resources/js/Servicios/actividad_servicios.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/Servicios/actividad_servicios.js ***!
+  \*******************************************************/
+/*! exports provided: listar, guardar, eliminar */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inicialesMigrantes", function() { return inicialesMigrantes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "poblacion_no_asegurada", function() { return poblacion_no_asegurada; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "determinante_salud", function() { return determinante_salud; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "condiciones_salud", function() { return condiciones_salud; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportarGeneralSalud", function() { return exportarGeneralSalud; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "riesgos_salud", function() { return riesgos_salud; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listar", function() { return listar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guardar", function() { return guardar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eliminar", function() { return eliminar; });
 /* harmony import */ var _http_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_services */ "./resources/js/Servicios/http_services.js");
 
-function inicialesMigrantes($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/informes/migrantes', $data);
+function listar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/actividad', $data);
 }
-function poblacion_no_asegurada() {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/informes/poblacion-no-asegurada');
+function guardar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/actividad/guardar', $data);
 }
-function determinante_salud() {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/informes/determinante-salud');
-}
-function condiciones_salud() {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/informes/condiciones-salud');
-}
-function exportarGeneralSalud($data) {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/informes/exportar-general-salud', $data);
-}
-function riesgos_salud() {
-  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().get('/informes/riesgos-salud');
+function eliminar($data) {
+  return Object(_http_services__WEBPACK_IMPORTED_MODULE_0__["http"])().post('/actividad/eliminar', $data);
 }
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/informes/riesgoSalud.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/Vistas/informes/riesgoSalud.vue ***!
-  \******************************************************/
+/***/ "./resources/js/Vistas/Actividad/Actividad.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/Vistas/Actividad/Actividad.vue ***!
+  \*****************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./riesgoSalud.vue?vue&type=template&id=0bb26523& */ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523&");
-/* harmony import */ var _riesgoSalud_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./riesgoSalud.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./riesgoSalud.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actividad.vue?vue&type=template&id=41d4bcc0& */ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0&");
+/* harmony import */ var _Actividad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Actividad.vue?vue&type=script&lang=js& */ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Actividad.vue?vue&type=style&index=0&lang=css& */ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -846,9 +1493,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _riesgoSalud_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _Actividad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -858,54 +1505,54 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/Vistas/informes/riesgoSalud.vue"
+component.options.__file = "resources/js/Vistas/Actividad/Actividad.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./riesgoSalud.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Actividad.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&":
-/*!***************************************************************************************!*\
-  !*** ./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css& ***!
-  \***************************************************************************************/
+/***/ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./riesgoSalud.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--5-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--5-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./Actividad.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_5_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_5_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ "./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0& ***!
+  \************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./riesgoSalud.vue?vue&type=template&id=0bb26523& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/informes/riesgoSalud.vue?vue&type=template&id=0bb26523&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Actividad.vue?vue&type=template&id=41d4bcc0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/Vistas/Actividad/Actividad.vue?vue&type=template&id=41d4bcc0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_riesgoSalud_vue_vue_type_template_id_0bb26523___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Actividad_vue_vue_type_template_id_41d4bcc0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
